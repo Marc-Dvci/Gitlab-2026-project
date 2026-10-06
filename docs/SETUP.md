@@ -32,16 +32,25 @@ uvicorn app.main:app --reload       # http://localhost:8000
 
 ## 3. Google Cloud, keyless, with OpenTofu/Terraform **(you, once)**
 
+Use the **GitLab-managed state from the first apply**, so CI and your laptop share one state.
+In GitLab: Operate → Terraform states → "Copy Terraform init command" for a state named `production`
+(it uses a personal access token with `api` scope). Then, authenticated to Google Cloud with
+`gcloud auth application-default login`:
+
 ```bash
 cd infra/terraform
-tofu init -backend=false   # first apply locally; CI takes over afterwards with GitLab-managed state
-tofu apply -var project_id=<gcp-project> -var gitlab_project_path=<group>/joule-thief \
-           -var tick_key=$(openssl rand -hex 16) -var gitlab_token=<project-access-token>
+tofu init <paste the backend-config flags from GitLab>
+export TF_VAR_project_id=<gcp-project> TF_VAR_gitlab_project_path=<group>/joule-thief
+export TF_VAR_tick_key=$(openssl rand -hex 16) TF_VAR_gitlab_token=<project-access-token>
+tofu apply
 ```
 
-Outputs: `service_url`, `wif_provider`, `artifact_registry_repo`. Optional: `-var enable_green_runner=true
--var runner_token=glrt-...` creates an always-free e2-micro runner in Oregon. Create the runner token
-in GitLab (Settings → CI/CD → Runners → New project runner) with the tag `green-runner`.
+Outputs: `service_url`, `wif_provider`, `artifact_registry_repo`. Optional: `TF_VAR_enable_green_runner=true`
+and `TF_VAR_runner_token=glrt-...` create an always-free e2-micro runner in Oregon. Create the runner
+token in GitLab (Settings → CI/CD → Runners → New project runner) with the tag `green-runner`.
+
+Add the same `TF_VAR_tick_key`, `TF_VAR_gitlab_token` (masked) and `TF_VAR_flow_consumer_id` as CI/CD
+variables, so `configure:infra` re-applies the same configuration instead of removing the scheduler.
 
 ## 4. CI/CD variables (Settings → CI/CD → Variables)
 

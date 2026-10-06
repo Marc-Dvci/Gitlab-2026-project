@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 
 from .signals.base import Point, Series, utc
 from .signals.marginal import IPCC_AR5_LIFECYCLE_MEDIAN, PriceMarginalModel
-from .signals.regions import REGIONS, google_region_carbon
+from .signals.regions import REGIONS, google_region_carbon, gsf_region_metadata
 from .signals.sources import EnergyCharts, FetchText, Neso, http_get_text
 
 
@@ -33,6 +33,8 @@ class LiveSignals:
     marginal_annual: dict[str, float] = field(default_factory=dict)  # from GSF metadata when available
     records: list[SignalRecord] = field(default_factory=list)
     _cache: dict[tuple[str, str], Series] = field(default_factory=dict)
+    load_gsf: bool = True  # use the GSF/WattTime annual marginal as each zone's fossil margin
+    _gsf_loaded: bool = False
 
     def _record(self, series: Series) -> None:
         digest = hashlib.sha256(json.dumps([(p.start.isoformat(), p.value) for p in series], sort_keys=True).encode())
@@ -47,8 +49,21 @@ class LiveSignals:
             self._cache[key] = s
         return self._cache[key]
 
+    def _ensure_marginal_annual(self) -> None:
+        """Fill fossil-margin defaults from the GSF Real Time Cloud dataset once (best effort)."""
+        if self._gsf_loaded or not self.load_gsf:
+            return
+        self._gsf_loaded = True
+        try:
+            for region, meta in gsf_region_metadata(self.fetch).items():
+                if meta.get("marginal_annual") and region not in self.marginal_annual:
+                    self.marginal_annual[region] = float(meta["marginal_annual"])
+        except Exception:  # noqa: BLE001 — fall back to the IPCC gas CCGT median
+            pass
+
     def decision_signal(self, region: str, now: datetime) -> Series:
         now = utc(now)
+        self._ensure_marginal_annual()
         info = REGIONS.get(region)
         if info and info.intensity_source == "price" and info.price_zone:
             fossil = self.marginal_annual.get(region, IPCC_AR5_LIFECYCLE_MEDIAN["gas_ccgt"])

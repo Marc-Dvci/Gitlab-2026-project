@@ -191,7 +191,12 @@ release:receipt:
       aud: sigstore
   script:
     - apk add --no-cache cosign python3 >/dev/null
-    - python3 -m joulethief.cli ci-energy --region us-east1 --minutes 10 --ledger ledger.jsonl
+    - |
+      if [ -n "${JOULE_GITLAB_TOKEN:-}" ]; then
+        python3 -m joulethief.cli pipeline-footprint --ledger ledger.jsonl --summary footprint-summary.json
+      else
+        python3 -m joulethief.cli ci-energy --region us-east1 --minutes 10 --ledger ledger.jsonl
+      fi
     - python3 -m joulethief.cli receipt build --subject "$IMAGE" --digest "$IMAGE_DIGEST" --ledger ledger.jsonl --out receipt.predicate.json
     - cosign login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
     - cosign sign "$IMAGE@$IMAGE_DIGEST"
@@ -227,8 +232,10 @@ release:canary:
     - >
       gcloud run deploy "$SERVICE" --access-token-file=token.txt --project "$GCP_PROJECT_ID" --region "$GCP_REGION"
       --image "$AR_IMAGE@$IMAGE_DIGEST" --no-traffic --tag "c-$CI_COMMIT_SHORT_SHA" --quiet
-    - CANARY=$(gcloud run services describe "$SERVICE" --access-token-file=token.txt --project "$GCP_PROJECT_ID" --region "$GCP_REGION" --format 'value(status.traffic.filter("tag","c-'$CI_COMMIT_SHORT_SHA'").url)' 2>/dev/null || true)
-    - PROD=$(gcloud run services describe "$SERVICE" --access-token-file=token.txt --project "$GCP_PROJECT_ID" --region "$GCP_REGION" --format 'value(status.url)')
+    - gcloud run services describe "$SERVICE" --access-token-file=token.txt --project "$GCP_PROJECT_ID" --region "$GCP_REGION" --format json > service.json
+    - export TAG="c-$CI_COMMIT_SHORT_SHA"
+    - CANARY=$(python3 -c 'import json,os; d=json.load(open("service.json")); print(next((t["url"] for t in d["status"].get("traffic", []) if t.get("tag") == os.environ["TAG"]), ""))')
+    - PROD=$(python3 -c 'import json; print(json.load(open("service.json"))["status"]["url"])')
     - echo "CANARY_URL=${CANARY:-$PROD}" > deploy.env && echo "PROD_URL=$PROD" >> deploy.env
   artifacts:
     reports:

@@ -77,6 +77,8 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
     now = utc(now)
     issues = {i["iid"]: i for label in (QUEUED, SCHEDULED) for i in gitlab.issues([label])}
     jobs = [issue_to_job(i, cfg.regions) for i in issues.values()]
+    if not jobs:  # an empty battery costs nothing: no signal fetch, no solver
+        return TickReport(plan([], {}, now, cfg.horizon))
     sig = {r: signals.decision_signal(r, now) for r in cfg.regions}
     p = plan(jobs, sig, now, cfg.horizon, capacity=cfg.capacity)
     report = TickReport(p)
