@@ -1,0 +1,6 @@
+# Runtime (Cloud Run image). Versions tested together.
+fastapi==0.142.2
+uvicorn==0.54.0
+mcp==2.3.0
+ecologits==0.11.2
+ortools==9.15.6755

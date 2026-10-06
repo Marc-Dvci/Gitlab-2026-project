@@ -1,0 +1,11 @@
+#!/bin/bash
+# Registers an always-free e2-micro as a GitLab runner tagged "green-runner" (shell executor).
+set -euo pipefail
+if ! command -v gitlab-runner >/dev/null; then
+  curl -fsSL "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | bash
+  apt-get install -y gitlab-runner python3 python3-venv
+fi
+if [ -n "${runner_token}" ] && ! grep -q green-runner /etc/gitlab-runner/config.toml 2>/dev/null; then
+  gitlab-runner register --non-interactive --url https://gitlab.com --token "${runner_token}" \
+    --executor shell --description green-runner
+fi

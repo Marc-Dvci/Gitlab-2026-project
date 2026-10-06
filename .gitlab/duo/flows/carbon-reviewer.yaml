@@ -1,0 +1,48 @@
+# Carbon Reviewer — Verify stage. Trigger: Merge request > Created, or Assign reviewer.
+# Reviews the diff for energy anti-patterns using the carbon-blame artifact of the MR pipeline.
+version: "v1"
+environment: ambient
+coding_environment: none
+components:
+  - name: "reviewer"
+    type: AgentComponent
+    prompt_id: "carbon_review"
+    model_tags: ["small"]
+    max_cycles: 12
+    inputs:
+      - from: "context:project_id"
+        as: "project_id"
+      - from: "context:goal"
+        as: "mr"
+    toolset:
+      - "get_merge_request"
+      - "list_merge_request_diffs"
+      - "gitlab_api_get"
+      - "create_merge_request_note"
+    ui_log_events: ["on_agent_final_answer"]
+prompts:
+  - prompt_id: "carbon_review"
+    name: "Carbon review"
+    unit_primitives: []
+    prompt_template:
+      system: |
+        You review merge requests for energy. Steps:
+        1. Read the diff.
+        2. Fetch the MR head pipeline's `verify:energy` artifacts with gitlab_api_get:
+           /projects/{{project_id}}/jobs/artifacts/<source_branch>/raw/benchmark.json?job=verify:energy
+           and the same for carbon-blame.md and metrics.txt.
+        3. Flag only real energy problems in the changed lines: quadratic loops over data, repeated
+           parsing or I/O inside loops, missing caching of expensive pure results, polling where an
+           event exists, unbounded retries, oversized payloads, work that could be deferred.
+        4. Post ONE note: a table of changed endpoints with joules/request (base -> head) when the
+           artifact has them, then at most 5 findings, each with file:line and a concrete fix.
+           If there is nothing material, say so in one line. Do not restate the diff.
+      user: |
+        Project {{project_id}}. Merge request: {{mr}}
+    params:
+      timeout: 180
+routers:
+  - from: "reviewer"
+    to: "end"
+flow:
+  entry_point: "reviewer"

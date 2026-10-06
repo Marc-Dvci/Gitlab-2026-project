@@ -44,8 +44,7 @@ def urgent(region: str, now_g: float, extra_g: float) -> str:
 
 
 def daily_plan(rows: list[dict], horizon_label: str) -> str:
-    lines = [f"## Tomorrow's dispatch plan ({horizon_label})", "",
-             "| Work | Region | Start | Expected gCO₂ | vs. run-now |", "|---|---|---|---:|---:|"]
+    lines = [f"## Dispatch plan ({horizon_label})", "", "| Work | Region | Start | Expected gCO₂ |", "|---|---|---|---:|"]
     for r in rows:
-        lines.append(f"| {r['job']} | {r['region']} | {r['start']} | {r['expected_g']:.1f} | {r['saving']:+.0%} |")
+        lines.append(f"| {r['job']} | {region_label(r['region'])} | {r['start']} | {r['expected_g']:.1f} |")
     return "\n".join(lines)

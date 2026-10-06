@@ -120,6 +120,10 @@ class GitLab:
         return raw.decode()
 
     # -- verify / release / configure -------------------------------------------------------
+    def pipeline_jobs(self, pipeline_id: int | str) -> list[dict]:
+        return self.request("GET", f"{self._project_path}/pipelines/{pipeline_id}/jobs",
+                            query={"per_page": 100, "include_retried": "true"})
+
     def run_pipeline(self, ref: str, variables: dict[str, str]) -> dict:
         return self.request("POST", f"{self._project_path}/pipeline",
                             {"ref": ref, "variables": [{"key": k, "value": v} for k, v in variables.items()]})

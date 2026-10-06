@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "joule-thief": {
+      "type": "http",
+      "url": "https://REPLACE-WITH-YOUR-CLOUD-RUN-URL/mcp",
+      "approvedTools": ["grid_signal", "plan_work", "estimate_agent_footprint", "explain_region", "check_carbon_receipt", "autonomy_dividend"]
+    }
+  }
+}

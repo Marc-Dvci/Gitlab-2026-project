@@ -1,0 +1,52 @@
+# Surge Intake — Plan stage. Trigger: Work item > Created (or mention @ai-surge-intake-<group>).
+# Turns a new issue into a Surge Request the dispatcher can schedule: priority, kind of work,
+# acceptance criteria, and whether it may wait for clean power. API-only: no repository clone.
+version: "v1"
+environment: ambient
+coding_environment: none
+components:
+  - name: "triage"
+    type: AgentComponent
+    prompt_id: "surge_triage"
+    model_tags: ["small"]  # classification does not need a frontier model
+    max_cycles: 8
+    inputs:
+      - from: "context:project_id"
+        as: "project_id"
+      - "context:goal"
+    toolset:
+      - "get_issue"
+      - "update_issue"
+      - "create_issue_note"
+      - "gitlab_issue_search"
+    ui_log_events: ["on_agent_final_answer", "on_tool_execution_failed"]
+prompts:
+  - prompt_id: "surge_triage"
+    name: "Surge triage"
+    unit_primitives: []
+    prompt_template:
+      system: |
+        You triage work for Joule Thief, a hands-off delivery system that schedules deferrable work
+        into hours when the electricity grid has clean surplus. Be brief; every token costs energy.
+        For the issue referenced in the goal:
+        1. Decide urgency. Production incidents, security vulnerabilities rated high/critical and
+           anything blocking users -> label `priority::critical` (it runs now, the grid never delays it).
+           Otherwise choose `priority::high` (4 h), `priority::normal` (24 h) or `priority::low` (72 h).
+        2. Decide the kind of work: `energy::agent_session` (code change by an agent),
+           `energy::ci_pipeline` (heavy test runs), `energy::security_scan` (DAST, fuzzing, full scans),
+           `energy::dependency_upgrade`.
+        3. Add `surge::queued`. Never remove labels you did not add.
+        4. If acceptance criteria are missing, append 2-4 testable bullet points under
+           "## Acceptance criteria" in the description, without rewriting the author's text.
+        5. Post one short note: the labels you chose and why, in at most three lines.
+        Search for duplicates first; if one exists, link it in your note and stop.
+      user: |
+        Project: {{project_id}}
+        Event: {{goal}}
+    params:
+      timeout: 120
+routers:
+  - from: "triage"
+    to: "end"
+flow:
+  entry_point: "triage"

@@ -25,6 +25,8 @@ QUEUED, SCHEDULED, RUNNING = "surge::queued", "surge::scheduled", "surge::runnin
 # Typical duration and facility power of each kind of work (overridable per issue with
 # ``energy::<kind>`` labels). Agent sessions assume a self-hosted model in the chosen region;
 # for provider-hosted models only the CI side is shiftable and the ledger says so.
+PIPELINE_KINDS = {"ci_pipeline": "heavy-tests", "security_scan": "heavy-scan"}
+
 JOB_PROFILES = {
     "agent_session": (timedelta(minutes=40), 0.35),
     "ci_pipeline": (timedelta(minutes=20), 0.05),
@@ -45,6 +47,7 @@ class LoopConfig:
     tick: timedelta = timedelta(minutes=30)
     flow_consumer_id: int | None = None  # AI Catalog consumer of the "surge-worker" flow
     workflow_definition: str | None = "developer/v1"  # fallback: GitLab's foundational developer flow
+    ref: str = "main"
     dry_run: bool = False
 
 
@@ -90,11 +93,16 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
             report.started.append(a.job_id)
             report.notes[a.job_id] = note
             if not cfg.dry_run:
-                goal = (f"Resolve issue #{iid}: {issue.get('title', '')}. Follow AGENTS.md. Run the tests, keep the "
-                        f"change minimal, open a merge request that closes #{iid}.")
-                gitlab.start_flow(goal, consumer_id=cfg.flow_consumer_id,
-                                  workflow_definition=None if cfg.flow_consumer_id else cfg.workflow_definition,
-                                  issue_iid=iid)
+                if job.kind in PIPELINE_KINDS:
+                    # CI work moves too: run the deferred heavy pipeline now, on the green runner if configured.
+                    gitlab.run_pipeline(cfg.ref, {"JOULE_TASK": PIPELINE_KINDS[job.kind], "JOULE_ISSUE": str(iid),
+                                                  "JOULE_REGION": a.region})
+                else:
+                    goal = (f"Resolve issue #{iid}: {issue.get('title', '')}. Follow AGENTS.md. Run the tests, keep "
+                            f"the change minimal, open a merge request that closes #{iid}.")
+                    gitlab.start_flow(goal, consumer_id=cfg.flow_consumer_id,
+                                      workflow_definition=None if cfg.flow_consumer_id else cfg.workflow_definition,
+                                      issue_iid=iid)
                 gitlab.set_labels(iid, add=[RUNNING], remove=[QUEUED, SCHEDULED])
                 gitlab.issue_note(iid, note)
         else:
@@ -108,3 +116,16 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
                 gitlab.set_labels(iid, add=[SCHEDULED], remove=[QUEUED])
                 gitlab.issue_note(iid, note)
     return report
+
+
+def publish_plan(gitlab, report: TickReport, title_prefix: str = "Dispatch plan") -> dict | None:
+    """Post the plan as an issue — the Plan stage, written by the grid."""
+    p = report.plan
+    rows = [{"job": a.job_id, "region": a.region, "start": a.start.strftime("%a %H:%M UTC"), "expected_g": a.expected_g}
+            for a in p.assignments]
+    if not rows:
+        return None
+    body = voice.daily_plan(rows, f"from {p.start:%Y-%m-%d %H:%M} UTC")
+    body += (f"\n\nExpected **{p.expected_g:.1f} g** vs {p.baseline_g:.1f} g if everything ran now "
+             f"({p.saving_fraction:.0%} less). Solver: {p.solver} ({p.status}).")
+    return gitlab.create_issue(f"{title_prefix} — {p.start:%Y-%m-%d %H:%M} UTC", body, ["surge::plan"])

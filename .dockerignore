@@ -1,0 +1,10 @@
+.venv
+.git
+.cache
+tests
+experiments
+infra
+scripts
+**/__pycache__
+*.md
+!docs/results/*.md

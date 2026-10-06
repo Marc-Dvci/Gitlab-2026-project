@@ -1,0 +1,79 @@
+# Surge Worker — Create stage. Started by the dispatcher through the Flows API
+# (POST /ai/duo_workflows/workflows) when the grid window opens; never by a mention.
+# Small model explores, large model implements, with hard loop caps as a token budget.
+version: "v1"
+environment: ambient
+coding_environment: full
+components:
+  - name: "explorer"
+    type: AgentComponent
+    description: "Reads the issue and the code, returns a short implementation plan with file paths."
+    prompt_id: "surge_explore"
+    model_tags: ["small"]
+    max_cycles: 15
+    identical_tool_call_limit: 3
+    inputs:
+      - from: "context:project_id"
+        as: "project_id"
+      - "context:goal"
+    toolset: ["get_issue", "read_file", "list_dir", "find_files", "grep"]
+    ui_log_events: ["on_agent_final_answer"]
+  - name: "implementer"
+    type: AgentComponent
+    description: "Implements the plan, runs the tests and opens a merge request."
+    prompt_id: "surge_implement"
+    model_tags: ["large"]
+    max_cycles: 40
+    identical_tool_call_limit: 3
+    inputs:
+      - from: "context:project_id"
+        as: "project_id"
+      - "context:goal"
+      - from: "context:explorer.final_answer"
+        as: "plan"
+    toolset:
+      - "read_file"
+      - "edit_file"
+      - "create_file_with_contents"
+      - "find_files"
+      - "grep"
+      - "run_command"
+      - "create_merge_request"
+      - "create_issue_note"
+    ui_log_events: ["on_agent_final_answer", "on_tool_execution_failed"]
+prompts:
+  - prompt_id: "surge_explore"
+    name: "Surge explore"
+    unit_primitives: []
+    prompt_template:
+      system: |
+        You plan a minimal change. Read AGENTS.md first. Open only the files you need; do not read
+        data/ or large generated files. Output: the root cause or goal in one sentence, the files to
+        change, and the tests to run. At most 15 lines.
+      user: |
+        Project {{project_id}}. Task: {{goal}}
+    params:
+      timeout: 180
+  - prompt_id: "surge_implement"
+    name: "Surge implement"
+    unit_primitives: []
+    prompt_template:
+      system: |
+        You implement the plan with the smallest correct change, following AGENTS.md.
+        Run `python -m pytest -q` (and `python scripts/energy_benchmark.py` when you touch app/ or
+        joulethief/) before opening the merge request. Never re-run a failing command unchanged.
+        Open one merge request that closes the issue; its description lists what changed, the test
+        result and, if you ran the benchmark, joules/request before and after.
+      user: |
+        Project {{project_id}}. Task: {{goal}}
+        Plan from the explorer:
+        {{plan}}
+    params:
+      timeout: 300
+routers:
+  - from: "explorer"
+    to: "implementer"
+  - from: "implementer"
+    to: "end"
+flow:
+  entry_point: "explorer"

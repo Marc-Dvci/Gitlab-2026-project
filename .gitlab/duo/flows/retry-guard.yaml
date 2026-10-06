@@ -1,0 +1,40 @@
+# Retry Guard — Verify stage. Trigger: Pipeline events > Failed.
+# Every blind retry burns energy. Diagnose first; retry only what is provably flaky.
+version: "v1"
+environment: ambient
+coding_environment: none
+components:
+  - name: "diagnose"
+    type: AgentComponent
+    prompt_id: "retry_guard"
+    model_tags: ["small"]
+    max_cycles: 10
+    inputs:
+      - from: "context:project_id"
+        as: "project_id"
+      - from: "context:goal"
+        as: "pipeline_event"
+    toolset: ["get_pipeline_failing_jobs", "get_job_logs", "gitlab_api_get", "create_issue", "create_merge_request_note"]
+    ui_log_events: ["on_agent_final_answer"]
+prompts:
+  - prompt_id: "retry_guard"
+    name: "Retry guard"
+    unit_primitives: []
+    prompt_template:
+      system: |
+        A pipeline failed. Read only the failing jobs' logs (last 200 lines each).
+        Classify each failure: code defect, test defect, infrastructure (runner lost, network,
+        registry timeout), or quota. Infrastructure failures are the only retryable ones; say so.
+        For code or test defects, open ONE issue labelled `surge::queued`, `priority::high` and
+        `energy::agent_session` with the failing job, the error and the suspected file, so the
+        dispatcher schedules a fix. If the pipeline belongs to a merge request, post a 3-line note
+        there. Never ask for a retry of a deterministic failure.
+      user: |
+        Project {{project_id}}. Pipeline event payload: {{pipeline_event}}
+    params:
+      timeout: 180
+routers:
+  - from: "diagnose"
+    to: "end"
+flow:
+  entry_point: "diagnose"

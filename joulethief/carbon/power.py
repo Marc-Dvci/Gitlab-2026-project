@@ -63,8 +63,10 @@ class CloudPowerModel:
     @staticmethod
     def embodied_g(machine_type: str, vcpus: float, hours: float) -> float:
         family = machine_type.split("-")[0]
-        host_total_kg = embodied_coefficients().get(machine_type) or max(
-            v for k, v in embodied_coefficients().items() if k.startswith(family + "-"))
+        coeffs = embodied_coefficients()
+        same_family = [v for k, v in coeffs.items() if k.startswith(family + "-")]
+        host_total_kg = coeffs.get(machine_type) or (max(same_family) if same_family else
+                                                     sorted(coeffs.values())[len(coeffs) // 2])
         host_vcpus = HOST_VCPUS.get(family, 64)
         share = min(vcpus / host_vcpus, 1.0)
         return host_total_kg * 1000.0 * share * hours / SERVER_LIFESPAN_HOURS

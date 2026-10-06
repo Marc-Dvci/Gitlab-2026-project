@@ -48,12 +48,29 @@ def cmd_grid(args) -> int:
 def cmd_tick(args) -> int:
     from .gitlab import GitLab
     from .live import LiveSignals
-    from .loop import LoopConfig, tick
+    from .loop import LoopConfig, publish_plan, tick
 
     consumer = os.environ.get("JOULE_FLOW_CONSUMER_ID")
-    cfg = LoopConfig(flow_consumer_id=int(consumer) if consumer else None, dry_run=args.dry_run)
-    report = tick(GitLab.from_env(), LiveSignals(), cfg, _now())
+    gitlab = GitLab.from_env()
+    cfg = LoopConfig(flow_consumer_id=int(consumer) if consumer else None, dry_run=args.dry_run,
+                     ref=os.environ.get("CI_DEFAULT_BRANCH", "main"))
+    report = tick(gitlab, LiveSignals(), cfg, _now())
+    if args.publish_plan and not args.dry_run:
+        publish_plan(gitlab, report)
     print(json.dumps({"plan": report.plan.to_dict(), "started": report.started, "held": report.held}, indent=2))
+    return 0
+
+
+def cmd_eco(args) -> int:
+    """Demand shaping: switch the app's eco-mode feature flag from the grid's current marginal signal."""
+    from .gitlab import GitLab
+    from .live import LiveSignals
+
+    value = LiveSignals().decision_signal(args.region, _now()).value_at(_now())
+    active = value is not None and value > args.threshold_g
+    print(f"{args.region}: {value} gCO2/kWh -> eco-mode {'ON' if active else 'OFF'} (threshold {args.threshold_g})")
+    if not args.dry_run:
+        GitLab.from_env().set_feature_flag(args.flag, active)
     return 0
 
 
@@ -78,6 +95,52 @@ def cmd_ci_energy(args) -> int:
     Ledger(Path(args.ledger)).record(entry)
     print(f"CI job: {hours * 60:.1f} min on {args.machine} in {args.region}: {energy:.4f} kWh, "
           f"{entry.attributional_g:.2f} gCO2e (attributional)")
+    return 0
+
+
+# GitLab.com hosted runner sizes (docs: "Hosted runners on Linux"); all run in GCP us-east1.
+RUNNER_PROFILES = {
+    "saas-linux-small-amd64": ("e2-standard-2", 2, 8, "us-east1"),
+    "saas-linux-medium-amd64": ("e2-standard-4", 4, 16, "us-east1"),
+    "saas-linux-large-amd64": ("n2d-standard-8", 8, 32, "us-east1"),
+    "saas-linux-small-arm64": ("t2a-standard-2", 2, 8, "us-east1"),
+    # Self-hosted always-free e2-micro in us-west1 (Oregon): 0.25 vCPU sustained, 1 GB.
+    "green-runner": ("e2-micro", 0.25, 1, "us-west1"),
+}
+
+
+def cmd_pipeline_footprint(args) -> int:
+    """Account for every job of this pipeline (including retries) from the GitLab API — one job, no per-job overhead."""
+    from .carbon.ledger import Ledger, LedgerEntry
+    from .carbon.power import CloudPowerModel
+    from .gitlab import GitLab
+    from .signals.regions import google_region_carbon
+
+    gl = GitLab.from_env()
+    jobs = gl.pipeline_jobs(args.pipeline or os.environ["CI_PIPELINE_ID"])
+    pm, regions = CloudPowerModel(), google_region_carbon()
+    ledger = Ledger(Path(args.ledger))
+    retried = 0
+    for job in jobs:
+        if not job.get("duration") or not job.get("started_at"):
+            continue
+        tags = job.get("tag_list") or []
+        profile = next((RUNNER_PROFILES[t] for t in tags if t in RUNNER_PROFILES), RUNNER_PROFILES["saas-linux-small-amd64"])
+        machine, vcpus, mem, region = profile
+        hours = job["duration"] / 3600
+        energy = pm.energy_kwh(vcpus, hours, args.utilisation, mem)
+        intensity = regions[region].grid_intensity_avg
+        embodied = pm.embodied_g(machine, vcpus, hours)
+        start = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
+        retried += bool(job.get("retried"))
+        ledger.record(LedgerEntry(job.get("web_url", job["name"]), "ci_job", region, start,
+                                  start + timedelta(seconds=job["duration"]), energy,
+                                  energy * intensity + embodied, energy * (args.marginal_g or intensity) + embodied,
+                                  signals=["google-region-carbon-2024", f"runner:{machine}"]))
+    summary = ledger.summary()
+    print(f"pipeline: {len(jobs)} jobs ({retried} retried), {summary['energy_kwh']['likely']:.4f} kWh, "
+          f"{summary['attributional_g']['likely']:.2f} gCO2e attributional")
+    Path(args.summary).write_text(json.dumps(summary, indent=2))
     return 0
 
 
@@ -146,7 +209,15 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("tick")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--publish-plan", action="store_true", help="also post the plan as an issue")
     p.set_defaults(fn=cmd_tick)
+
+    p = sub.add_parser("eco")
+    p.add_argument("--region", default=os.environ.get("JOULE_REGION", "europe-north1"))
+    p.add_argument("--flag", default="eco-mode")
+    p.add_argument("--threshold-g", type=float, default=200.0)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(fn=cmd_eco)
 
     p = sub.add_parser("ci-energy")
     p.add_argument("--machine", default="e2-standard-2")
@@ -158,6 +229,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--minutes", type=float, default=5.0, help="fallback when CI_JOB_STARTED_AT is unset")
     p.add_argument("--ledger", default="ledger.jsonl")
     p.set_defaults(fn=cmd_ci_energy)
+
+    p = sub.add_parser("pipeline-footprint")
+    p.add_argument("--pipeline", default="")
+    p.add_argument("--utilisation", type=float, default=0.6)
+    p.add_argument("--marginal-g", type=float, default=None)
+    p.add_argument("--ledger", default="ledger.jsonl")
+    p.add_argument("--summary", default="footprint-summary.json")
+    p.set_defaults(fn=cmd_pipeline_footprint)
 
     p = sub.add_parser("footprint")
     p.add_argument("--trace", required=True)
