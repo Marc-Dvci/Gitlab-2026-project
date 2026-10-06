@@ -3,6 +3,8 @@
 **Just-in-time Orchestration Using Leftover Energy** — hands-off agents that run the post-code
 lifecycle on the energy the grid throws away. *The backlog is a battery.*
 
+![A real week of the Spanish grid replayed hands-off: work waits through the evening and runs in the surplus hours](docs/img/battery-replay.png)
+
 A [joule thief](https://en.wikipedia.org/wiki/Joule_thief) is a little circuit that squeezes the last
 energy out of batteries everyone else considers dead. Joule Thief does the same with electricity
 grids: GitLab Duo agents and pipelines do their deferrable work (dependency upgrades, test
@@ -64,7 +66,8 @@ price→marginal knee anywhere from 20 to 80 €/MWh, hands-off still cuts Spani
 
 [Full results](docs/results/autonomy_dividend.md) · [Average vs marginal by region](docs/results/region_ledgers.md) ·
 [Design](docs/DESIGN.md) · [Methodology](docs/METHODOLOGY.md) · [Data sources](docs/DATA_SOURCES.md) ·
-[Setup at $0](docs/SETUP.md) · [Demo script](docs/DEMO.md) · [Carbon receipt spec](docs/RECEIPT.md)
+[Setup at $0](docs/SETUP.md) · [Demo script & video](docs/DEMO.md) · [Carbon receipt spec](docs/RECEIPT.md) ·
+[Submission text](docs/SUBMISSION.md)
 
 ## For judges: where to look
 
