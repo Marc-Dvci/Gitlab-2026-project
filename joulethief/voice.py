@@ -91,11 +91,15 @@ def energy_check(gate, target_branch: str, reviewer: str) -> str:
     return "\n".join(lines)
 
 
+def shipped_marker(sha: str) -> str:
+    return f"<!-- joule:shipped:{sha} -->"
+
+
 def shipped(mr_ref: str, sha: str, region: str, deployed: bool, footprint: dict, receipt: dict | None,
             canary: dict | None, tag: str = "") -> str:
     """The closing note on an issue, from the pipeline's own artifacts (numbers verbatim, ranges kept)."""
     where = f"is live in {region_label(region)}" + (f" as `{tag}`" if tag else "") if deployed else "is merged (not deployed)"
-    lines = [f"**@grid · Shipped** — {mr_ref} (`{sha[:8]}`) {where}. What it cost, likely (low–high):", "",
+    lines = [shipped_marker(sha), f"**@grid · Shipped** — {mr_ref} (`{sha[:8]}`) {where}. What it cost, likely (low–high):", "",
              "| | Value |", "|---|---:|",
              f"| Pipeline energy (kWh) | {_range(footprint.get('energy_kwh'), 4)} |",
              f"| Attributional gCO₂e (location-based) | {_range(footprint.get('attributional_g'))} |",

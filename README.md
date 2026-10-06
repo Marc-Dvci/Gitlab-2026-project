@@ -49,7 +49,7 @@ prices, cut emissions 41 % with no late work and no LLM call ([replay](docs/resu
 ```bash
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-python -m pytest -q                         # 62 tests, offline
+python -m pytest -q                         # 64 tests, offline
 python experiments/loop_replay.py           # the real loop on a real week (seconds)
 python experiments/autonomy_dividend.py     # replays real GB and Spanish grids (~2 min)
 uvicorn app.main:app                        # dashboard (press Play on the battery) + API + MCP server at /mcp

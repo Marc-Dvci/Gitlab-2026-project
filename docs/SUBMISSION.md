@@ -91,7 +91,7 @@ but the free plan covers few); the grid-window component in the CI/CD Catalog.
 
 | Criterion | Where to look |
 |---|---|
-| **Technological implementation** | 9 stages in [`.gitlab-ci.yml`](../.gitlab-ci.yml) · 4 custom Duo flows and 2 agents in [`.gitlab/duo/`](../.gitlab/duo/) · Flows API from the dispatcher and the MR energy gate ([`joulethief/loop.py`](../joulethief/loop.py), [`joulethief/cli.py`](../joulethief/cli.py)) · issue webhook ([`app/main.py`](../app/main.py)) · CP-SAT planner ([`joulethief/dispatch/optimizer.py`](../joulethief/dispatch/optimizer.py)) · Sigstore carbon receipts and gate · compliance external control (HMAC) · feature flags · metrics reports · Terraform state · CI/CD Catalog component ([`templates/grid-window`](../templates/grid-window/template.yml)) · MCP server with 7 tools · 62 offline tests |
+| **Technological implementation** | 9 stages in [`.gitlab-ci.yml`](../.gitlab-ci.yml) · 4 custom Duo flows and 2 agents in [`.gitlab/duo/`](../.gitlab/duo/) · Flows API from the dispatcher and the MR energy gate ([`joulethief/loop.py`](../joulethief/loop.py), [`joulethief/cli.py`](../joulethief/cli.py)) · issue webhook ([`app/main.py`](../app/main.py)) · CP-SAT planner ([`joulethief/dispatch/optimizer.py`](../joulethief/dispatch/optimizer.py)) · Sigstore carbon receipts and gate · compliance external control (HMAC) · feature flags · metrics reports · Terraform state · CI/CD Catalog component ([`templates/grid-window`](../templates/grid-window/template.yml)) · MCP server with 7 tools · 64 offline tests |
 | **Design: complete end-to-end workflow** | Issue template → Surge Intake → webhook tick → @grid hold → Flows API → Surge Worker MR → energy check → receipt → canary → promote → "Shipped" note. Replayed end to end on a real week: [`results/loop_replay.md`](results/loop_replay.md), and on the control room's *battery* panel |
 | **Potential impact** | A real, quantified problem (curtailment, negative prices, agentic energy) · results on real grids · net of its own footprint · an adoption path that needs no agents ([`grid-window`](../templates/grid-window/template.yml)) |
 | **Innovation** | Autonomy as a climate feature (the *carbon dividend of autonomy*) · marginal, not average, signals · the grid as a code reviewer · `git blame` for grams of CO₂ · signed carbon receipts as a deploy gate · a tool that measured itself and changed |
@@ -134,7 +134,7 @@ demand shaping through an eco-mode feature flag; energy regressions treated as b
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q                      # 62 tests, no network
+python -m pytest -q                      # 64 tests, no network
 python experiments/loop_replay.py        # the real loop on a real week, in seconds
 python experiments/net_impact.py         # does it pay back its own footprint? (~1 min)
 uvicorn app.main:app                     # http://localhost:8000 → press Play on "The backlog is a battery"

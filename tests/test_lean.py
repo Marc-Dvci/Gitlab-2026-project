@@ -41,8 +41,9 @@ def test_gate_wakes_reviewer_on_regression_or_hot_line():
 class FakeGitLabAPI:
     """Just enough of the REST API, behind the client's transport."""
 
-    def __init__(self, base_benchmark=None, changed=(), notes=(), jobs=(), mrs=(), closes=()):
+    def __init__(self, base_benchmark=None, changed=(), notes=(), jobs=(), mrs=(), closes=(), issue_notes=()):
         self.base_benchmark, self.changed, self.notes = base_benchmark, list(changed), list(notes)
+        self.issue_notes = list(issue_notes)
         self.jobs, self.mrs, self.closes = list(jobs), list(mrs), list(closes)
         self.calls = []
 
@@ -58,6 +59,7 @@ class FakeGitLabAPI:
             ("GET", "/pipelines/99/jobs"): self.jobs,
             ("GET", "/repository/commits/abcdef1234/merge_requests"): self.mrs,
             ("GET", "/merge_requests/3/closes_issues"): self.closes,
+            ("GET", "/issues/8/notes"): self.issue_notes,
         }
         if (method, path) in routes:
             return 200, json.dumps(routes[(method, path)]).encode()
@@ -129,8 +131,20 @@ def test_shipped_note_and_label(fake, tmp_path):
     assert api.posted("PUT", "/issues/8")[0]["remove_labels"] == "surge::running"
 
 
-def test_shipped_skips_blocked_delivery(fake, tmp_path):
-    api = fake(FakeGitLabAPI(jobs=[{"name": "monitor:canary-energy", "status": "failed"}],
-                             mrs=[{"iid": 3, "state": "merged"}], closes=[{"iid": 8}]))
+@pytest.mark.parametrize("failed", ["monitor:canary-energy", "verify:test"])
+def test_shipped_skips_blocked_delivery(fake, tmp_path, failed):
+    jobs = [{"name": failed, "status": "failed"}, {"name": "secret_detection", "status": "failed", "allow_failure": True}]
+    api = fake(FakeGitLabAPI(jobs=jobs, mrs=[{"iid": 3, "state": "merged"}], closes=[{"iid": 8}]))
     assert cli(["shipped"]) == 0
     assert not api.posted("POST", "/issues/8/notes")
+
+
+def test_shipped_is_idempotent_and_tolerates_allowed_failures(fake, tmp_path):
+    jobs = [{"name": "secret_detection", "status": "failed", "allow_failure": True}]
+    already = [{"id": 1, "body": voice.shipped_marker("abcdef1234") + " Shipped"}]
+    api = fake(FakeGitLabAPI(jobs=jobs, mrs=[{"iid": 3, "state": "merged"}], closes=[{"iid": 8}], issue_notes=already))
+    assert cli(["shipped"]) == 0
+    assert not api.posted("POST", "/issues/8/notes")
+    api = fake(FakeGitLabAPI(jobs=jobs, mrs=[{"iid": 3, "state": "merged"}], closes=[{"iid": 8}]))
+    assert cli(["shipped"]) == 0
+    assert "is merged (not deployed)" in api.posted("POST", "/issues/8/notes")[0]["body"]

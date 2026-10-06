@@ -269,9 +269,10 @@ def cmd_shipped(args) -> int:
 
     gl = GitLab.from_env()
     sha = os.environ["CI_COMMIT_SHA"]
-    jobs = {j["name"]: j.get("status") for j in gl.pipeline_jobs(args.pipeline or os.environ["CI_PIPELINE_ID"])
-            if not j.get("retried")}
-    blocked = [n for n in ("release:verify-receipt", "monitor:canary-energy", "monitor:promote") if jobs.get(n) == "failed"]
+    latest = [j for j in gl.pipeline_jobs(args.pipeline or os.environ["CI_PIPELINE_ID"]) if not j.get("retried")]
+    jobs = {j["name"]: j.get("status") for j in latest}
+    # Any failure that may not fail (tests, receipt gate, canary, promotion) means nothing shipped.
+    blocked = [j["name"] for j in latest if j.get("status") == "failed" and not j.get("allow_failure")]
     if blocked:
         print(f"delivery blocked by {', '.join(blocked)}: nothing shipped")
         return 0
@@ -284,6 +285,8 @@ def cmd_shipped(args) -> int:
         if mr.get("state") != "merged":
             continue
         for issue in gl.mr_closes_issues(mr["iid"]):
+            if gl.find_issue_note(issue["iid"], voice.shipped_marker(sha)):
+                continue  # this commit's note is already there (a retried job)
             note = voice.shipped(f"!{mr['iid']}", sha, args.region, deployed, footprint, receipt, canary, tag)
             if not args.dry_run:
                 gl.issue_note(issue["iid"], note)

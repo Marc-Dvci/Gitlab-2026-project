@@ -92,6 +92,11 @@ class GitLab:
     def mr_note(self, iid: int, body: str) -> dict:
         return self.request("POST", f"{self._project_path}/merge_requests/{iid}/notes", {"body": body})
 
+    def find_issue_note(self, iid: int, marker: str) -> dict | None:
+        notes = self.request("GET", f"{self._project_path}/issues/{iid}/notes",
+                             query={"per_page": 100, "sort": "desc"}) or []
+        return next((n for n in notes if marker in (n.get("body") or "")), None)
+
     def find_mr_note(self, iid: int, marker: str) -> dict | None:
         notes = self.request("GET", f"{self._project_path}/merge_requests/{iid}/notes",
                              query={"per_page": 100, "sort": "desc"}) or []
