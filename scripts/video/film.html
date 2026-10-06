@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Joule Thief film</title>
+<!--
+  Scenes for the demo video. Every scene is a pure function of time: make_video.py calls
+  enter(name, meta) once, then frame(t) for each video frame and screenshots the page, so the
+  result is identical on any machine and never drops frames. All numbers come from FILM_DATA,
+  which make_video.py builds from the repository's own results.
+-->
+<style>
+  :root { --bg: #0d1210; --panel: #151c19; --panel2: #1b2420; --ink: #eef2ef; --muted: #9aa69f; --line: #2a3530;
+          --accent: #5fcf95; --accent2: #2e8b5f; --warm: #f0a070; --danger: #ff7a7a; --surplus: rgba(95,207,149,.16);
+          --mono: "DejaVu Sans Mono", ui-monospace, Menlo, Consolas, monospace; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink);
+               font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif; }
+  #stage { position: relative; width: 1920px; height: 1080px; }
+  #brand { position: absolute; left: 72px; top: 48px; font-weight: 700; letter-spacing: .28em; font-size: 20px; color: var(--accent); }
+  #tag { position: absolute; right: 72px; top: 46px; font: 18px var(--mono); color: var(--muted); padding: 6px 14px;
+         border: 1px solid var(--line); border-radius: 999px; }
+  #tag:empty { display: none; }
+  #scene { position: absolute; inset: 120px 72px 196px 72px; }
+  #caption { position: absolute; left: 50%; bottom: 44px; transform: translateX(-50%); width: max-content; max-width: 1720px; text-align: center;
+             font-size: 32px; line-height: 1.35; padding: 12px 26px; border-radius: 12px; background: rgba(0,0,0,.55); }
+  #caption:empty { display: none; }
+  h1 { font-size: 54px; font-weight: 700; letter-spacing: -.01em; }
+  h2 { font-size: 40px; font-weight: 650; }
+  .muted { color: var(--muted); }
+  .mono { font-family: var(--mono); }
+  .accent { color: var(--accent); }
+  .warm { color: var(--warm); }
+  svg text { font-family: Inter, "Segoe UI", system-ui, sans-serif; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 28px 32px; }
+  .pill { display: inline-block; font: 20px var(--mono); padding: 4px 12px; border-radius: 999px; margin: 0 8px 8px 0;
+          background: var(--panel2); border: 1px solid var(--line); color: var(--muted); }
+  .pill.on { color: var(--accent); border-color: var(--accent2); }
+  .pill.crit { color: var(--danger); border-color: var(--danger); }
+  .entry { display: grid; grid-template-columns: 170px 1fr; gap: 18px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 25px; line-height: 1.4; }
+  .entry time { font: 22px var(--mono); color: var(--muted); padding-top: 3px; }
+  .who { font-weight: 700; color: var(--accent); margin-right: 8px; }
+  .who.crit { color: var(--danger); }
+  .who.ship { color: var(--ink); }
+  b { font-weight: 700; }
+  code { font-family: var(--mono); font-size: .88em; }
+  .node { position: absolute; width: 380px; min-height: 170px; padding: 22px 24px; border-radius: 16px; background: var(--panel);
+          border: 2px solid var(--line); }
+  .node .n { font: 18px var(--mono); color: var(--muted); }
+  .node .t { font-size: 29px; font-weight: 700; margin: 6px 0 8px; }
+  .node .d { font-size: 21px; color: var(--muted); line-height: 1.35; }
+  .node.hot { border-color: var(--accent); box-shadow: 0 0 0 6px rgba(95,207,149,.12); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+  .kpi b { display: block; font-size: 76px; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .kpi span { font-size: 24px; color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; font-size: 23px; }
+  td { padding: 9px 8px; border-top: 1px solid var(--line); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  pre { font: 21px/1.45 var(--mono); white-space: pre-wrap; color: var(--ink); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="brand">JOULE THIEF</div>
+  <div id="tag"></div>
+  <div id="scene"></div>
+  <div id="caption"></div>
+</div>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => { x = clamp01(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const span = (t, a, b) => clamp01((t - a) / Math.max(b - a, 1e-6));  // 0→1 between seconds a and b
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`(.+?)`/g, "<code>$1</code>");
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs = {}, parent = null, html = null) {
+  const svgTags = ["svg", "path", "rect", "line", "text", "g", "circle", "polyline", "defs", "marker"];
+  const e = svgTags.includes(tag) ? document.createElementNS(NS, tag) : document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (html != null) e.innerHTML = html;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+let D = null, S = null, M = null;
+
+function caption(t) {
+  const c = (M.captions || []).find(c => t >= c.start && t < c.end);
+  $("caption").textContent = c ? c.text : "";
+}
+
+/* ───────────── scenes: each returns {update(t)}; meta.duration is the scene length (s) ───────────── */
+const SCENES = {
+  "cold-open"(m) {
+    const root = $("scene"), p = D.prices;
+    el("h1", {}, root, "Spain · day-ahead electricity price");
+    el("div", {class: "muted", style: "font-size:28px;margin-top:8px"}, root, `${esc(p.day)} · Madrid time · €/MWh · source: OMIE`);
+    const W = 1776, H = 600, L = 90, R = 30, T = 40, B = 60;
+    const svg = el("svg", {width: W, height: H, style: "margin-top:24px"}, root);
+    const lo = -8, hi = Math.max(...p.values.map(v => v.v)) + 6;
+    const x = (h) => L + (W - L - R) * h / 24, y = (v) => T + (H - T - B) * (hi - v) / (hi - lo);
+    p.values.filter(v => v.v <= 0).forEach(v => el("rect", {x: x(v.h), y: T, width: x(1) - x(0), height: H - T - B, fill: css("--surplus"), class: "band", opacity: 0}, svg));
+    el("line", {x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: css("--line"), "stroke-width": 2}, svg);
+    [0, 6, 12, 18, 24].forEach(h => el("text", {x: x(h), y: H - 18, "font-size": 24, fill: css("--muted"), "text-anchor": "middle"}, svg, `${String(h).padStart(2, "0")}:00`));
+    [0, 20].forEach(v => el("text", {x: L - 16, y: y(v) + 8, "font-size": 22, fill: css("--muted"), "text-anchor": "end"}, svg, v));
+    const pts = []; p.values.forEach(v => { pts.push([x(v.h), y(v.v)], [x(v.h + 1), y(v.v)]); });
+    const path = el("path", {d: "M" + pts.map(q => q.join(",")).join("L"), fill: "none", stroke: css("--accent"), "stroke-width": 5, "stroke-linejoin": "round"}, svg);
+    const len = path.getTotalLength();
+    path.setAttribute("stroke-dasharray", `${len} ${len}`);
+    const min = p.values.reduce((a, b) => b.v < a.v ? b : a);
+    const call = el("text", {x: x((p.first_surplus + p.last_surplus + 1) / 2), y: T + 125, "font-size": 50, "font-weight": 700, fill: css("--accent"), "text-anchor": "middle", opacity: 0}, svg, `lowest ${min.v.toFixed(2).replace("-", "−")} €/MWh`);
+    const note = el("text", {x: x((p.first_surplus + p.last_surplus + 1) / 2), y: T + 50, "font-size": 30, fill: css("--accent"), "text-anchor": "middle", opacity: 0}, svg,
+                    `at or below zero from ${String(p.first_surplus).padStart(2, "0")}:00 to ${String(p.last_surplus + 1).padStart(2, "0")}:00`);
+    return { update(t) {
+      const k = ease(span(t, .6, m.duration * .62));
+      path.setAttribute("stroke-dashoffset", len * (1 - k));
+      const drawnHour = k * 24;
+      svg.querySelectorAll(".band").forEach(b => b.setAttribute("opacity", +b.getAttribute("x") < x(drawnHour) ? 1 : 0));
+      call.setAttribute("opacity", ease(span(t, m.duration * .55, m.duration * .65)));
+      note.setAttribute("opacity", ease(span(t, m.duration * .62, m.duration * .72)));
+    } };
+  },
+
+  title(m) {
+    const root = $("scene");
+    const wrap = el("div", {style: "position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center"}, root);
+    const big = el("div", {style: "font-size:170px;font-weight:800;letter-spacing:-.03em"}, wrap, "Joule Thief");
+    const sub = el("div", {style: "font-size:40px;margin-top:10px", class: "muted"}, wrap,
+      "<span class=accent>J</span>ust-in-time <span class=accent>O</span>rchestration <span class=accent>U</span>sing <span class=accent>L</span>eftover <span class=accent>E</span>nergy");
+    const row = el("div", {style: "display:flex;align-items:center;gap:36px;margin-top:70px"}, wrap);
+    const bat = el("div", {style: "position:relative;width:200px;height:96px;border:5px solid var(--ink);border-radius:14px"}, row);
+    el("div", {style: "position:absolute;right:-18px;top:28px;width:12px;height:30px;background:var(--ink);border-radius:0 5px 5px 0"}, bat);
+    const fill = el("div", {style: "position:absolute;left:6px;top:6px;bottom:6px;width:0;border-radius:6px;background:var(--accent)"}, bat);
+    const tag = el("div", {style: "font-size:64px;font-weight:700"}, row, "The backlog is a battery.");
+    return { update(t) {
+      const a = ease(span(t, .2, 1.4));
+      big.style.opacity = a; big.style.transform = `translateY(${(1 - a) * 30}px)`;
+      sub.style.opacity = ease(span(t, 1.0, 2.2));
+      row.style.opacity = ease(span(t, m.duration * .5, m.duration * .6));
+      const c = span(t, m.duration * .55, m.duration * .95);  // charge, then discharge
+      fill.style.width = `${176 * (c < .6 ? c / .6 : 1 - (c - .6) / .4 * .85)}px`;
+    } };
+  },
+
+  loop(m) {
+    const root = $("scene");
+    const steps = D.loop;
+    const pos = [[0, 30], [440, 30], [880, 30], [1320, 30], [1320, 400], [880, 400], [440, 400]];
+    const svg = el("svg", {width: 1776, height: 760, style: "position:absolute;left:0;top:0"}, root);
+    const nodes = steps.map((s, i) => {
+      const n = el("div", {class: "node", style: `left:${pos[i][0]}px;top:${pos[i][1]}px`}, root,
+        `<div class=n>${i + 1} · ${esc(s.who)}</div><div class=t>${esc(s.title)}</div><div class=d>${esc(s.detail)}</div>`);
+      return n;
+    });
+    const arrows = steps.slice(1).map((_, i) => {
+      const [a, b] = [pos[i], pos[i + 1]];
+      let d;
+      if (a[1] === b[1]) { const yy = a[1] + 85, x1 = Math.min(a[0], b[0]) + 380, x2 = Math.max(a[0], b[0]);
+        d = a[0] < b[0] ? `M${x1},${yy}L${x2 - 6},${yy}` : `M${x2},${yy}L${x1 + 6},${yy}`; }
+      else d = `M${a[0] + 190},${a[1] + 175}L${b[0] + 190},${b[1] - 8}`;
+      return el("path", {d, stroke: css("--accent"), "stroke-width": 4, fill: "none", "marker-end": "url(#arr)", opacity: 0}, svg);
+    });
+    const marker = el("marker", {id: "arr", viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto"}, el("defs", {}, svg));
+    el("path", {d: "M0,0L10,5L0,10z", fill: css("--accent")}, marker);
+    const foot = el("div", {style: "position:absolute;left:0;top:640px;font-size:30px", class: "muted"}, root,
+      "After a human files the issue, <span class=accent>no one presses a button</span>: triggers, the Flows API and the grid do the rest.");
+    return { update(t) {
+      const each = (m.duration * .86) / steps.length;
+      nodes.forEach((n, i) => {
+        const a = ease(span(t, .3 + i * each, .3 + i * each + .5));
+        n.style.opacity = a; n.style.transform = `translateY(${(1 - a) * 18}px)`;
+        n.classList.toggle("hot", t >= .3 + i * each && t < .3 + (i + 1) * each);
+      });
+      arrows.forEach((a, i) => a.setAttribute("opacity", ease(span(t, .3 + (i + 1) * each - .2, .3 + (i + 1) * each + .2))));
+      foot.style.opacity = ease(span(t, m.duration * .88, m.duration * .96));
+    } };
+  },
+
+  hold(m) { return issueScene(m, D.story.hold, false); },
+  urgent(m) { return issueScene(m, D.story.urgent, true); },
+
+  battery(m) {
+    const root = $("scene"), d = D.battery, tl = d.timeline, n = tl.length;
+    el("h1", {}, root, "One real week, replayed hands-off");
+    el("div", {class: "muted", style: "font-size:26px;margin-top:6px"}, root, esc(d.subtitle));
+    const W = 1776, H = 400, L = 70, R = 10, T = 16, MID = 210, B = 362;
+    const svg = el("svg", {width: W, height: H, style: "margin-top:18px"}, root);
+    const x = (i) => L + (W - L - R) * i / (n - 1);
+    const smax = Math.max(...tl.map(p => p.signal || 0)) * 1.05;
+    const ys = (v) => T + (MID - 20 - T) * (1 - v / smax);
+    const qmax = Math.max(...tl.map(p => p.queued_kwh + p.running_kwh)) * 1.1;
+    const yq = (v) => B - (B - MID) * v / qmax;
+    const step = x(1) - x(0);
+    for (let i = 0; i < n; i++) { if (!tl[i].surplus) continue; let j = i; while (j + 1 < n && tl[j + 1].surplus) j++;
+      el("rect", {x: x(i) - step / 2, y: T, width: x(j) - x(i) + step, height: B - T, fill: css("--surplus")}, svg); i = j; }
+    el("path", {d: tl.map((p, i) => `${i ? "L" : "M"}${x(i)},${ys(p.signal || 0)}`).join(""), fill: "none", stroke: css("--accent"), "stroke-width": 3}, svg);
+    el("line", {x1: L, x2: W - R, y1: MID, y2: MID, stroke: css("--line"), "stroke-width": 2}, svg);
+    el("text", {x: 0, y: ys(smax / 1.05) + 8, "font-size": 20, fill: css("--muted")}, svg, `${(smax / 1.05).toFixed(0)} g`);
+    el("text", {x: 0, y: MID - 22, "font-size": 20, fill: css("--muted")}, svg, "0 g");
+    el("text", {x: 0, y: B, "font-size": 20, fill: css("--muted")}, svg, "kWh");
+    tl.forEach((p, i) => { if (p.t.slice(11, 16) === "12:00") el("text", {x: x(i), y: H - 6, "font-size": 24, fill: css("--muted"), "text-anchor": "middle"}, svg, p.day); });
+    const run = el("path", {fill: css("--accent"), "fill-opacity": .6}, svg);
+    const wait = el("path", {fill: css("--warm"), "fill-opacity": .7}, svg);
+    const cursor = el("line", {y1: T, y2: B, stroke: css("--ink"), "stroke-dasharray": "6 6", "stroke-width": 2}, svg);
+    const legend = el("div", {style: "display:flex;gap:40px;font-size:24px;margin-top:6px", class: "muted"}, root,
+      `<span><span class=accent>━</span> decision signal, gCO₂/kWh</span><span style="color:var(--accent)">▮</span><span style="margin-left:-30px">surplus hours (price ≤ 0)</span><span class=warm>▮</span><span style="margin-left:-30px">work waiting (battery charging)</span><span class=accent>▮</span><span style="margin-left:-30px">work running</span>`);
+    const kpis = el("div", {class: "kpis", style: "margin-top:18px"}, root);
+    const k = d.kpis.map(v => el("div", {class: "kpi"}, kpis, `<b>${esc(v.value)}</b><span>${esc(v.label)}</span>`));
+    const area = (upto, f, base) => upto < 1 ? "" : `M${x(0)},${yq(base(tl[0]))}` + tl.slice(0, upto).map((p, i) => `L${x(i)},${yq(f(p))}`).join("") +
+      tl.slice(0, upto).map((_, i) => i).reverse().map(i => `L${x(i)},${yq(base(tl[i]))}`).join("") + "Z";
+    return { update(t) {
+      const idx = Math.round(ease(span(t, .8, m.duration * .66)) * (n - 1));
+      run.setAttribute("d", area(idx + 1, p => p.running_kwh, () => 0));
+      wait.setAttribute("d", area(idx + 1, p => p.running_kwh + p.queued_kwh, p => p.running_kwh));
+      cursor.setAttribute("x1", x(idx)); cursor.setAttribute("x2", x(idx));
+      k.forEach((e, i) => e.style.opacity = ease(span(t, m.duration * (.62 + i * .07), m.duration * (.68 + i * .07))));
+    } };
+  },
+
+  verify(m) {
+    const root = $("scene"), v = D.verify;
+    el("h1", {}, root, "Measured in every merge request, gated on every release");
+    const grid = el("div", {style: "display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:28px;margin-top:34px"}, root);
+    const blame = el("div", {class: "card"}, grid, `<h2>Carbon blame</h2><div class=muted style="font-size:22px;margin:6px 0 14px">${esc(v.blame_caption)}</div>`);
+    const tb = el("table", {}, blame, `<tr><td class="num muted" style="font-size:19px">g/day</td><td class=muted style="font-size:19px">source line</td></tr>`);
+    v.blame.forEach(r => el("tr", {}, tb, `<td class=num>${esc(r.g)}</td><td class=mono style="font-size:20px">${esc(r.where)}</td>`));
+    const rec = el("div", {class: "card"}, grid, `<h2>Carbon receipt</h2><div class=muted style="font-size:22px;margin:6px 0 14px">in-toto predicate, signed with Sigstore</div>`);
+    el("pre", {}, rec, esc(v.receipt));
+    const gate = el("div", {class: "card"}, grid, `<h2>Gates</h2>`);
+    v.gates.forEach(g => el("div", {style: "font-size:25px;line-height:1.4;margin-top:18px"}, gate, `<span class=accent>✔</span> ${md(g)}`));
+    const cards = [blame, rec, gate];
+    return { update(t) { cards.forEach((c, i) => { const a = ease(span(t, .3 + i * m.duration * .25, .9 + i * m.duration * .25));
+      c.style.opacity = a; c.style.transform = `translateY(${(1 - a) * 20}px)`; }); } };
+  },
+
+  dividend(m) {
+    const root = $("scene"), d = D.dividend;
+    el("h1", {}, root, "The carbon dividend of autonomy");
+    el("div", {class: "muted", style: "font-size:26px;margin-top:6px"}, root, "Same work, same deadlines, real grids, no look-ahead. Emissions as a share of running work when filed.");
+    const rows = el("div", {style: "margin-top:30px;display:grid;gap:30px"}, root);
+    const bars = [];
+    d.rows.forEach(r => {
+      const row = el("div", {style: "display:grid;grid-template-columns:330px 1fr 330px;gap:28px;align-items:center"}, rows);
+      el("div", {style: "font-size:28px;font-weight:650"}, row, `${esc(r.grid)}<div class=muted style="font-size:21px;font-weight:400">${esc(r.signal)}</div>`);
+      const box = el("div", {}, row);
+      [["run now", 1, "#3a4842", ""], ["supervised", r.supervised, "var(--warm)", `${r.late_supervised} late`], ["hands-off", r.hands_off, "var(--accent)", `${r.late_hands_off} late`]].forEach(([label, share, color, late]) => {
+        const line = el("div", {style: "display:grid;grid-template-columns:150px 1fr;align-items:center;gap:12px;margin:4px 0"}, box);
+        el("div", {class: "muted", style: "font-size:21px"}, line, label);
+        const bar = el("div", {style: `height:30px;border-radius:6px;background:${color};width:0;font:19px var(--mono);color:${label === "run now" ? "var(--ink)" : "var(--bg)"};padding:3px 10px;white-space:nowrap;overflow:hidden`}, line);
+        const text = el("span", {style: "opacity:0"}, bar, `${(share * 100).toFixed(1)}%${late ? " · " + late : ""}`);
+        bars.push([bar, share, text]);
+      });
+      el("div", {}, row, `<div style="font-size:64px;font-weight:800;color:var(--accent)">${(r.dividend * 100).toFixed(1)}%</div><div class=muted style="font-size:21px">dividend · ${esc(r.range)} over 5 backlogs</div>`);
+    });
+    return { update(t) { const a = ease(span(t, .5, m.duration * .5));
+      bars.forEach(([b, s, txt]) => { b.style.width = `${a * s * 100}%`; txt.style.opacity = clamp01((a - .75) / .25); });
+      rows.style.opacity = ease(span(t, .1, .7)); } };
+  },
+
+  margin(m) {
+    const root = $("scene"), d = D.regions;
+    el("h1", {}, root, "Averages lie: decide on the margin");
+    el("div", {class: "muted", style: "font-size:26px;margin-top:6px"}, root, "gCO₂ per kWh · average: Google 2024 · marginal (what one more kWh causes): GSF Real Time Cloud, annual");
+    const box = el("div", {style: "margin-top:30px;display:grid;gap:16px"}, root);
+    const max = Math.max(...d.map(r => r.marginal));
+    const items = d.map(r => {
+      const row = el("div", {style: "display:grid;grid-template-columns:470px 1fr 150px;gap:24px;align-items:center"}, box);
+      el("div", {style: `font-size:27px;${r.highlight ? "color:var(--accent);font-weight:700" : ""}`}, row, `${esc(r.city)} <span class=muted style="font-size:20px">${esc(r.region)}</span>`);
+      const bars = el("div", {}, row);
+      const a = el("div", {style: "height:22px;background:var(--muted);border-radius:4px;width:0;margin:3px 0"}, bars);
+      const b = el("div", {style: "height:22px;background:var(--warm);border-radius:4px;width:0;margin:3px 0"}, bars);
+      const ratio = el("div", {style: `font-size:${r.highlight ? 44 : 28}px;font-weight:800;color:${r.highlight ? "var(--warm)" : "var(--muted)"}`}, row, `${r.ratio.toFixed(r.ratio < 10 ? 1 : 0)}×`);
+      return [r, a, b, ratio];
+    });
+    el("div", {class: "muted", style: "font-size:23px;margin-top:22px"}, root, "<span style='color:var(--muted)'>▮</span> average  <span class=warm>▮</span> marginal");
+    return { update(t) { const k = ease(span(t, .4, m.duration * .55));
+      items.forEach(([r, a, b, ratio], i) => { const q = ease(span(t, .3 + i * .15, m.duration * .55 + i * .15));
+        a.style.width = `${q * r.average / max * 100}%`; b.style.width = `${q * r.marginal / max * 100}%`; ratio.style.opacity = q; });
+      box.style.opacity = k > 0 ? 1 : 0; } };
+  },
+
+  end(m) {
+    const root = $("scene"), e = D.end;
+    const wrap = el("div", {style: "position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center"}, root);
+    const big = el("div", {style: "font-size:130px;font-weight:800;letter-spacing:-.03em"}, wrap, "Joule Thief");
+    const line = el("div", {style: "font-size:40px;margin-top:6px"}, wrap, "<span class=accent>You touched nothing. The grid did the timing.</span>");
+    const card = el("div", {class: "card", style: "margin-top:56px;text-align:left"}, wrap,
+      `<div class=muted style="font-size:24px;margin-bottom:10px">Try it in 60 seconds, no accounts</div><pre style="font-size:30px">${esc(e.command)}</pre>`);
+    const url = el("div", {style: "font: 30px var(--mono);margin-top:36px", class: "muted"}, wrap, esc(e.url));
+    const foot = el("div", {class: "muted", style: "font-size:24px;margin-top:18px"}, wrap, esc(e.footer));
+    return { update(t) { [big, line, card, url, foot].forEach((x, i) => x.style.opacity = ease(span(t, .2 + i * .45, .8 + i * .45))); } };
+  },
+};
+
+function issueScene(m, s, critical) {
+  const root = $("scene");
+  const grid = el("div", {style: "display:grid;grid-template-columns:1.45fr 1fr;gap:36px;height:100%"}, root);
+  const card = el("div", {class: "card"}, grid);
+  el("div", {class: "muted", style: "font:22px var(--mono)"}, card, `Issue #${s.iid} · ${esc(s.where)}`);
+  el("h1", {style: "margin:6px 0 14px;font-size:48px"}, card, esc(s.title));
+  const pills = el("div", {}, card);
+  s.labels.forEach(l => el("span", {class: "pill " + (l.includes("critical") ? "crit" : "")}, pills, esc(l)));
+  const state = el("span", {class: "pill on"}, pills, "surge::queued");
+  const entries = s.events.map(ev => {
+    const who = ev.kind === "shipped" ? "<span class='who ship'>Shipped</span>" :
+                ev.kind === "flow" || ev.kind === "pipeline" ? "<span class=who>Dispatcher</span>" :
+                ev.kind === "filed" ? "<span class=who style='color:var(--ink)'>Human</span>" :
+                `<span class='who ${critical ? "crit" : ""}'>@grid</span>`;
+    return el("div", {class: "entry"}, card, `<time>${esc(ev.local)}</time><div>${who}${md(ev.text)}</div>`);
+  });
+  const side = el("div", {class: "card"}, grid);
+  el("h2", {}, side, "What the grid did");
+  el("div", {class: "muted", style: "font-size:22px;margin:4px 0 10px"}, side, esc(s.signal_label));
+  const W = 640, H = 420, L = 10, R = 10, T = 16, B = 40, pts = s.signal;
+  const svg = el("svg", {width: W, height: H}, side);
+  const vmax = Math.max(...pts.map(p => p.v)) * 1.08;
+  const x = (i) => L + (W - L - R) * i / Math.max(pts.length - 1, 1), y = (v) => T + (H - T - B) * (1 - v / vmax);
+  const step = x(1) - x(0);
+  pts.forEach((p, i) => { if (p.surplus) el("rect", {x: x(i) - step / 2, y: T, width: step + .6, height: H - T - B, fill: css("--surplus")}, svg); });
+  el("path", {d: pts.map((p, i) => `${i ? "L" : "M"}${x(i)},${y(p.v)}`).join(""), fill: "none", stroke: css("--accent"), "stroke-width": 3}, svg);
+  const marks = s.marks.map(mk => { const g = el("g", {opacity: 0}, svg);
+    el("line", {x1: x(mk.i), x2: x(mk.i), y1: T, y2: H - B, stroke: mk.color === "warm" ? css("--warm") : mk.color === "danger" ? css("--danger") : css("--ink"), "stroke-width": 3, "stroke-dasharray": "8 6"}, g);
+    el("text", {x: x(mk.i) + (mk.i > pts.length * .7 ? -8 : 8), y: H - 12, "font-size": 20, fill: css("--ink"), "text-anchor": mk.i > pts.length * .7 ? "end" : "start"}, g, esc(mk.label));
+    return [g, mk]; });
+  return { update(t) {
+    let shown = 0;
+    entries.forEach((e, i) => { const at = s.events[i].at * m.duration; const a = ease(span(t, at, at + .5));
+      e.style.opacity = a; e.style.transform = `translateX(${(1 - a) * 24}px)`; if (t >= at) shown = i; });
+    state.textContent = s.events[shown].state;
+    marks.forEach(([g, mk]) => g.setAttribute("opacity", ease(span(t, mk.at * m.duration, mk.at * m.duration + .5))));
+  } };
+}
+
+function enter(name, meta, data) {
+  D = data; M = meta;
+  $("scene").innerHTML = ""; $("caption").textContent = "";
+  $("tag").textContent = meta.tag || "";
+  S = SCENES[name](meta);
+}
+function frame(t) { S.update(t); caption(t); }
+</script>
+</body>
+</html>

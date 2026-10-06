@@ -31,6 +31,28 @@ about a second. The transcript is committed as [`results/hands_off_replay.md`](r
 NESO instead. Use it to rehearse the narration, and as the fallback shot (labelled "replay") if the live
 grid is dull on recording day.
 
+## Render the video: `scripts/video/make_video.py`
+
+The video is generated, not edited by hand. Scenes are HTML (`scripts/video/film.html`), drawn as a
+pure function of time and screenshotted frame by frame, so every run gives the same cut. The numbers
+come from `docs/results` and from the CLI's own output (carbon blame, a freshly built receipt), and scene
+lengths follow the narration. Captions are burned in and also written as `.srt` for YouTube.
+
+```bash
+pip install -r requirements-video.txt && playwright install chromium   # plus ffmpeg on PATH
+python scripts/video/make_video.py                    # edge-tts → build/video/joule-thief.mp4 + .srt (~10 min)
+python scripts/video/make_video.py --voice en-GB-SoniaNeural --rate=-5%
+python scripts/video/make_video.py --tts kokoro --kokoro-dir ~/kokoro   # offline open-weights voice
+python scripts/video/make_video.py --clip hold=rec/issue-10.mp4 --clip loop=rec/flow-session.mp4
+python scripts/video/make_video.py --stills-only --still title@14 --still battery   # cover and README images
+```
+
+The narration lives at the top of `make_video.py` (the grid speaks in the first person, about 420 words,
+just under three minutes). Once the project runs on GitLab, record the real thing (Surge Intake labelling
+an issue, @grid's note, the Duo flow session, the MR widget, `cosign verify-attestation`) and pass the
+recordings with `--clip scene=file`. They replace that scene's picture and keep its narration. Judges
+weigh real Duo Agent Platform footage most, so swap in at least `hold` and `loop`.
+
 ## Seeded backlog (disclosed)
 
 To show the full loop on camera, the app contains one deliberate inefficiency, documented in

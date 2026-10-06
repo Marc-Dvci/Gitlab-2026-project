@@ -1,0 +1,6 @@
+# Demo video only (python scripts/video/make_video.py); also needs ffmpeg and `playwright install chromium`.
+-r requirements-dev.txt
+playwright==1.56.0
+edge-tts==7.2.8
+# Optional offline voice (--tts kokoro): pip install kokoro-onnx==0.6.1 soundfile==0.14.0, plus the model files
+# kokoro-v1.0.onnx (or .int8.onnx) and voices-v1.0.bin from github.com/thewh1teagle/kokoro-onnx/releases.
