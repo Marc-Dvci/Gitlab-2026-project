@@ -8,6 +8,7 @@
     joule footprint --trace trace.jsonl      # SCI for AI of a Duo session trace
     joule energy-gate                        # MR energy check; wakes the Carbon Reviewer only on a regression
     joule shipped                            # carbon balance on the issues a pipeline delivered (no LLM)
+    joule window --deadline 12h --jobs ci/nightly.yml   # hold deferrable CI jobs for the grid window
 """
 
 from __future__ import annotations
@@ -234,6 +235,28 @@ def cmd_energy_gate(args) -> int:
     return 0
 
 
+def cmd_window(args) -> int:
+    """Cleanest start for deferrable CI work before a deadline; with --jobs, the delayed child pipeline too."""
+    from . import voice
+    from .live import LiveSignals
+    from .window import child_pipeline, choose, parse_duration
+
+    sig = LiveSignals()
+    try:
+        signal = sig.decision_signal(args.region, _now())
+    except Exception as err:  # noqa: BLE001 — never block a pipeline on a grid API: no signal, run now
+        print(f"grid signal unavailable ({type(err).__name__}): running now", file=sys.stderr)
+        signal = sig.flat(args.region, _now())
+    window = choose(signal, args.region, _now(), parse_duration(args.duration), parse_duration(args.deadline))
+    report = json.dumps(window.to_dict(), indent=2)
+    print(report)
+    Path(args.report).write_text(report)
+    if args.jobs:
+        Path(args.out).write_text(child_pipeline(Path(args.jobs).read_text(), window, voice.region_label(args.region)))
+        print(f"wrote {args.out}: {args.jobs} held {window.wait.total_seconds() / 60:.0f} min")
+    return 0
+
+
 def _read_json(path: str) -> dict | None:
     return json.loads(Path(path).read_text()) if path and Path(path).exists() else None
 
@@ -346,6 +369,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--tolerance", type=float, default=float(os.environ.get("JOULE_ENERGY_TOLERANCE", "0.2")))
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(fn=cmd_energy_gate)
+
+    p = sub.add_parser("window")
+    p.add_argument("--region", default=os.environ.get("JOULE_REGION", "europe-north1"))
+    p.add_argument("--duration", default="30m", help="expected run time, e.g. 45m")
+    p.add_argument("--deadline", default="12h", help="must finish within, e.g. 12h or 1d")
+    p.add_argument("--jobs", default="", help="CI file with the deferrable jobs: write the delayed child pipeline")
+    p.add_argument("--out", default="grid-window-child.yml")
+    p.add_argument("--report", default="grid-window.json")
+    p.set_defaults(fn=cmd_window)
 
     p = sub.add_parser("shipped")
     p.add_argument("--pipeline", default="")

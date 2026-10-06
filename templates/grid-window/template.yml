@@ -1,0 +1,50 @@
+spec:
+  description: >-
+    Joule Thief grid window: run deferrable jobs (nightly matrix, fuzzing, full scans) at the cleanest
+    start before a deadline. A planning job reads the grid's decision signal and holds a child pipeline
+    with your jobs behind a delayed job until the window opens. No agents, no extra infrastructure.
+  inputs:
+    jobs:
+      description: CI file with the deferrable jobs, e.g. ci/nightly.yml. They run in a child pipeline held until the window opens.
+    deadline:
+      description: >-
+        The jobs must finish within this time, e.g. 12h or 1d (GitLab holds a pipeline for at most 7 days).
+        In solar grids, 24h lets an evening pipeline reach the next midday.
+      default: 24h
+    duration:
+      description: Expected run time of the jobs, e.g. 45m.
+      default: 30m
+    region:
+      description: >-
+        Google Cloud region whose grid your runners draw from. European regions use day-ahead prices
+        (europe-north1, europe-west1/3/4/9, europe-southwest1, ...) and europe-west2 the NESO forecast, both
+        free and time-varying; elsewhere only an annual figure is known, so the jobs run at once.
+    stage:
+      description: Stage of the planning and trigger jobs.
+      default: test
+    image:
+      description: Image with Python 3.11+ and the joulethief package (the Joule Thief app image works).
+      default: registry.gitlab.com/REPLACE-WITH-YOUR-GROUP/joule-thief/app:latest
+---
+"grid-window:plan":
+  stage: $[[ inputs.stage ]]
+  image: $[[ inputs.image ]]
+  variables:
+    GIT_DEPTH: "1"
+  script:
+    - >
+      python -m joulethief.cli window --region "$[[ inputs.region ]]" --duration "$[[ inputs.duration ]]"
+      --deadline "$[[ inputs.deadline ]]" --jobs "$[[ inputs.jobs ]]"
+      --out grid-window-child.yml --report grid-window.json
+  artifacts:
+    paths: [grid-window-child.yml, grid-window.json]
+    expire_in: 1 week
+
+"grid-window:run":
+  stage: $[[ inputs.stage ]]
+  needs: ["grid-window:plan"]
+  trigger:
+    include:
+      - artifact: grid-window-child.yml
+        job: "grid-window:plan"
+    strategy: depend

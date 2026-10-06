@@ -47,11 +47,31 @@ uvicorn app.main:app                        # dashboard + API + MCP server at /m
 python -m joulethief.cli grid europe-north1 # live decision signal (needs internet)
 ```
 
+## Use the grid window in your own project
+
+No agents, no cloud: one CI/CD Catalog component holds your deferrable jobs (nightly matrix, fuzzing,
+full scans) until the cleanest start before a deadline, as a child pipeline behind a `when: delayed` job.
+
+```yaml
+include:
+  - component: gitlab.com/<group>/joule-thief/grid-window@<version>
+    inputs:
+      jobs: ci/nightly.yml     # your deferrable jobs, unchanged
+      region: europe-north1    # where your runners draw power
+      deadline: 24h
+      duration: 45m
+```
+
+On real Spanish prices, a 45-minute pipeline scheduled at 02:00 on 13 May 2025 waits 9 h for the
+11:00 solar surplus: 98 % less carbon. With no live signal for the region, it runs at once.
+Details: [`templates/grid-window/template.yml`](templates/grid-window/template.yml).
+
 ## Layout
 
 ```
 joulethief/   signals · dispatch · carbon · receipts · blame · gitlab · loop · voice · mcp_server · cli
-app/          Cloud Run control room (FastAPI) with eco-mode and the MCP server mounted at /mcp
+app/          Cloud Run control room (FastAPI): battery replay, eco-mode, issue webhook, MCP server at /mcp
+templates/    CI/CD Catalog component `grid-window` (joulethief/window.py)
 .gitlab/duo/  custom flows (surge-intake, surge-worker, carbon-reviewer, retry-guard), Surge Request issue template,
               custom agents (@grid, carbon-accountant), MCP client config
 .gitlab-ci.yml  plan · verify · test · secure · package · release · configure · monitor · govern

@@ -114,7 +114,20 @@ Secure → Compliance center → Frameworks → New framework "Carbon budget" �
 **external control** (URL: the Cloud Run `/healthz`, HMAC secret: generate one, ping disabled).
 Note its id → `JOULE_CONTROL_ID`, secret → `JOULE_CONTROL_SECRET`. `govern:footprint` reports pass/fail.
 
-## 8. Free-tier guardrails
+## 8. Publish the grid-window component (optional)
+
+Replace `REPLACE-WITH-YOUR-GROUP` in `templates/grid-window/template.yml` with the project's registry path
+(the `image` default; the app image already contains `joulethief`). Then Settings → General → Visibility →
+turn on **CI/CD Catalog project**, and create a release with a semantic-version tag (e.g. `1.0.0`). To try
+it in this project first, include it at the current commit from a scheduled pipeline:
+
+```yaml
+include:
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/grid-window@$CI_COMMIT_SHA
+    inputs: { jobs: ci/nightly.yml, region: europe-north1, deadline: 24h, duration: 30m }
+```
+
+## 9. Free-tier guardrails
 
 | Service | Free allowance | Joule Thief usage |
 |---|---|---|
