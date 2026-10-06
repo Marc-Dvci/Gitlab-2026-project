@@ -172,5 +172,5 @@ def test_mcp_tools_registered():
 
     tools = asyncio.run(server.list_tools())
     names = {t.name for t in tools}
-    assert {"grid_signal", "plan_work", "estimate_agent_footprint", "explain_region", "check_carbon_receipt",
+    assert {"grid_signal", "best_window", "plan_work", "estimate_agent_footprint", "explain_region", "check_carbon_receipt",
             "autonomy_dividend"} <= names

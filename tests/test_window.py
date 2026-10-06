@@ -68,3 +68,24 @@ def test_component_template_is_well_formed():
     assert "joulethief.cli window" in plan["script"][0] and "grid-window-child.yml" in plan["artifacts"]["paths"]
     assert run["trigger"]["include"][0] == {"artifact": "grid-window-child.yml", "job": "grid-window:plan"}
     assert run["trigger"]["strategy"] == "depend" and run["needs"] == ["grid-window:plan"]
+
+
+def test_watttime_moer_is_used_when_configured(monkeypatch):
+    import json as _json
+
+    from joulethief.live import LiveSignals
+
+    def fetch(url, headers):
+        if url.endswith("/login"):
+            return _json.dumps({"token": "t"})
+        assert "region=BPA" in url and headers["Authorization"] == "Bearer t"
+        data = [{"point_time": (T0 + i * timedelta(minutes=5)).isoformat(), "value": 1000.0 - i} for i in range(24)]
+        return _json.dumps({"meta": {"units": "lbs_co2_per_mwh", "data_point_period_seconds": 300}, "data": data})
+
+    monkeypatch.setenv("JOULE_WATTTIME_USERNAME", "u")
+    monkeypatch.setenv("JOULE_WATTTIME_PASSWORD", "p")
+    monkeypatch.setenv("JOULE_WATTTIME_REGIONS", "us-west1=BPA")
+    s = LiveSignals(fetch=fetch, load_gsf=False).decision_signal("us-west1", T0)
+    assert s.metric == "carbon_intensity_marginal" and s.value_at(T0) == pytest.approx(1000 * 0.45359237)
+    flat = LiveSignals(fetch=fetch, load_gsf=False).decision_signal("us-east1", T0)  # not mapped: annual figure
+    assert flat.kind == "derived"

@@ -66,6 +66,23 @@ def grid_signal(region: str, hours: int = 24) -> dict:
 
 
 @server.tool()
+def best_window(region: str, duration_minutes: float = 30, deadline_hours: float = 24) -> dict:
+    """When should this run? The cleanest start for one job of the given duration that still finishes
+    before the deadline, from the region's decision signal (only hours already published or forecast)."""
+    from .window import choose
+
+    if region not in REGIONS:
+        return {"error": f"unknown region {region}", "known": sorted(REGIONS)}
+    now = datetime.now(timezone.utc)
+    try:
+        signal = _signals.decision_signal(region, now)
+    except Exception:  # noqa: BLE001 — source down: the annual figure, i.e. "no reason to wait"
+        signal = _signals.flat(region, now)
+    window = choose(signal, region, now, timedelta(minutes=duration_minutes), timedelta(hours=deadline_hours))
+    return window.to_dict()
+
+
+@server.tool()
 def plan_work(jobs: list[dict], regions: list[str], horizon_hours: int = 36, capacity: int = 3) -> dict:
     """Plan deferrable jobs. Each job: {id, minutes, power_kw, priority (critical|high|normal|low)}.
     Returns start time and region per job, expected grams and the run-now baseline."""
