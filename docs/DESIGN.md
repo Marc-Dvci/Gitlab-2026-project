@@ -101,8 +101,8 @@ marginal and surplus signals, and why every claim of *avoided* emissions is cons
             │            image · carbon receipt (Sigstore) · receipt gate · │
             │            Cloud Run canary · energy-regression gate ·        │
             │            promote · release · footprint ledger · compliance │
-            │ Carbon Reviewer flow on MR · Retry Guard on failed pipeline  │
-            │ Release Captain posts the carbon balance on the closed issue │
+            │ MR energy check (no LLM) → Carbon Reviewer only on regression │
+            │ Retry Guard on failed pipeline · `joule shipped` closes issues│
             └───────────────────────────────────────────────────────────────┘
                        │ MCP (streamable HTTP)            ▲ feature flag eco-mode
                        ▼                                  │
@@ -124,13 +124,13 @@ directly with `POST /ai/duo_workflows/workflows` (`start_workflow: true`,
 |---|---|---|
 | **Plan** | Surge Intake flow triages; dispatcher plans on the grid; plan published as an issue; @grid comments | Custom flow (Work item trigger), labels, issues, Flows API, schedules |
 | **Create** | Surge Worker flow implements the issue in a clean window; small→large model routing; loop caps as token budget | Custom flow (`model_tags`, `max_cycles`), Flows API, MR |
-| **Verify** | Tests; energy benchmark with joules/request as a **metrics report**; carbon blame artifact; Carbon Reviewer flow; Retry Guard on failures; deferred test matrix | CI, metrics reports, `expose_as`, MR-created and pipeline-failed triggers |
+| **Verify** | Tests; energy benchmark with joules/request as a **metrics report**; carbon blame artifact; deterministic MR energy check that starts the Carbon Reviewer flow only on a regression; Retry Guard on failures; deferred test matrix | CI, metrics reports, `expose_as`, Flows API, pipeline-failed trigger |
 | **Package** | Slim image; push to GitLab registry and Artifact Registry; container scanning; registry cleanup | Container registry, Container Scanning |
 | **Secure** | SAST, secret detection, dependency scanning; heavy scans deferred to clean windows | Security templates, vulnerability report |
 | **Release** | Carbon receipt signed keylessly (Sigstore + GitLab OIDC); **receipt gate**; Cloud Run canary; GitLab release | id_tokens, cosign, environments, releases (evidence) |
 | **Configure** | OpenTofu with GitLab-managed state; eco-mode feature flag flipped from the grid signal (demand shaping) | Terraform state, Feature Flags (Unleash API), schedules |
 | **Monitor** | Canary vs production joules/request; energy regression blocks promotion and opens an incident issue | Environments, deployments, issues |
-| **Govern** | Pipeline-wide footprint ledger (one job, all jobs incl. retries); carbon budget reported as a compliance **external control**; audit artifacts | Compliance centre external controls (HMAC API), artifacts |
+| **Govern** | Pipeline-wide footprint ledger (one job, all jobs incl. retries); carbon budget reported as a compliance **external control**; "Shipped" note with the carbon balance on every delivered issue; audit artifacts | Compliance centre external controls (HMAC API), artifacts |
 
 ## 7. Engineering that few teams can do
 
@@ -163,9 +163,19 @@ directly with `POST /ai/duo_workflows/workflows` (`start_workflow: true`,
 
 ## 8. Sustainability practices in the design itself
 
-- **Deterministic first, LLM last.** @grid messages, plans, footprints and receipts involve no LLM.
-- **Model routing.** Every flow component declares `model_tags`; triage, review, retry diagnosis and
-  release notes use the small model; only implementation uses the large one.
+- **Measured against itself.** [`results/net_impact.md`](results/net_impact.md) charges everything Joule
+  Thief adds (dispatcher ticks measured, LLM sessions, accounting CI jobs) at the marginal rate and sets it
+  against what dispatch saves. The first version cost 19 LLM calls and ~10 runner-minutes per code change;
+  the measurement showed the overhead could exceed the savings when only CI work can move, so it was cut:
+  receipts only for deployable images, the Release Captain LLM flow replaced by a script, the Carbon
+  Reviewer woken only by a measured regression, one-call triage for templated issues (19 → 5 LLM calls).
+  Likely payback now: scheduling 4–90×; everything included 5–18× (self-hosted inference), 0.7–2.7×
+  (only CI can move).
+- **Deterministic first, LLM last.** @grid messages, plans, footprints, receipts, the MR energy check and
+  the "Shipped" note involve no LLM. An agent is woken only when a deterministic check finds something
+  that needs judgment.
+- **Model routing.** Every flow component declares `model_tags`; triage, review and retry diagnosis use
+  the small model; only implementation uses the large one.
 - **Token budgets.** `max_cycles` and `identical_tool_call_limit` cap loops; `coding_environment: none`
   avoids cloning the repository for API-only flows.
 - **No blind retries.** Retry Guard classifies failures; only infrastructure failures are retryable.
