@@ -6,6 +6,8 @@
     joule receipt build|verify ...           # carbon receipts (in-toto predicate)
     joule control --ledger ledger.jsonl ...  # report the carbon budget to the compliance centre
     joule footprint --trace trace.jsonl      # SCI for AI of a Duo session trace
+    joule demo [--grid es|gb]                # the hands-off loop end to end, offline, on a real replayed week
+    joule bootstrap [--service-url URL]      # labels, eco-mode flag, schedules, webhook — idempotent
 """
 
 from __future__ import annotations
@@ -14,7 +16,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from .estimate import Estimate
@@ -57,7 +59,8 @@ def cmd_tick(args) -> int:
     report = tick(gitlab, LiveSignals(), cfg, _now())
     if args.publish_plan and not args.dry_run:
         publish_plan(gitlab, report)
-    print(json.dumps({"plan": report.plan.to_dict(), "started": report.started, "held": report.held}, indent=2))
+    print(json.dumps({"plan": report.plan.to_dict(), "started": report.started, "held": report.held,
+                      "deferred": report.deferred}, indent=2))
     return 0
 
 
@@ -198,6 +201,40 @@ def cmd_control(args) -> int:
     return 0 if passed else 2
 
 
+def cmd_demo(args) -> int:
+    """The hands-off loop end to end on a replayed real grid: no GitLab account, no cloud, no LLM."""
+    from .demo import markdown, run
+
+    result = run(args.grid, date.fromisoformat(args.start) if args.start else None, args.days)
+    text = markdown(result, story_only=not args.all)
+    if args.markdown:
+        Path(args.markdown).write_text(text + "\n")
+    if args.json:
+        Path(args.json).write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n")
+    print(text)
+    return 0
+
+
+def cmd_bootstrap(args) -> int:
+    """Prepare the GitLab project: labels, the eco-mode flag, schedules and (optionally) the issue webhook."""
+    from .gitlab import GitLab
+    from .gitlab.bootstrap import Bootstrap
+
+    gl = GitLab.from_env()
+    tick_key = os.environ.get("JOULE_TICK_KEY", "")
+    if not args.dry_run and not (gl.token and gl.project):
+        print("set JOULE_GITLAB_TOKEN (Maintainer, api scope) and JOULE_PROJECT=<group/project>, or use --dry-run",
+              file=sys.stderr)
+        return 2
+    if args.service_url and not tick_key:
+        print("--service-url needs JOULE_TICK_KEY (the same key the Cloud Run service checks)", file=sys.stderr)
+        return 2
+    steps = Bootstrap(gl, ref=args.ref, tick_schedule=not args.no_tick_schedule, service_url=args.service_url,
+                      tick_key=tick_key, dry_run=args.dry_run).run()
+    print("\n".join(steps))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="joule", description="Joule Thief")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -266,6 +303,22 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--month-to-date-g", type=float, default=0.0)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(fn=cmd_control)
+
+    p = sub.add_parser("demo", help="replay a real week of hands-off operation against an in-memory GitLab")
+    p.add_argument("--grid", choices=["es", "gb"], default="es")
+    p.add_argument("--start", default="", help="first day (YYYY-MM-DD); defaults to a week with real surplus")
+    p.add_argument("--days", type=int, default=5)
+    p.add_argument("--all", action="store_true", help="print every issue's timeline, not only the story")
+    p.add_argument("--markdown", default="", help="also write the transcript here")
+    p.add_argument("--json", default="", help="also write the battery timeline (dashboard input) here")
+    p.set_defaults(fn=cmd_demo)
+
+    p = sub.add_parser("bootstrap", help="create labels, the eco-mode flag, schedules and the webhook (idempotent)")
+    p.add_argument("--ref", default=os.environ.get("CI_DEFAULT_BRANCH", "main"))
+    p.add_argument("--service-url", default="", help="Cloud Run URL: adds an issue-events webhook for instant ticks")
+    p.add_argument("--no-tick-schedule", action="store_true", help="Cloud Scheduler already ticks every 30 min")
+    p.add_argument("--dry-run", action="store_true", help="print the plan; call no API")
+    p.set_defaults(fn=cmd_bootstrap)
 
     args = parser.parse_args(argv)
     return args.fn(args)

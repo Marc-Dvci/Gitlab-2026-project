@@ -32,15 +32,27 @@ def holding(region: str, now_g: float, start: datetime, planned_g_per_kwh: float
 
 
 def releasing(region: str, now_g: float, price: float | None, count: int) -> str:
-    price_text = f" Day-ahead price is **{price:.1f} €/MWh**" if price is not None else ""
+    price_text = f" Day-ahead price is **{round(price, 1) or 0.0:.1f} €/MWh**" if price is not None else ""  # no "-0.0"
     surplus = " — clean power is in surplus." if price is not None and price <= 0 else "."
     return (f"**@grid · {region_label(region)}** — releasing {count} queued Surge Request(s) now: marginal ≈ "
             f"**{now_g:.0f} gCO₂/kWh**.{price_text}{surplus}")
 
 
-def urgent(region: str, now_g: float, extra_g: float) -> str:
+def urgent(region: str, now_g: float, extra_g: float, cleanest_start: datetime | None = None) -> str:
+    if extra_g >= 0.05 and cleanest_start is not None:
+        cost = (f"waiting until {_hhmm(cleanest_start)} would have saved about **{extra_g:.1f} g**. "
+                f"Logged in the ledger as the price of urgency.")
+    else:
+        cost = "nothing cleaner is in my forecast, so waiting would have saved nothing."
     return (f"**@grid · {region_label(region)}** — critical work never waits for me. Running now at "
-            f"**{now_g:.0f} gCO₂/kWh**; waiting would have saved about {extra_g:.1f} g. Logged in the ledger.")
+            f"**{now_g:.0f} gCO₂/kWh**; {cost}")
+
+
+def deferring(region: str, now_g: float, typical_g: float, horizon_h: float, deadline: datetime) -> str:
+    return (f"**@grid · {region_label(region)}** — one more kWh here right now would be answered at about "
+            f"**{now_g:.0f} gCO₂/kWh**, and nothing in my next {horizon_h:.0f} h beats this zone's typical "
+            f"**{typical_g:.0f} gCO₂/kWh**. I'm keeping this Surge Request in the battery and will look again "
+            f"every tick. Deadline {_hhmm(deadline)} is safe.")
 
 
 def daily_plan(rows: list[dict], horizon_label: str) -> str:

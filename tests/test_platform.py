@@ -174,3 +174,150 @@ def test_mcp_tools_registered():
     names = {t.name for t in tools}
     assert {"grid_signal", "plan_work", "estimate_agent_footprint", "explain_region", "check_carbon_receipt",
             "autonomy_dividend"} <= names
+
+
+class PricedSignals(Signals):
+    def prices(self, zone, now):
+        return Series(zone, "day_ahead_price", "EUR / MWh", timedelta(hours=1), [Point(NOW, -2.5)], "t")
+
+
+def test_tick_releases_only_the_current_slot_and_explains_urgency():
+    issues = [{"iid": 3, "title": "Hotfix", "labels": [QUEUED, "priority::critical"], "created_at": "2026-10-06T11:58:00Z"}]
+    gl = FakeGitLab(issues)
+    tick(gl, Signals(), LoopConfig(regions=("europe-north1",)), NOW)
+    note = dict(gl.notes)[3]
+    # dirty now (500), clean from 18:00 (20): the price of urgency is the difference, not "0.0 g"
+    assert "waiting until Tue 18:00 UTC would have saved about" in note and "**0.0 g**" not in note
+    # Clock skew: GitLab stamped the issue a few seconds after our "now"; critical still never waits.
+    skewed = [{"iid": 7, "title": "Outage", "labels": [QUEUED, "priority::critical"], "created_at": "2026-10-06T12:00:05Z"}]
+    assert tick(FakeGitLab(skewed), Signals(), LoopConfig(regions=("europe-north1",)), NOW).started == ["#7"]
+    # A job whose clean slot opens in 30 minutes is held, not started early in the dirty slot.
+    soon = [{"iid": 4, "title": "Deps", "labels": [QUEUED, "priority::high"], "created_at": "2026-10-06T12:00:00Z"}]
+    vals = [500] + [20] * 10 + [500] * 69
+    class Soon:
+        def decision_signal(self, region, now):
+            return Series(region, "m", "g", timedelta(minutes=30), [Point(NOW + i * timedelta(minutes=30), v) for i, v in enumerate(vals)], "t")
+    gl = FakeGitLab(soon)
+    report = tick(gl, Soon(), LoopConfig(regions=("europe-north1",)), NOW)
+    assert report.held == ["#4"] and not gl.flows
+    report = tick(FakeGitLab(soon), Soon(), LoopConfig(regions=("europe-north1",)), NOW + timedelta(minutes=30))
+    assert report.started == ["#4"]
+
+
+def test_release_note_names_a_surplus_price():
+    issues = [{"iid": 5, "title": "Matrix", "labels": [QUEUED, "priority::high"], "created_at": "2026-10-06T11:00:00Z"}]
+    flat = [20] * 80
+    class Clean(PricedSignals):
+        def decision_signal(self, region, now):
+            return Series(region, "m", "g", timedelta(minutes=30), [Point(NOW + i * timedelta(minutes=30), v) for i, v in enumerate(flat)], "t")
+    gl = FakeGitLab(issues)
+    tick(gl, Clean(), LoopConfig(regions=("europe-north1",)), NOW)
+    assert "-2.5 €/MWh" in dict(gl.notes)[5] and "surplus" in dict(gl.notes)[5]
+
+
+def test_deferred_work_is_explained_once(monkeypatch):
+    import joulethief.loop as loop_module
+    from joulethief.dispatch.optimizer import Plan
+
+    issues = [{"iid": 6, "title": "Scan", "labels": [QUEUED, "priority::low", "energy::security_scan"], "created_at": "2026-10-06T12:00:00Z"}]
+    monkeypatch.setattr(loop_module, "plan", lambda *a, **k: Plan(NOW, timedelta(minutes=30), [], ["#6"], 0.0, 0.0, "stub", "OPTIMAL"))
+    gl = FakeGitLab(issues)
+    report = tick(gl, Signals(), LoopConfig(regions=("europe-north1",)), NOW)
+    assert report.deferred == ["#6"] and (6, [SCHEDULED], [QUEUED]) in gl.labels
+    assert "keeping this Surge Request in the battery" in dict(gl.notes)[6] and "Deadline" in dict(gl.notes)[6]
+    issues[0]["labels"] = [SCHEDULED, "priority::low", "energy::security_scan"]
+    gl = FakeGitLab(issues)
+    tick(gl, Signals(), LoopConfig(regions=("europe-north1",)), NOW + timedelta(minutes=30))
+    assert gl.notes == []  # said once, not every tick
+
+
+def test_webhook_ticks_only_for_new_or_critical_surge_requests():
+    from joulethief.loop import webhook_wants_tick
+
+    def event(labels, previous=None, action="update", state="opened"):
+        e = {"object_kind": "issue", "object_attributes": {"action": action, "state": state},
+             "labels": [{"title": x} for x in labels]}
+        if previous is not None:
+            e["changes"] = {"labels": {"previous": [{"title": x} for x in previous], "current": e["labels"]}}
+        return e
+
+    assert webhook_wants_tick(event([QUEUED, "priority::low"], previous=["priority::low"]))  # intake just triaged it
+    assert webhook_wants_tick(event([QUEUED, "priority::critical"], action="open"))
+    assert webhook_wants_tick(event([SCHEDULED, "priority::critical"], previous=[SCHEDULED, "priority::low"]))
+    assert not webhook_wants_tick(event([SCHEDULED], previous=[QUEUED]))  # the loop's own relabelling
+    assert not webhook_wants_tick(event([RUNNING], previous=[SCHEDULED]))
+    assert not webhook_wants_tick(event([QUEUED], action="update"))  # no label change: an edit
+    assert not webhook_wants_tick(event([QUEUED], action="open", state="closed"))
+    assert not webhook_wants_tick({"object_kind": "merge_request"})
+
+
+def test_webhook_endpoint_requires_the_key(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    monkeypatch.setenv("JOULE_TICK_KEY", "k")
+    client = TestClient(app)  # no lifespan: the MCP session manager runs once per process
+    assert client.post("/api/webhook/gitlab", json={}).status_code == 403
+    r = client.post("/api/webhook/gitlab", json={"object_kind": "note"}, headers={"X-Gitlab-Token": "k"})
+    assert r.status_code == 200 and r.json()["ticked"] is False
+
+
+def test_demo_replays_the_hands_off_loop_end_to_end():
+    from joulethief.demo import markdown, run
+
+    result = run("es", days=4, filing_days=2, per_day=3)
+    s = result["summary"]
+    assert s["shipped"] == s["issues"] and s["late"] == 0
+    assert s["hands_off_g"] < s["run_now_g"] and s["surplus_share"] > 0.5
+    assert s["flows_started"] + s["pipelines_started"] == s["issues"]
+    assert all(i["state"] == "closed" for i in result["issues"])
+    critical = next(r for r in result["runs"] if r["priority"] == "critical")
+    assert critical["wait_h"] == 0 and critical["on_time"]  # the webhook tick starts it at once
+    assert result["timeline"] and {"queued_kwh", "signal", "price"} <= set(result["timeline"][0])
+    text = markdown(result)
+    assert "@grid" in text and "Shipped" in text and "Production returns 500" in text
+
+
+def test_battery_replay_and_queue_endpoints(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    for var in ("JOULE_GITLAB_TOKEN", "JOULE_PROJECT", "CI_PROJECT_ID"):
+        monkeypatch.delenv(var, raising=False)
+    client = TestClient(app)  # no lifespan: the MCP session manager runs once per process
+    assert client.get("/api/queue").json() == {"configured": False}
+    replay = client.get("/api/results/battery")
+    assert replay.status_code == 200
+    body = replay.json()
+    assert body["summary"]["late"] == 0 and body["timeline"] and body["events"]
+
+
+def test_bootstrap_is_idempotent_and_well_formed():
+    from joulethief.gitlab.bootstrap import Bootstrap
+
+    calls = []
+    existing = {"/labels": [{"name": "priority::low"}], "/feature_flags": [{"name": "eco-mode"}],
+                "/pipeline_schedules": [{"description": "Joule Thief: eco-mode"}], "/hooks": []}
+
+    def transport(method, url, headers, body):
+        calls.append((method, url.split("?")[0], json.loads(body) if body else None))
+        if method == "GET":
+            path = "/" + url.split("?")[0].rsplit("/", 1)[1]
+            return 200, json.dumps(existing[path]).encode()
+        return 201, b'{"id": 9}'
+
+    gl = GitLab("https://gitlab.com/api/v4", "tok", "g/p", transport=transport)
+    log = Bootstrap(gl, service_url="https://jt.run.app/", tick_key="k").run()
+    posts = [(u, b) for m, u, b in calls if m == "POST"]
+    labels = [b["name"] for u, b in posts if u.endswith("/labels")]
+    assert "surge::queued" in labels and "priority::low" not in labels and "exists  label: priority::low" in log
+    assert not any(u.endswith("/feature_flags") for u, _ in posts)
+    created = [b for u, b in posts if u.endswith("/pipeline_schedules")]
+    assert {b["description"] for b in created} == {"Joule Thief: dispatcher tick", "Joule Thief: daily dispatch plan"}
+    assert ("https://gitlab.com/api/v4/projects/g%2Fp/pipeline_schedules/9/variables", {"key": "JOULE_TASK", "value": "tick"}) in posts
+    hook = next(b for u, b in posts if u.endswith("/hooks"))
+    assert hook == {"url": "https://jt.run.app/api/webhook/gitlab", "token": "k", "issues_events": True,
+                    "push_events": False, "enable_ssl_verification": True}
+    assert all(m == "GET" or m == "POST" for m, _, _ in calls)

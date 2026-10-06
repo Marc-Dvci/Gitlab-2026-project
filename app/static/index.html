@@ -35,6 +35,24 @@
   .scroll { overflow-x: auto; }
   .big { font-size: 26px; font-weight: 650; color: var(--accent); }
   code { font-family: var(--mono); font-size: 12px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 16px; margin: 12px 0; }
+  .kpi b { display: block; font-size: 24px; font-weight: 650; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .kpi span { color: var(--muted); font-size: 13px; }
+  .battery-row { display: flex; gap: 12px; align-items: stretch; }
+  .battery-row svg { flex: 1; min-width: 0; height: 260px; }
+  .gauge { width: 46px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .gauge-cell { position: relative; width: 34px; flex: 1; border: 2px solid var(--muted); border-radius: 6px; overflow: hidden; }
+  .gauge-cell::before { content: ""; position: absolute; top: -7px; left: 10px; width: 10px; height: 5px; background: var(--muted); border-radius: 2px 2px 0 0; }
+  .gauge-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--accent); transition: height .08s linear; }
+  .gauge-label { font: 11px var(--mono); color: var(--muted); text-align: center; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 10px 0 6px; }
+  .controls input[type=range] { flex: 1; min-width: 160px; accent-color: var(--accent); }
+  button { font: inherit; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); cursor: pointer; }
+  .log { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .log li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .log time { font: 12px var(--mono); color: var(--muted); margin-right: 6px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
 </style>
 </head>
 <body>
@@ -46,6 +64,27 @@
   </header>
 
   <div class="grid">
+    <section class="wide" id="battery-section">
+      <h2>The backlog is a battery: one real week, replayed hands-off</h2>
+      <div class="muted" id="battery-meta">loading…</div>
+      <div class="kpis" id="battery-kpis"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>decision signal (gCO₂/kWh)</span>
+        <span><i class="sw" style="background:var(--surplus)"></i>surplus hours (price ≤ 0)</span>
+        <span><i class="sw" style="background:var(--warn);opacity:.55"></i>work waiting (kWh charged)</span>
+        <span><i class="sw" style="background:var(--accent);opacity:.55"></i>work running (kWh discharging)</span></div>
+      <div class="battery-row">
+        <svg id="battery-chart" role="img" aria-label="Grid signal and queued work across the replayed week"></svg>
+        <div class="gauge" aria-hidden="true"><div class="gauge-cell"><div class="gauge-fill" id="gauge-fill"></div></div>
+          <div class="gauge-label" id="gauge-label"></div></div>
+      </div>
+      <div class="controls">
+        <button id="play" type="button">▶ Replay the week</button>
+        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Replay time">
+        <span class="muted" id="clock"></span>
+      </div>
+      <ol class="log" id="battery-log" aria-live="polite"></ol>
+    </section>
+
     <section class="wide">
       <h2>Decision signal — what one more kWh emits
         <select id="region" aria-label="Region"></select></h2>
@@ -57,6 +96,12 @@
       <h2>Carbon dividend of autonomy (real grid data)</h2>
       <div class="muted">Same backlog, same deadlines. Supervised work waits for office hours; hands-off work follows the wind and the sun.</div>
       <div class="scroll"><table id="dividend"></table></div>
+    </section>
+
+    <section class="wide">
+      <h2>Surge Requests now (live from GitLab)</h2>
+      <div class="muted" id="queue-meta"></div>
+      <div class="scroll"><table id="queue"></table></div>
     </section>
 
     <section>
@@ -107,7 +152,92 @@ async function loadSignal() {
   drawChart(p);
 }
 
+const esc = (t) => String(t).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const md = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`(.+?)`/g, "<code>$1</code>");
+const hhmm = (iso) => { const d = new Date(iso); return d.toUTCString().slice(0, 3) + " " + d.toISOString().slice(11, 16); };
+let replay = null, idx = 0, timer = null;
+
+function drawBattery() {
+  const d = replay, tl = d.timeline, n = tl.length, svg = $("battery-chart");
+  const W = svg.clientWidth || 800, H = 260, L = 34, R = 6, T = 8, MID = 148, B = 238;
+  const css = getComputedStyle(document.documentElement), c = (v) => css.getPropertyValue(v);
+  const x = (i) => L + (W - L - R) * i / Math.max(n - 1, 1);
+  const smax = Math.max(...tl.map(p => p.signal || 0)) * 1.05 || 1;
+  const ys = (v) => T + (MID - 14 - T) * (1 - v / smax);
+  const qmax = Math.max(...tl.map(p => p.queued_kwh + p.running_kwh)) * 1.1 || 1;
+  const yq = (v) => B - (B - MID) * v / qmax;
+  const step = x(1) - x(0);
+  let out = "";
+  for (let i = 0; i < n; i++) {  // one band per contiguous run of surplus hours
+    if (!tl[i].surplus) continue;
+    let j = i; while (j + 1 < n && tl[j + 1].surplus) j++;
+    out += `<rect x="${x(i) - step / 2}" y="${T}" width="${x(j) - x(i) + step}" height="${B - T}" fill="${c('--surplus')}"/>`;
+    i = j;
+  }
+  out += `<path d="${tl.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${ys(p.signal || 0).toFixed(1)}`).join("")}" fill="none" stroke="${c('--accent')}" stroke-width="1.8"/>`;
+  const upto = tl.slice(0, idx + 1);
+  const area = (f, base) => upto.length ? `M${x(0)},${yq(base(tl[0]))}` + upto.map((p, i) => `L${x(i).toFixed(1)},${yq(f(p)).toFixed(1)}`).join("") +
+    upto.map((p, i) => i).reverse().map(i => `L${x(i).toFixed(1)},${yq(base(tl[i])).toFixed(1)}`).join("") + "Z" : "";
+  out += `<path d="${area(p => p.running_kwh, () => 0)}" fill="${c('--accent')}" fill-opacity=".55"/>`;
+  out += `<path d="${area(p => p.running_kwh + p.queued_kwh, p => p.running_kwh)}" fill="${c('--warn')}" fill-opacity=".55"/>`;
+  out += `<line x1="${L}" x2="${W - R}" y1="${MID}" y2="${MID}" stroke="${c('--line')}"/>`;
+  out += `<line x1="${x(idx)}" x2="${x(idx)}" y1="${T}" y2="${B}" stroke="${c('--ink')}" stroke-dasharray="3 3"/>`;
+  [0, smax / 1.05].forEach(v => out += `<text x="2" y="${ys(v) + 4}" font-size="10" fill="${c('--muted')}">${v.toFixed(0)}</text>`);
+  out += `<text x="2" y="${yq(qmax / 1.1) + 4}" font-size="10" fill="${c('--muted')}">${(qmax / 1.1).toFixed(1)}</text>`;
+  out += `<text x="2" y="${B - 2}" font-size="10" fill="${c('--muted')}">kWh</text>`;
+  tl.forEach((p, i) => { if (p.t.slice(11, 16) === "12:00") out += `<text x="${x(i)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="${c('--muted')}">${hhmm(p.t).slice(0, 3)}</text>`; });
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = out;
+  const now = tl[idx], peak = Math.max(...tl.map(p => p.queued_kwh)) || 1;
+  $("gauge-fill").style.height = `${100 * now.queued_kwh / peak}%`;
+  $("gauge-label").textContent = `${now.queued} held`;
+  $("clock").textContent = `${hhmm(now.t)} UTC · ${now.signal == null ? "—" : now.signal.toFixed(0)} gCO₂/kWh` +
+    (now.price == null ? "" : ` · ${now.price.toFixed(1)} €/MWh`) + ` · ${now.queued} waiting, ${now.running} running`;
+  const titles = Object.fromEntries(d.issues.map(i => [i.iid, i.title]));
+  const seen = d.events.filter(e => e.kind !== "filed" && e.t <= now.t).slice(-5).reverse();
+  $("battery-log").innerHTML = seen.map(e => `<li><time>${hhmm(e.t)}</time><b>#${e.iid} ${esc(titles[e.iid] || "")}</b><br>${md(e.text)}</li>`).join("") ||
+    "<li class=muted>Work arrives during office hours; press play.</li>";
+}
+
+function loadBattery() {
+  getJSON("/api/results/battery").then(d => {
+    replay = d; idx = d.timeline.length - 1;
+    const s = d.summary;
+    $("battery-meta").textContent = `${d.label} · ${d.region} · ${d.days} days from ${d.start.slice(0, 10)}. The production dispatcher ticks every 30 min (and on GitLab webhooks) against an in-memory GitLab; emissions are scored on what the grid actually did. Reproduce: joule demo.`;
+    $("battery-kpis").innerHTML = [
+      [`−${fmt(s.reduction * 100, 0)}%`, "CO₂ vs running work when filed"],
+      [s.surplus_share == null ? "—" : `${fmt(s.surplus_share * 100, 0)}%`, "of energy used in surplus hours"],
+      [`${s.late}`, `deadlines missed of ${s.issues}`],
+      [`${s.flows_started + s.pipelines_started}`, `agent flows & pipelines started, 0 by humans`],
+    ].map(([v, l]) => `<div class=kpi><b>${v}</b><span>${l}</span></div>`).join("");
+    $("scrub").max = d.timeline.length - 1; $("scrub").value = idx;
+    $("scrub").oninput = (e) => { idx = +e.target.value; drawBattery(); };
+    $("play").onclick = () => {
+      if (timer) { clearInterval(timer); timer = null; $("play").textContent = "▶ Replay the week"; return; }
+      if (idx >= d.timeline.length - 1) idx = 0;
+      $("play").textContent = "❚❚ Pause";
+      timer = setInterval(() => { idx += 1; $("scrub").value = idx; drawBattery();
+        if (idx >= d.timeline.length - 1) { clearInterval(timer); timer = null; $("play").textContent = "▶ Replay the week"; } }, 70);
+    };
+    drawBattery();
+    window.addEventListener("resize", drawBattery);
+  }).catch(() => $("battery-meta").textContent = "No replay yet: run joule demo --json docs/results/battery_replay.json");
+}
+
+function loadQueue() {
+  getJSON("/api/queue").then(q => {
+    if (!q.configured) { $("queue-meta").textContent = "Not connected to a GitLab project here (set JOULE_GITLAB_TOKEN and JOULE_PROJECT). The replay above runs the same dispatcher."; return; }
+    if (q.error) { $("queue-meta").textContent = `GitLab or the grid is unreachable right now (${q.error}).`; return; }
+    $("queue-meta").textContent = `Dry-run plan at ${hhmm(q.at)} UTC: ${fmt(q.expected_g, 1)} g expected vs ${fmt(q.baseline_g, 1)} g if everything ran now.`;
+    $("queue").innerHTML = "<tr><th>Issue</th><th>Labels</th><th>Status</th><th>Planned start</th><th class=num>Expected g</th></tr>" +
+      (q.rows.length ? q.rows.map(r => `<tr><td><a href="${esc(r.url)}">#${r.iid}</a> ${esc(r.title)}</td><td><code>${r.labels.map(esc).join(" ")}</code></td><td>${esc(r.status)}</td><td>${r.start ? hhmm(r.start) + " UTC" : "—"}</td><td class=num>${fmt(r.expected_g, 2)}</td></tr>`).join("")
+                     : "<tr><td colspan=5 class=muted>The battery is empty: no Surge Requests waiting.</td></tr>");
+  }).catch(() => $("queue-meta").textContent = "queue unavailable");
+}
+
 async function init() {
+  loadBattery();
+  loadQueue();
   const health = await getJSON("/healthz");
   $("status").textContent = health.eco_mode ? "eco-mode on: demand shaped" : "grid-aware";
   const regions = await getJSON("/api/regions");

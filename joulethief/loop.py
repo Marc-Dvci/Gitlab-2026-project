@@ -6,11 +6,12 @@ Every tick (Cloud Scheduler → Cloud Run, or a scheduled GitLab pipeline):
   3. plan with the CP-SAT dispatcher under each issue's service level;
   4. start the work whose window has opened — a GitLab Duo flow through the Flows API
      (bots cannot trigger flows by mention) — and relabel the issue ``surge::running``;
-  5. let @grid explain every hold and every release on the issue itself.
+  5. let @grid explain every hold, deferral and release on the issue itself.
 """
 
 from __future__ import annotations
 
+import statistics
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Protocol
@@ -19,6 +20,7 @@ from . import voice
 from .dispatch.jobs import Job, job_from_issue
 from .dispatch.optimizer import Plan, plan
 from .signals.base import Series, parse_time, utc
+from .signals.regions import REGIONS
 
 QUEUED, SCHEDULED, RUNNING = "surge::queued", "surge::scheduled", "surge::running"
 
@@ -56,7 +58,29 @@ class TickReport:
     plan: Plan
     started: list[str] = field(default_factory=list)
     held: list[str] = field(default_factory=list)
+    deferred: list[str] = field(default_factory=list)
     notes: dict[str, str] = field(default_factory=dict)
+
+
+def webhook_wants_tick(event: dict) -> bool:
+    """Should a GitLab issue event tick now instead of waiting for the 30-minute heartbeat?
+
+    Yes when an open issue just became a Surge Request or critical: critical work then starts
+    within seconds, and a new hold is explained while the author is still looking. The loop's
+    own relabelling (queued → scheduled → running) never matches, so ticks cannot feed back.
+    """
+    if event.get("object_kind") not in ("issue", "work_item"):
+        return False
+    attrs = event.get("object_attributes") or {}
+    if attrs.get("state", "opened") != "opened":
+        return False
+    labels = {label.get("title") for label in event.get("labels") or []}
+    change = (event.get("changes") or {}).get("labels")
+    if change:
+        before = {label.get("title") for label in change.get("previous") or []}
+    else:
+        before = set() if attrs.get("action") in ("open", "reopen") else labels
+    return bool((labels - before) & {QUEUED, "priority::critical", "surge::now"})
 
 
 def kind_of(labels: list[str]) -> str:
@@ -73,6 +97,38 @@ def issue_to_job(issue: dict, regions: tuple[str, ...]) -> Job:
     return job_from_issue(issue["iid"], labels, parse_time(issue["created_at"]), duration, power, regions, kind)
 
 
+def cost_of_not_waiting(series: Series, job: Job, now: datetime, horizon: timedelta,
+                        slot: timedelta = timedelta(minutes=30)) -> tuple[float, datetime | None]:
+    """Grams that waiting for the cleanest start in view would have saved, and that start.
+
+    Critical work runs anyway; the number is the honest price of urgency, for the ledger.
+    """
+    d, n = job.slots(slot), max(1, int(horizon / slot))
+    vals = series.on_grid(now, n + d, slot)
+    kwh_per_slot = job.energy_kwh / d
+
+    def cost(s: int) -> float | None:
+        window = vals[s:s + d]
+        return None if len(window) < d or None in window else kwh_per_slot * sum(window)
+
+    now_cost = cost(0)
+    if now_cost is None:
+        return 0.0, None
+    best_cost, best_slot = min(((c, s) for s in range(n) if (c := cost(s)) is not None), default=(now_cost, 0))
+    return max(0.0, now_cost - best_cost), now + best_slot * slot
+
+
+def _price_now(signals, region: str, now: datetime) -> float | None:
+    """Day-ahead price for the region's bidding zone, when the provider has prices (cached upstream)."""
+    zone = REGIONS[region].price_zone if region in REGIONS else None
+    if not zone or not hasattr(signals, "prices"):
+        return None
+    try:
+        return signals.prices(zone, now).value_at(now)
+    except Exception:  # noqa: BLE001 — a missing price only shortens the note
+        return None
+
+
 def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> TickReport:
     now = utc(now)
     issues = {i["iid"]: i for label in (QUEUED, SCHEDULED) for i in gitlab.issues([label])}
@@ -87,11 +143,15 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
         issue = issues[iid]
         job = next(j for j in jobs if j.id == a.job_id)
         now_g = sig[a.region].value_at(now) or a.expected_g / max(job.energy_kwh, 1e-9)
-        if a.start <= now + cfg.tick:
+        # Release only work whose slot starts now (plans start at ``now``); the next tick, at most one
+        # tick away, re-plans the rest. Starting a later slot early would run it in a dirtier one.
+        # Critical work always starts, even if clock skew put its release a moment after ``now``.
+        if a.start <= now or job.urgent:
             if job.urgent:
-                note = voice.urgent(a.region, now_g, 0.0)
+                extra_g, cleanest = cost_of_not_waiting(sig[a.region], job, now, cfg.horizon)
+                note = voice.urgent(a.region, now_g, extra_g, cleanest)
             else:
-                note = voice.releasing(a.region, now_g, None, 1)
+                note = voice.releasing(a.region, now_g, _price_now(signals, a.region, now), 1)
             report.started.append(a.job_id)
             report.notes[a.job_id] = note
             if not cfg.dry_run:
@@ -117,6 +177,19 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
             if not cfg.dry_run and first_hold:
                 gitlab.set_labels(iid, add=[SCHEDULED], remove=[QUEUED])
                 gitlab.issue_note(iid, note)
+    for job_id in p.deferred:  # no slot in view beats the zone's typical hour: keep charging the battery
+        iid = int(job_id.lstrip("#"))
+        job = next(j for j in jobs if j.id == job_id)
+        region = next(r for r in job.regions if r in sig)
+        ahead = [pt.value for pt in sig[region].slice(now, now + cfg.horizon)]
+        now_g = sig[region].value_at(now) or (ahead[0] if ahead else 0.0)
+        note = voice.deferring(region, now_g, statistics.median(ahead) if ahead else now_g,
+                               cfg.horizon.total_seconds() / 3600, job.deadline)
+        report.deferred.append(job_id)
+        report.notes[job_id] = note
+        if not cfg.dry_run and QUEUED in issues[iid].get("labels", []):
+            gitlab.set_labels(iid, add=[SCHEDULED], remove=[QUEUED])
+            gitlab.issue_note(iid, note)
     return report
 
 
