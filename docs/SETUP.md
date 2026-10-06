@@ -27,6 +27,7 @@ Make the project **public**, keep `LICENSE` (MIT) at the root so it shows in the
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
 python -m pytest -q
+python -m joulethief.cli demo       # the whole hands-off loop on a real replayed week, no accounts needed
 uvicorn app.main:app --reload       # http://localhost:8000
 ```
 
@@ -87,7 +88,20 @@ Protect `main` (Workload Identity only trusts protected refs).
 
 ## 6. The heartbeat
 
-Either Cloud Scheduler (created by Terraform when `tick_key` is set, every 30 min, free) or GitLab
+**One command** creates the labels, the `eco-mode` feature flag, the schedules below and the issue
+webhook, and skips anything that already exists (needs a Maintainer token; `--dry-run` shows the plan):
+
+```bash
+export JOULE_GITLAB_TOKEN=<maintainer token, api scope> JOULE_PROJECT=<group>/joule-thief
+export JOULE_TICK_KEY=<the TF_VAR_tick_key from step 3>
+python -m joulethief.cli bootstrap --service-url <service_url output> --no-tick-schedule  # Cloud Scheduler ticks
+```
+
+The webhook (Issue events → `<service_url>/api/webhook/gitlab`, secret token = the tick key) makes the
+loop event-driven: a new or critical Surge Request is planned within seconds instead of waiting up to
+30 minutes, so critical work really never waits. The loop's own relabelling never re-triggers it.
+
+The manual equivalent: either Cloud Scheduler (created by Terraform when `tick_key` is set, every 30 min, free) or GitLab
 schedules (Build → Pipeline schedules):
 
 | Schedule | Variable | Cron |

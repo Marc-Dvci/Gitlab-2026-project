@@ -38,8 +38,8 @@ system emits follows the rules below and carries a low / likely / high range.
 (11 g/kWh, IPCC AR5 onshore wind median); `p ≥ 40` → a thermal unit or an import displacing one is
 on the margin (the zone's annual marginal from GSF/WattTime, e.g. 785 g/kWh for Finland; 490 g/kWh
 gas CCGT by default); linear in between. This is a transparent heuristic, not a dispatch model, and
-is replaced by WattTime MOER wherever available. A sensitivity analysis on the 40 €/MWh knee is on
-the roadmap.
+is replaced by WattTime MOER wherever available. Its sensitivity to the 40 €/MWh knee (20–80 €/MWh)
+is measured in [`results/robustness.md`](results/robustness.md).
 
 **Avoided emissions** = consequential(counterfactual: run immediately, default region) −
 consequential(actual). Attributional differences are never called "avoided".
@@ -72,11 +72,24 @@ only information available at decision time; emissions are scored on what the gr
 Policies: run-now, supervised (starts only in office hours), hands-off (24/7). Critical work always
 starts immediately. Reported: emissions, share of energy in surplus hours, deadline misses, mean wait.
 
+- **Planned cost = scored cost.** The dispatcher costs a job on its own energy spread over the slots it
+  touches, exactly as the scorer does (a 40-minute job is not billed as an hour), and a job is deferred
+  to a later plan only if no slot in view *beats* the zone's typical (median) hour; ties run.
+- **The live loop does what the simulator assumes.** A tick releases only work whose planned slot
+  starts now; later slots are re-planned by the next tick instead of being started early.
+- **Robustness.** `experiments/robustness.py` repeats the protocol over five independently seeded
+  backlogs and four price knees, and reports medians and ranges ([`results/robustness.md`](results/robustness.md)).
+- **End to end.** `joule demo` drives the production tick against an in-memory GitLab on a replayed
+  week, so the numbers in @grid's notes and "Shipped" balances are tested, not only the planner
+  ([`results/hands_off_replay.md`](results/hands_off_replay.md)).
+
 ## 8. Reproduce
 
 ```bash
 python scripts/build_snapshots.py          # rebuild the real-data snapshots
 python experiments/autonomy_dividend.py    # policies × grids, conformal intervals
+python experiments/robustness.py           # backlog seeds × price knees (~15 min)
+python -m joulethief.cli demo              # the hands-off loop end to end on a replayed week (~1 s)
 python experiments/region_ledgers.py       # average vs marginal per region
 python scripts/energy_benchmark.py         # joules/request and carbon blame for this service
 ```

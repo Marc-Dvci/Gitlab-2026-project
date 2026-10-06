@@ -23,7 +23,9 @@ planet. Your own footprint is measured and published (SCI for AI). Work like it.
 - `joulethief/dispatch/` CP-SAT dispatcher, virtual capacity curves, conformal intervals, simulator.
 - `joulethief/carbon/` SCI, SCI for AI (EcoLogits), water, power model, two ledgers.
 - `joulethief/receipts/` in-toto carbon receipts; `joulethief/blame/` carbon blame profiler.
-- `joulethief/loop.py` hands-off dispatcher tick; `joulethief/voice.py` @grid messages (no LLM).
+- `joulethief/loop.py` hands-off dispatcher tick (+ webhook trigger); `joulethief/voice.py` @grid messages (no LLM).
+- `joulethief/replay.py` real grids as known at any past moment; `joulethief/demo.py` `joule demo`, the whole
+  loop offline against an in-memory GitLab. `joulethief/gitlab/bootstrap.py` `joule bootstrap` project setup.
 - `app/` Cloud Run control room + MCP server mount. `app/insights.py` contains a **disclosed seeded
   inefficiency** used in the demo: `weekly_pairs` is O(n·m) and should be O(n+m).
 
