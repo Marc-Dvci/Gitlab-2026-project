@@ -1,0 +1,245 @@
+{
+  "generated": "2026-10-06T17:18:16+00:00",
+  "seeds": [
+    7,
+    11,
+    23,
+    42,
+    101
+  ],
+  "knees_eur_mwh": [
+    20.0,
+    40.0,
+    60.0,
+    80.0
+  ],
+  "by_seed": {
+    "7": {
+      "GB (NESO, Sep\u2013Oct 2026)": {
+        "jobs": 276,
+        "hands_off": 0.2484,
+        "supervised": 0.1995,
+        "dividend": 0.0489,
+        "late_supervised": 8,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0
+      },
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3163,
+        "supervised": 0.2488,
+        "dividend": 0.0675,
+        "late_supervised": 22,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4654
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.2876,
+        "supervised": 0.225,
+        "dividend": 0.0626,
+        "late_supervised": 24,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0428
+      }
+    },
+    "11": {
+      "GB (NESO, Sep\u2013Oct 2026)": {
+        "jobs": 276,
+        "hands_off": 0.2378,
+        "supervised": 0.1849,
+        "dividend": 0.0529,
+        "late_supervised": 10,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0
+      },
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3321,
+        "supervised": 0.2449,
+        "dividend": 0.0872,
+        "late_supervised": 19,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4444
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.2791,
+        "supervised": 0.1948,
+        "dividend": 0.0843,
+        "late_supervised": 17,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0518
+      }
+    },
+    "23": {
+      "GB (NESO, Sep\u2013Oct 2026)": {
+        "jobs": 276,
+        "hands_off": 0.2357,
+        "supervised": 0.1823,
+        "dividend": 0.0534,
+        "late_supervised": 7,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0
+      },
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3292,
+        "supervised": 0.3122,
+        "dividend": 0.017,
+        "late_supervised": 12,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4354
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.3067,
+        "supervised": 0.2205,
+        "dividend": 0.0862,
+        "late_supervised": 12,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0753
+      }
+    },
+    "42": {
+      "GB (NESO, Sep\u2013Oct 2026)": {
+        "jobs": 276,
+        "hands_off": 0.2249,
+        "supervised": 0.1934,
+        "dividend": 0.0315,
+        "late_supervised": 6,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0
+      },
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3139,
+        "supervised": 0.2442,
+        "dividend": 0.0697,
+        "late_supervised": 16,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4524
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.285,
+        "supervised": 0.2015,
+        "dividend": 0.0835,
+        "late_supervised": 16,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.051
+      }
+    },
+    "101": {
+      "GB (NESO, Sep\u2013Oct 2026)": {
+        "jobs": 276,
+        "hands_off": 0.2313,
+        "supervised": 0.1871,
+        "dividend": 0.0442,
+        "late_supervised": 5,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0
+      },
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.2991,
+        "supervised": 0.2689,
+        "dividend": 0.0302,
+        "late_supervised": 15,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4625
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.256,
+        "supervised": 0.1831,
+        "dividend": 0.073,
+        "late_supervised": 13,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0576
+      }
+    }
+  },
+  "by_knee": {
+    "20.0": {
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3487,
+        "supervised": 0.2583,
+        "dividend": 0.0904,
+        "late_supervised": 22,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4648
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.2207,
+        "supervised": 0.171,
+        "dividend": 0.0497,
+        "late_supervised": 24,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0401
+      }
+    },
+    "40.0": {
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3163,
+        "supervised": 0.2488,
+        "dividend": 0.0675,
+        "late_supervised": 22,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4654
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.2876,
+        "supervised": 0.225,
+        "dividend": 0.0626,
+        "late_supervised": 24,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0428
+      }
+    },
+    "60.0": {
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3473,
+        "supervised": 0.2897,
+        "dividend": 0.0577,
+        "late_supervised": 22,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4649
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.3182,
+        "supervised": 0.2511,
+        "dividend": 0.0671,
+        "late_supervised": 24,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0417
+      }
+    },
+    "80.0": {
+      "ES spring (Mar\u2013May 2025)": {
+        "jobs": 756,
+        "hands_off": 0.3641,
+        "supervised": 0.3124,
+        "dividend": 0.0517,
+        "late_supervised": 22,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.4658
+      },
+      "ES summer (Jul\u2013Sep 2025)": {
+        "jobs": 768,
+        "hands_off": 0.378,
+        "supervised": 0.2878,
+        "dividend": 0.0902,
+        "late_supervised": 24,
+        "late_hands_off": 0,
+        "surplus_share_hands_off": 0.0416
+      }
+    }
+  }
+}
