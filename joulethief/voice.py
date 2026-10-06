@@ -48,3 +48,57 @@ def daily_plan(rows: list[dict], horizon_label: str) -> str:
     for r in rows:
         lines.append(f"| {r['job']} | {region_label(r['region'])} | {r['start']} | {r['expected_g']:.1f} |")
     return "\n".join(lines)
+
+
+ENERGY_CHECK_MARKER = "<!-- joule:energy-check -->"
+
+
+def _range(d: dict | None, digits: int = 2) -> str:
+    if not d:
+        return "—"
+    return f"{d['likely']:.{digits}f} ({d['low']:.{digits}f}–{d['high']:.{digits}f})"
+
+
+def energy_check(gate, target_branch: str, reviewer: str) -> str:
+    """MR note from the energy gate: a table always, an LLM reviewer only when the numbers call for one."""
+    lines = [ENERGY_CHECK_MARKER, f"**@grid · energy check** — joules per request, this merge request vs `{target_branch}`:", "",
+             "| Endpoint | " + f"`{target_branch}`" + " | This MR | Change | Projected gCO₂e/day |", "|---|---:|---:|---:|---:|"]
+    for d in gate.deltas:
+        base = f"{d.base_j:.4f}" if d.base_j is not None else "new"
+        change = f"{d.change:+.0%}" if d.change is not None else "—"
+        lines.append(f"| `{d.endpoint}` | {base} | {d.head_j:.4f} | {change} | {d.g_per_day:+.3f} |")
+    if gate.hot_lines:
+        hot = ", ".join(f"`{h['file']}:{h['line']}` ({h['g_per_day']:.3f} g/day)" for h in gate.hot_lines)
+        lines += ["", f"This MR edits the service's hottest lines: {hot}."]
+    lines.append("")
+    if gate.needs_reviewer:
+        lines.append(f"Worth a closer look: {'; '.join(gate.reasons)}. {reviewer}")
+    else:
+        lines.append("No material energy change: no LLM review needed for this one.")
+    return "\n".join(lines)
+
+
+def shipped(mr_ref: str, sha: str, region: str, deployed: bool, footprint: dict, receipt: dict | None,
+            canary: dict | None, tag: str = "") -> str:
+    """The closing note on an issue, from the pipeline's own artifacts (numbers verbatim, ranges kept)."""
+    where = f"is live in {region_label(region)}" + (f" as `{tag}`" if tag else "") if deployed else "is merged (not deployed)"
+    lines = [f"**@grid · Shipped** — {mr_ref} (`{sha[:8]}`) {where}. What it cost, likely (low–high):", "",
+             "| | Value |", "|---|---:|",
+             f"| Pipeline energy (kWh) | {_range(footprint.get('energy_kwh'), 4)} |",
+             f"| Attributional gCO₂e (location-based) | {_range(footprint.get('attributional_g'))} |",
+             f"| Consequential gCO₂e (marginal) | {_range(footprint.get('consequential_g'))} |"]
+    agents = (receipt or {}).get("agents") or {}
+    if agents.get("gwp_g"):
+        lines.append(f"| Agents' own gCO₂e (SCI for AI) | {_range(agents['gwp_g'], 3)} |")
+    lines.append(f"| Jobs accounted (retries included) | {footprint.get('entries', 0)} |")
+    if canary and canary.get("canary_j_per_request"):
+        prod = canary.get("prod_j_per_request", {})
+        parts = [f"`{ep}` {j:.4f} J vs {prod[ep]:.4f} in production ({j / prod[ep] - 1:+.0%})"
+                 for ep, j in sorted(canary["canary_j_per_request"].items()) if prod.get(ep)]
+        if parts:
+            lines += ["", "Canary energy per request: " + "; ".join(parts) + "."]
+    if receipt:
+        b = receipt.get("budget", {})
+        lines += ["", f"Carbon receipt: **{receipt.get('verdict', '?')}** ({b.get('spentG', 0):.1f} of {b.get('capG', 0):.0f} g "
+                  f"used in {b.get('period', 'this period')}); signed with Sigstore, check it with `cosign verify-attestation`."]
+    return "\n".join(lines)

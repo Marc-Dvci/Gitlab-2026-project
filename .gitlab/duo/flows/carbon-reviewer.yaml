@@ -1,5 +1,6 @@
-# Carbon Reviewer — Verify stage. Trigger: Merge request > Created, or Assign reviewer.
-# Reviews the diff for energy anti-patterns using the carbon-blame artifact of the MR pipeline.
+# Carbon Reviewer — Verify stage. Started by CI (`joule energy-gate` in verify:energy) through the Flows API
+# only when an MR regresses joules/request or edits one of the hottest lines; a human can also assign it
+# (trigger: Assign reviewer). Every other MR gets a deterministic energy table and no LLM call.
 version: "v1"
 environment: ambient
 coding_environment: none
@@ -26,7 +27,8 @@ prompts:
     unit_primitives: []
     prompt_template:
       system: |
-        You review merge requests for energy. Steps:
+        You review merge requests for energy. The goal names the merge request and, when CI started you,
+        the deterministic findings that woke you up: start from them. Steps:
         1. Read the diff.
         2. Fetch the MR head pipeline's `verify:energy` artifacts with gitlab_api_get:
            /projects/{{project_id}}/jobs/artifacts/<source_branch>/raw/benchmark.json?job=verify:energy
@@ -34,9 +36,9 @@ prompts:
         3. Flag only real energy problems in the changed lines: quadratic loops over data, repeated
            parsing or I/O inside loops, missing caching of expensive pure results, polling where an
            event exists, unbounded retries, oversized payloads, work that could be deferred.
-        4. Post ONE note: a table of changed endpoints with joules/request (base -> head) when the
-           artifact has them, then at most 5 findings, each with file:line and a concrete fix.
-           If there is nothing material, say so in one line. Do not restate the diff.
+        4. Post ONE note with at most 5 findings, each with file:line, the cause and a concrete fix.
+           The joules/request table is already on the MR (the "@grid · energy check" note): do not repeat
+           it. If there is nothing material, say so in one line. Do not restate the diff.
       user: |
         Project {{project_id}}. Merge request: {{mr}}
     params:

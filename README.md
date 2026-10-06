@@ -52,7 +52,7 @@ python -m joulethief.cli grid europe-north1 # live decision signal (needs intern
 ```
 joulethief/   signals · dispatch · carbon · receipts · blame · gitlab · loop · voice · mcp_server · cli
 app/          Cloud Run control room (FastAPI) with eco-mode and the MCP server mounted at /mcp
-.gitlab/duo/  custom flows (surge-intake, surge-worker, carbon-reviewer, retry-guard, release-captain),
+.gitlab/duo/  custom flows (surge-intake, surge-worker, carbon-reviewer, retry-guard), Surge Request issue template,
               custom agents (@grid, carbon-accountant), MCP client config
 .gitlab-ci.yml  plan · verify · test · secure · package · release · configure · monitor · govern
 infra/        OpenTofu/Terraform for Google Cloud's free tier (keyless Workload Identity Federation)

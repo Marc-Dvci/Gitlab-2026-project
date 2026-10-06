@@ -6,6 +6,8 @@
     joule receipt build|verify ...           # carbon receipts (in-toto predicate)
     joule control --ledger ledger.jsonl ...  # report the carbon budget to the compliance centre
     joule footprint --trace trace.jsonl      # SCI for AI of a Duo session trace
+    joule energy-gate                        # MR energy check; wakes the Carbon Reviewer only on a regression
+    joule shipped                            # carbon balance on the issues a pipeline delivered (no LLM)
 """
 
 from __future__ import annotations
@@ -198,6 +200,76 @@ def cmd_control(args) -> int:
     return 0 if passed else 2
 
 
+REVIEWER_STARTED = "The Carbon Reviewer agent has been started"
+
+
+def cmd_energy_gate(args) -> int:
+    """MR energy check: always a deterministic table; the Carbon Reviewer agent only when the numbers call for it."""
+    from . import voice
+    from .blame.gate import compare
+    from .gitlab import GitLab
+
+    head = json.loads(Path(args.benchmark).read_text())
+    gl = GitLab.from_env()
+    mr = int(args.mr or os.environ["CI_MERGE_REQUEST_IID"])
+    target = os.environ.get("CI_MERGE_REQUEST_TARGET_BRANCH_NAME") or os.environ.get("CI_DEFAULT_BRANCH", "main")
+    raw = gl.job_artifact(target, "benchmark.json", args.job)
+    gate = compare(json.loads(raw) if raw else None, head, gl.mr_changed_files(mr), args.tolerance)
+    previous = gl.find_mr_note(mr, voice.ENERGY_CHECK_MARKER)
+    already = bool(previous) and REVIEWER_STARTED in previous["body"] and all(r in previous["body"] for r in gate.reasons)
+    consumer = os.environ.get("JOULE_REVIEWER_CONSUMER_ID")
+    reviewer = ""
+    if gate.needs_reviewer and consumer and not already:
+        if not args.dry_run:
+            gl.start_flow(f"Review merge request !{mr} for energy. The deterministic energy check found: "
+                          f"{'; '.join(gate.reasons)}. Explain the cause and propose the smallest fix.",
+                          consumer_id=int(consumer))
+        reviewer = f"{REVIEWER_STARTED} to explain the cause and propose a fix."
+    elif gate.needs_reviewer:
+        reviewer = f"{REVIEWER_STARTED} for these findings." if already else "Assign the carbon-reviewer for a fix proposal."
+    note = voice.energy_check(gate, target, reviewer)
+    print(note)
+    if not args.dry_run:
+        gl.upsert_mr_note(mr, note, voice.ENERGY_CHECK_MARKER)
+    return 0
+
+
+def _read_json(path: str) -> dict | None:
+    return json.loads(Path(path).read_text()) if path and Path(path).exists() else None
+
+
+def cmd_shipped(args) -> int:
+    """Close the loop on the issues a default-branch pipeline delivered: their carbon balance, no LLM."""
+    from . import voice
+    from .gitlab import GitLab
+    from .loop import RUNNING
+
+    gl = GitLab.from_env()
+    sha = os.environ["CI_COMMIT_SHA"]
+    jobs = {j["name"]: j.get("status") for j in gl.pipeline_jobs(args.pipeline or os.environ["CI_PIPELINE_ID"])
+            if not j.get("retried")}
+    blocked = [n for n in ("release:verify-receipt", "monitor:canary-energy", "monitor:promote") if jobs.get(n) == "failed"]
+    if blocked:
+        print(f"delivery blocked by {', '.join(blocked)}: nothing shipped")
+        return 0
+    deployed = jobs.get("monitor:promote") == "success"
+    tag = f"v0.1.{os.environ.get('CI_PIPELINE_IID', '')}" if jobs.get("release:gitlab-release") == "success" else ""
+    footprint = _read_json(args.summary) or {}
+    receipt, canary = _read_json(args.receipt), _read_json(args.canary)
+    closed = 0
+    for mr in gl.commit_merge_requests(sha):
+        if mr.get("state") != "merged":
+            continue
+        for issue in gl.mr_closes_issues(mr["iid"]):
+            note = voice.shipped(f"!{mr['iid']}", sha, args.region, deployed, footprint, receipt, canary, tag)
+            if not args.dry_run:
+                gl.issue_note(issue["iid"], note)
+                gl.set_labels(issue["iid"], remove=[RUNNING])
+            closed += 1
+    print(f"shipped note on {closed} issue(s)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="joule", description="Joule Thief")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -266,6 +338,23 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--month-to-date-g", type=float, default=0.0)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(fn=cmd_control)
+
+    p = sub.add_parser("energy-gate")
+    p.add_argument("--benchmark", default="benchmark.json")
+    p.add_argument("--job", default="verify:energy", help="job whose artifacts hold the target branch's benchmark")
+    p.add_argument("--mr", default="")
+    p.add_argument("--tolerance", type=float, default=float(os.environ.get("JOULE_ENERGY_TOLERANCE", "0.2")))
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(fn=cmd_energy_gate)
+
+    p = sub.add_parser("shipped")
+    p.add_argument("--pipeline", default="")
+    p.add_argument("--summary", default="footprint-summary.json")
+    p.add_argument("--receipt", default="receipt.predicate.json")
+    p.add_argument("--canary", default="canary-report.json")
+    p.add_argument("--region", default=os.environ.get("GCP_REGION", "europe-north1"))
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(fn=cmd_shipped)
 
     args = parser.parse_args(argv)
     return args.fn(args)

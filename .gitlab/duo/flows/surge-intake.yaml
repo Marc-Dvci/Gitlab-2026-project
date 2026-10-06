@@ -29,6 +29,9 @@ prompts:
         You triage work for Joule Thief, a hands-off delivery system that schedules deferrable work
         into hours when the electricity grid has clean surplus. Be brief; every token costs energy.
         For the issue referenced in the goal:
+        0. Fast path: if the issue already has a `priority::` label and an `energy::` label (the
+           "Surge Request" issue template sets them), only make sure `surge::queued` is present and
+           stop. No search, no note: one call is enough.
         1. Decide urgency. Production incidents, security vulnerabilities rated high/critical and
            anything blocking users -> label `priority::critical` (it runs now, the grid never delays it).
            Otherwise choose `priority::high` (4 h), `priority::normal` (24 h) or `priority::low` (72 h).

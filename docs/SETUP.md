@@ -74,14 +74,18 @@ Protect `main` (Workload Identity only trusts protected refs).
 | Flow | Trigger |
 |---|---|
 | surge-intake | Work item → Created |
-| carbon-reviewer | Merge request → Created (and Assign reviewer) |
+| carbon-reviewer | Assign reviewer (a human asks). CI also starts it through the Flows API when an MR regresses joules/request or edits a hot line |
 | retry-guard | Pipeline events → Failed |
-| release-captain | Pipeline events → Passed |
 | surge-worker | none: the dispatcher starts it through the Flows API |
+
+The closing "Shipped" note on delivered issues is written by `joule shipped` in `govern:footprint` (no LLM: it
+copies the pipeline's numbers). File deferrable work with the **Surge Request** issue template: it sets the
+labels, so triage needs one call.
 
 3. Find the surge-worker consumer id (GraphQL `aiCatalogConfiguredItems`, see the Flows API docs) and
    set `JOULE_FLOW_CONSUMER_ID`. Without it, the dispatcher falls back to the foundational
-   `developer/v1` flow.
+   `developer/v1` flow. Do the same for carbon-reviewer → `JOULE_REVIEWER_CONSUMER_ID` (without it the MR
+   energy note asks a human to assign the reviewer instead).
 4. **AI → Agents → New agent** for `.gitlab/duo/agents/grid.md` and `carbon-accountant.md`.
 5. Put the Cloud Run URL in `.gitlab/duo/mcp.json` and allow the MCP server in the group's Duo settings.
 

@@ -48,6 +48,7 @@ def main() -> None:
     Path("metrics.txt").write_text("\n".join(metrics) + "\n")
     Path("carbon-blame.md").write_text(render_markdown(costs, intensity_label=f"{INTENSITY:.0f} gCO₂/kWh"))
     Path("benchmark.json").write_text(json.dumps({"endpoints": endpoints, "projected_gco2e_per_day": projected,
+                                                  "traffic": TRAFFIC, "intensity_g_per_kwh": INTENSITY,
                                                   "lines": [c.__dict__ for c in costs[:20]]}, indent=2))
     print(Path("metrics.txt").read_text())
     print(Path("carbon-blame.md").read_text())

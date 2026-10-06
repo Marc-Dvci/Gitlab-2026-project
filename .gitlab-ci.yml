@@ -11,6 +11,7 @@
 #   JOULE_GITLAB_TOKEN   project access token (api) — dispatcher, footprint accounting, flags, issues
 #   GCP_PROJECT_ID, GCP_WIF_PROVIDER, GCP_REGION (europe-north1), GCP_AR_REPO
 #   JOULE_FLOW_CONSUMER_ID   AI Catalog consumer id of the "surge-worker" flow
+#   JOULE_REVIEWER_CONSUMER_ID   AI Catalog consumer id of the "carbon-reviewer" flow (started on energy regressions)
 #   JOULE_CONTROL_ID, JOULE_CONTROL_SECRET   compliance external control (Ultimate)
 
 workflow:
@@ -52,6 +53,12 @@ include:
     - if: $JOULE_TASK
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+.default-branch:  # receipts and gates are for artifacts that can be deployed, not for every MR image
+  rules:
+    - if: $JOULE_TASK
+      when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 .main-only:
@@ -97,10 +104,21 @@ verify:test:
 
 verify:energy:
   stage: verify
-  extends: .code-pipeline
+  rules:  # MRs measure only when they change code that serves requests; main always keeps the baseline
+    - if: $JOULE_TASK
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes: [app/**/*, joulethief/**/*, scripts/energy_benchmark.py, requirements.txt, requirements-dev.txt]
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - pip install -q -r requirements-dev.txt
     - python scripts/energy_benchmark.py
+    # Deterministic MR note with J/request vs the target branch; the Carbon Reviewer agent is started
+    # only when energy per request regresses or the MR edits one of the hottest lines.
+    - |
+      if [ -n "${JOULE_GITLAB_TOKEN:-}" ] && [ -n "${CI_MERGE_REQUEST_IID:-}" ]; then
+        python -m joulethief.cli energy-gate --benchmark benchmark.json
+      fi
   artifacts:
     expose_as: "Carbon blame"
     paths: [carbon-blame.md, benchmark.json, metrics.txt]
@@ -181,7 +199,7 @@ container_scanning:
 # ─────────────────────────────── release ───────────────────────────────
 release:receipt:
   stage: release
-  extends: .code-pipeline
+  extends: .default-branch
   image: alpine:3.20
   needs: [package:image, verify:energy]
   variables:
@@ -206,7 +224,7 @@ release:receipt:
 
 release:verify-receipt:  # the gate: no valid, within-budget carbon receipt -> no deploy
   stage: release
-  extends: .code-pipeline
+  extends: .default-branch
   image: alpine:3.20
   needs: [package:image, release:receipt]
   script:
@@ -329,6 +347,12 @@ govern:footprint:  # one job accounts for every job of the pipeline (retries inc
     - |
       if [ -n "${JOULE_CONTROL_ID:-}" ] && [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
         python -m joulethief.cli control --ledger pipeline-ledger.jsonl
+      fi
+    # Close the loop on the delivered issues with their carbon balance: a script, not an LLM —
+    # the numbers are copied from this pipeline's artifacts, so there is nothing to generate.
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
+        python -m joulethief.cli shipped --summary footprint-summary.json
       fi
   artifacts:
     when: always

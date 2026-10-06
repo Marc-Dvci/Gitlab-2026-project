@@ -17,7 +17,8 @@ KNOWN_TOOLS = {
 
 
 def test_flows_exist():
-    assert len(FLOWS) >= 5
+    names = {p.stem for p in FLOWS}
+    assert {"surge-intake", "surge-worker", "carbon-reviewer", "retry-guard"} <= names
 
 
 @pytest.mark.parametrize("path", FLOWS, ids=lambda p: p.name)

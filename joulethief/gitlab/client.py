@@ -92,6 +92,39 @@ class GitLab:
     def mr_note(self, iid: int, body: str) -> dict:
         return self.request("POST", f"{self._project_path}/merge_requests/{iid}/notes", {"body": body})
 
+    def find_mr_note(self, iid: int, marker: str) -> dict | None:
+        notes = self.request("GET", f"{self._project_path}/merge_requests/{iid}/notes",
+                             query={"per_page": 100, "sort": "desc"}) or []
+        return next((n for n in notes if marker in (n.get("body") or "")), None)
+
+    def upsert_mr_note(self, iid: int, body: str, marker: str) -> dict:
+        """Edit our earlier note (found by an HTML-comment marker) instead of adding one per pipeline."""
+        mine = self.find_mr_note(iid, marker)
+        if mine:
+            return self.request("PUT", f"{self._project_path}/merge_requests/{iid}/notes/{mine['id']}", {"body": body})
+        return self.mr_note(iid, body)
+
+    def mr_changed_files(self, iid: int) -> list[str]:
+        diffs = self.request("GET", f"{self._project_path}/merge_requests/{iid}/diffs", query={"per_page": 100}) or []
+        return sorted({d.get("new_path") or d.get("old_path") for d in diffs} - {None})
+
+    def commit_merge_requests(self, sha: str) -> list[dict]:
+        return self.request("GET", f"{self._project_path}/repository/commits/{sha}/merge_requests") or []
+
+    def mr_closes_issues(self, iid: int) -> list[dict]:
+        return self.request("GET", f"{self._project_path}/merge_requests/{iid}/closes_issues") or []
+
+    def job_artifact(self, ref: str, path: str, job: str) -> bytes | None:
+        """A file from the latest successful ``job`` artifacts on ``ref``; ``None`` when there is none yet."""
+        url = (self.base_url.rstrip("/") + f"{self._project_path}/jobs/artifacts/{urllib.parse.quote(ref, safe='')}/raw/"
+               + urllib.parse.quote(path) + "?" + urllib.parse.urlencode({"job": job}))
+        status, raw = self.transport("GET", url, self._headers(), None)
+        if status == 404:
+            return None
+        if status >= 400:
+            raise GitLabError(f"artifact {ref}:{path} ({job}) -> {status}")
+        return raw
+
     # -- agents -----------------------------------------------------------------------------
     def start_flow(self, goal: str, *, consumer_id: int | None = None, workflow_definition: str | None = None,
                    issue_iid: int | None = None, source_branch: str | None = None) -> dict:
