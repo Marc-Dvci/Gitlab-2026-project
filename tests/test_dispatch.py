@@ -42,6 +42,22 @@ def test_plan_moves_work_into_the_clean_valley(use_solver):
     assert p.saving_fraction > 0.9
 
 
+def test_partial_slot_jobs_are_costed_on_their_energy():
+    # 40 minutes spans two 30-minute slots; the plan must cost 40 minutes of energy, not an hour.
+    j = Job("a", timedelta(minutes=40), 0.3, T0, T0 + timedelta(hours=12), ("r1",))
+    p = plan([j], {"r1": signal([500] * 4 + [20] * 4 + [500] * 16)}, T0, horizon=timedelta(hours=12))
+    a = p.assignment("a")
+    assert a.expected_g == pytest.approx(j.energy_kwh * 20, rel=1e-3)
+    assert p.baseline_g == pytest.approx(j.energy_kwh * 500, rel=1e-3)
+
+
+def test_slot_as_clean_as_typical_is_not_deferred():
+    # Spanish spring: most known hours sit on the surplus floor, so the median *is* the floor.
+    # A slot that matches it must run, not wait for a later plan that cannot do better.
+    p = plan([job("a", deadline_h=72)], {"r1": signal([30] * 2 + [11] * 28 + [490] * 10)}, T0, horizon=timedelta(hours=20))
+    assert p.deferred == [] and p.assignment("a").start == T0 + 2 * SLOT
+
+
 def test_plan_respects_deadline_even_when_dirty():
     values = [500] * 4 + [10] * 20
     p = plan([job("a", deadline_h=2)], {"r1": signal(values)}, T0, horizon=timedelta(hours=12))

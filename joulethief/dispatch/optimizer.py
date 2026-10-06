@@ -99,7 +99,6 @@ def plan(
 ) -> Plan:
     start = utc(start)
     n = max(1, int(horizon / slot))
-    slot_h = slot.total_seconds() / 3600.0
     regions = sorted({r for j in jobs for r in j.regions if r in signals})
     known = {r: [v for v in signals[r].on_grid(start, n, slot) if v is not None] for r in regions}
     unknown = {r: (unknown_signal or {}).get(r, max(signals[r].values()) if len(signals[r]) else 1000.0) for r in regions}
@@ -115,7 +114,9 @@ def plan(
         window = sig[region][s:s + d]
         if len(window) < d:  # runs past the horizon: assume the unknown (pessimistic) value
             window = window + [unknown[region]] * (d - len(window))
-        return int(round(job.power_kw * slot_h * sum(window) * 1000))
+        # The job's energy spread over the slots it touches (as scored), not whole slots of power:
+        # a 40-minute job must not be costed as an hour, or deferral and @grid's numbers drift.
+        return int(round(job.energy_kwh / d * sum(window) * 1000))
 
     def start_time(s: int) -> datetime:
         return start + s * slot
@@ -143,8 +144,8 @@ def plan(
                 opts.append(_Candidate(r, s, cost_mg(job, r, s) + s))
         if opts:
             candidates[job.id] = opts
-            if beyond:
-                deferrable[job.id] = int(round(job.energy_kwh * typical[job_regions[0]] * 1000))
+            if beyond:  # deferring must *beat* every slot in view: ties (+n > any start tie-break) go to running
+                deferrable[job.id] = int(round(job.energy_kwh * typical[job_regions[0]] * 1000)) + n
             continue
         if beyond:
             continue  # nothing allowed inside this horizon; the job waits for a later plan

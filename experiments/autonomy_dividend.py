@@ -20,65 +20,23 @@ from __future__ import annotations
 import json
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from joulethief.dispatch.receding import OfficeHours, simulate, synthetic_backlog  # noqa: E402
 from joulethief.dispatch.uncertainty import ConformalIntervals, chronological_split, rolling_coverage  # noqa: E402
-from joulethief.signals.base import Point, Series  # noqa: E402
+from joulethief.replay import es_forecast_fn, gb_forecast_fn  # noqa: E402
 from joulethief.signals.marginal import PriceMarginalModel  # noqa: E402
-from joulethief.signals.snapshots import GB_LEADS, _gb_rows, es_prices, gb_forecast_errors, gb_intensity  # noqa: E402
-from joulethief.signals.base import parse_time  # noqa: E402
+from joulethief.signals.snapshots import es_prices, gb_forecast_errors, gb_intensity  # noqa: E402
 
 UTC = timezone.utc
 
 
-def gb_forecast_fn():
-    table: dict[datetime, dict] = {}
-    for r in _gb_rows():
-        table[parse_time(r["window_start_utc"])] = r
-    windows = sorted(table)
-    actual = gb_intensity()
-
-    def forecast(region: str, now: datetime) -> Series:
-        pts = []
-        for w in windows:
-            if w < now - timedelta(hours=1) or w > now + timedelta(hours=48):
-                continue
-            row = table[w]
-            if w < now:
-                v = actual.value_at(w)
-                if v is not None:
-                    pts.append(Point(w, v))
-                continue
-            lead = (w - now).total_seconds() / 3600
-            bucket = next((h for h in GB_LEADS if h >= lead), GB_LEADS[-1])
-            v = row[f"forecast_lead_{bucket}h_gco2_kwh"] or row["forecast_latest_gco2_kwh"]
-            if v:
-                pts.append(Point(w, float(v)))
-        return Series("GB", "carbon_intensity_average", "gCO2/kWh", timedelta(minutes=30), pts, "NESO forecast", kind="forecast")
-
-    return forecast
-
-
-def es_forecast_fn(marginal: Series):
-    madrid = ZoneInfo("Europe/Madrid")
-
-    def forecast(region: str, now: datetime) -> Series:
-        local = now.astimezone(madrid)
-        known_until_local = (local + timedelta(days=1 if local.hour >= 13 else 0)).replace(hour=0, minute=0) + timedelta(days=1)
-        known_until = known_until_local.astimezone(UTC)
-        return marginal.slice(now - timedelta(hours=1), known_until)
-
-    return forecast
-
-
-def run_case(name, region, actual, forecast, start, end, tz, surplus=None):
-    jobs = synthetic_backlog(start, (end - start).days - 3, region=region, tz=tz)
+def run_case(name, region, actual, forecast, start, end, tz, surplus=None, seed=7):
+    jobs = synthetic_backlog(start, (end - start).days - 3, region=region, tz=tz, seed=seed)
     office = OfficeHours(tz=tz)
     results = {}
     for policy in ("run_now", "supervised", "hands_off"):
