@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joule Thief</title>
+<style>
+  :root {
+    --bg: #f7f7f4; --panel: #ffffff; --ink: #1d1f1e; --muted: #5d6460; --line: #dcdfdb;
+    --accent: #1f7a4d; --accent-soft: #d9efe3; --warn: #b4531e; --surplus: rgba(31,122,77,.14);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111413; --panel: #191d1b; --ink: #e8ebe9; --muted: #9aa39e; --line: #2c3330;
+            --accent: #5fcf95; --accent-soft: #1d3a2b; --warn: #f0a070; --surplus: rgba(95,207,149,.16); }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 20px; margin-bottom: 20px; }
+  h1 { font-size: 28px; margin: 0; letter-spacing: -.01em; }
+  .tag { color: var(--muted); }
+  .pill { font: 12px var(--mono); padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+  section.wide { grid-column: 1 / -1; }
+  h2 { font-size: 15px; margin: 0 0 10px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  select { font: inherit; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+  svg { width: 100%; height: 220px; display: block; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; }
+  .big { font-size: 26px; font-weight: 650; color: var(--accent); }
+  code { font-family: var(--mono); font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Joule Thief</h1>
+    <span class="tag">Hands-off agents that run the post-code lifecycle on the energy the grid throws away. <b>The backlog is a battery.</b></span>
+    <span class="pill" id="status">loading…</span>
+  </header>
+
+  <div class="grid">
+    <section class="wide">
+      <h2>Decision signal — what one more kWh emits
+        <select id="region" aria-label="Region"></select></h2>
+      <div class="muted" id="signal-meta"></div>
+      <svg id="chart" role="img" aria-label="Decision signal over time"></svg>
+    </section>
+
+    <section class="wide">
+      <h2>Carbon dividend of autonomy (real grid data)</h2>
+      <div class="muted">Same backlog, same deadlines. Supervised work waits for office hours; hands-off work follows the wind and the sun.</div>
+      <div class="scroll"><table id="dividend"></table></div>
+    </section>
+
+    <section>
+      <h2>Regions: average vs marginal</h2>
+      <div class="scroll"><table id="regions"></table></div>
+    </section>
+
+    <section>
+      <h2>Carbon blame (this service)</h2>
+      <div class="muted">Sampled CPU time per source line × traffic × grid intensity.</div>
+      <div class="scroll"><table id="blame"></table></div>
+    </section>
+  </div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = (v, d = 0) => v == null ? "—" : Number(v).toFixed(d);
+
+async function getJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
+
+function drawChart(payload) {
+  const svg = $("chart"), W = svg.clientWidth || 800, H = 220, P = 32;
+  const pts = payload.points.map(p => ({ t: new Date(p.t).getTime(), v: p.v }));
+  if (!pts.length) { svg.innerHTML = ""; return; }
+  const t0 = pts[0].t, t1 = pts[pts.length - 1].t, vmax = Math.max(...pts.map(p => p.v)) * 1.1 || 1;
+  const x = t => P + (W - 2 * P) * (t - t0) / Math.max(t1 - t0, 1), y = v => H - P - (H - 2 * P) * v / vmax;
+  const css = getComputedStyle(document.documentElement);
+  let out = "";
+  (payload.surplus_windows || []).forEach(w => {
+    const a = Math.max(t0, new Date(w.start).getTime()), b = Math.min(t1, new Date(w.end).getTime());
+    if (b > a) out += `<rect x="${x(a)}" y="${P}" width="${x(b) - x(a)}" height="${H - 2 * P}" fill="${css.getPropertyValue('--surplus')}"/>`;
+  });
+  const now = Date.now();
+  if (now > t0 && now < t1) out += `<line x1="${x(now)}" x2="${x(now)}" y1="${P}" y2="${H - P}" stroke="${css.getPropertyValue('--warn')}" stroke-dasharray="4 3"/>`;
+  const path = pts.map((p, i) => `${i ? "L" : "M"}${x(p.t).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
+  out += `<path d="${path}" fill="none" stroke="${css.getPropertyValue('--accent')}" stroke-width="2"/>`;
+  [0, vmax / 2, vmax].forEach(v => out += `<text x="4" y="${y(v) + 4}" font-size="11" fill="${css.getPropertyValue('--muted')}">${v.toFixed(0)}</text>`);
+  out += `<text x="${P}" y="${H - 8}" font-size="11" fill="${css.getPropertyValue('--muted')}">${new Date(t0).toISOString().slice(0, 16).replace("T", " ")} UTC</text>`;
+  out += `<text x="${W - P}" y="${H - 8}" font-size="11" text-anchor="end" fill="${css.getPropertyValue('--muted')}">${new Date(t1).toISOString().slice(0, 16).replace("T", " ")} UTC</text>`;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = out;
+}
+
+async function loadSignal() {
+  const region = $("region").value;
+  const p = await getJSON(`/api/grid/${region}`);
+  $("signal-meta").textContent = `${p.metric} (${p.unit}) · ${p.mode} · ${p.source}` + (p.surplus_windows?.length ? ` · ${p.surplus_windows.length} surplus window(s) shaded` : "");
+  drawChart(p);
+}
+
+async function init() {
+  const health = await getJSON("/healthz");
+  $("status").textContent = health.eco_mode ? "eco-mode on: demand shaped" : "grid-aware";
+  const regions = await getJSON("/api/regions");
+  $("region").innerHTML = regions.map(r => `<option value="${r.region}">${r.city} · ${r.region}</option>`).join("");
+  $("region").value = "europe-southwest1";
+  $("region").onchange = loadSignal;
+  $("regions").innerHTML = "<tr><th>Region</th><th class=num>Google CFE</th><th class=num>Avg g/kWh</th><th>Signal</th></tr>" +
+    regions.map(r => `<tr><td>${r.city}<br><code>${r.region}</code></td><td class=num>${fmt(r.google_cfe * 100)}%</td><td class=num>${fmt(r.grid_intensity_avg)}</td><td>${r.signal}${r.notes ? `<div class=muted>${r.notes}</div>` : ""}</td></tr>`).join("");
+  loadSignal().catch(e => $("signal-meta").textContent = "signal unavailable: " + e);
+  getJSON("/api/results/autonomy").then(res => {
+    let rows = "<tr><th>Grid</th><th class=num>Supervised</th><th class=num>Hands-off</th><th class=num>Dividend</th><th class=num>Late (sup. / hands-off)</th></tr>";
+    res.cases.forEach(c => { const r = c.results;
+      rows += `<tr><td>${c.case}</td><td class=num>${fmt(-r.supervised.reduction_vs_run_now * 100, 1)}%</td><td class=num>${fmt(-r.hands_off.reduction_vs_run_now * 100, 1)}%</td><td class=num><span class=big>${fmt(r.carbon_dividend_of_autonomy * 100, 1)}%</span></td><td class=num>${r.supervised.late_jobs} / ${r.hands_off.late_jobs}</td></tr>`; });
+    $("dividend").innerHTML = rows;
+  }).catch(() => $("dividend").innerHTML = "<tr><td>Run experiments/autonomy_dividend.py</td></tr>");
+  getJSON("/api/blame").then(b => {
+    $("blame").innerHTML = "<tr><th class=num>g/day</th><th>Line</th><th>Function</th></tr>" +
+      (b.lines.length ? b.lines.slice(0, 8).map(l => `<tr><td class=num>${fmt(l.g_per_day, 3)}</td><td><code>${l.file}:${l.line}</code></td><td><code>${l.function}</code></td></tr>`).join("")
+                      : "<tr><td colspan=3 class=muted>No samples yet — open the comparison endpoint to generate traffic.</td></tr>");
+  });
+}
+init();
+</script>
+</body>
+</html>

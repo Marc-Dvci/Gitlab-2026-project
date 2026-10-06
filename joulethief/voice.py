@@ -1,0 +1,51 @@
+"""@grid — the electricity grid gets a seat at code review.
+
+Messages are generated deterministically from data (no LLM): it is cheaper, greener,
+reproducible, and the numbers in a comment are exactly the numbers in the ledger.
+"""
+
+from __future__ import annotations
+
+from datetime import datetime
+
+from .signals.regions import REGIONS
+
+
+def _hhmm(t: datetime) -> str:
+    return t.strftime("%a %H:%M UTC")
+
+
+def region_label(region: str) -> str:
+    r = REGIONS.get(region)
+    if not r:
+        return region
+    zone = f", {r.price_zone} bidding zone" if r.price_zone else ""
+    return f"{r.city} (`{region}`{zone})"
+
+
+def holding(region: str, now_g: float, start: datetime, planned_g_per_kwh: float, saving: float, deadline: datetime,
+            reason: str = "") -> str:
+    why = f" {reason}" if reason else ""
+    return (f"**@grid · {region_label(region)}** — one more kWh here right now would be answered at about "
+            f"**{now_g:.0f} gCO₂/kWh**.{why} I'm holding this Surge Request until **{_hhmm(start)}**, when I expect "
+            f"**{planned_g_per_kwh:.0f} gCO₂/kWh** (≈{saving:.0%} less). Deadline {_hhmm(deadline)} is safe.")
+
+
+def releasing(region: str, now_g: float, price: float | None, count: int) -> str:
+    price_text = f" Day-ahead price is **{price:.1f} €/MWh**" if price is not None else ""
+    surplus = " — clean power is in surplus." if price is not None and price <= 0 else "."
+    return (f"**@grid · {region_label(region)}** — releasing {count} queued Surge Request(s) now: marginal ≈ "
+            f"**{now_g:.0f} gCO₂/kWh**.{price_text}{surplus}")
+
+
+def urgent(region: str, now_g: float, extra_g: float) -> str:
+    return (f"**@grid · {region_label(region)}** — critical work never waits for me. Running now at "
+            f"**{now_g:.0f} gCO₂/kWh**; waiting would have saved about {extra_g:.1f} g. Logged in the ledger.")
+
+
+def daily_plan(rows: list[dict], horizon_label: str) -> str:
+    lines = [f"## Tomorrow's dispatch plan ({horizon_label})", "",
+             "| Work | Region | Start | Expected gCO₂ | vs. run-now |", "|---|---|---|---:|---:|"]
+    for r in rows:
+        lines.append(f"| {r['job']} | {r['region']} | {r['start']} | {r['expected_g']:.1f} | {r['saving']:+.0%} |")
+    return "\n".join(lines)
