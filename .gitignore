@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.cache/
+*.egg-info/
+build/
+dist/
+.terraform/
+*.tfstate
+*.tfstate.*
+.env
+ledger.jsonl
