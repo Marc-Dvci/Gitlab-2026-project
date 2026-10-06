@@ -1,0 +1,323 @@
+{
+  "generated": "2026-10-06T14:02:14+00:00",
+  "runtime_s": 547.2,
+  "seeds": [
+    {
+      "case": "GB (NESO average, Sep\u2013Oct 2026)",
+      "runs": [
+        {
+          "seed": 7,
+          "jobs": 276,
+          "supervised": 0.1791698480290166,
+          "hands_off": 0.24855770401990973,
+          "dividend": 0.06938785599089316,
+          "late_supervised": 10,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 11,
+          "jobs": 276,
+          "supervised": 0.15166551095940162,
+          "hands_off": 0.23702608933969938,
+          "dividend": 0.08536057838029773,
+          "late_supervised": 14,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 23,
+          "jobs": 276,
+          "supervised": 0.1652542460534504,
+          "hands_off": 0.23570065313762145,
+          "dividend": 0.07044640708417108,
+          "late_supervised": 8,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 42,
+          "jobs": 276,
+          "supervised": 0.17871184558239572,
+          "hands_off": 0.22637001522042355,
+          "dividend": 0.04765816963802785,
+          "late_supervised": 6,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 101,
+          "jobs": 276,
+          "supervised": 0.17309244582425132,
+          "hands_off": 0.23122018903695118,
+          "dividend": 0.05812774321269995,
+          "late_supervised": 5,
+          "late_hands_off": 0
+        }
+      ],
+      "supervised": {
+        "mean": 0.1696,
+        "min": 0.1517,
+        "max": 0.1792
+      },
+      "hands_off": {
+        "mean": 0.2358,
+        "min": 0.2264,
+        "max": 0.2486
+      },
+      "dividend": {
+        "mean": 0.0662,
+        "min": 0.0477,
+        "max": 0.0854
+      },
+      "late_hands_off_max": 0,
+      "late_supervised": {
+        "mean": 8.6,
+        "min": 5,
+        "max": 14
+      }
+    },
+    {
+      "case": "ES spring (Mar\u2013May 2025), marginal heuristic",
+      "runs": [
+        {
+          "seed": 7,
+          "jobs": 756,
+          "supervised": 0.26459249645008565,
+          "hands_off": 0.3420990857101289,
+          "dividend": 0.07750658926004322,
+          "late_supervised": 22,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 11,
+          "jobs": 756,
+          "supervised": 0.27235498421125626,
+          "hands_off": 0.3675997615344738,
+          "dividend": 0.09524477732321762,
+          "late_supervised": 18,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 23,
+          "jobs": 756,
+          "supervised": 0.31361593406984967,
+          "hands_off": 0.3466635319470647,
+          "dividend": 0.03304759787721501,
+          "late_supervised": 12,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 42,
+          "jobs": 756,
+          "supervised": 0.24953830055019055,
+          "hands_off": 0.32420284481411865,
+          "dividend": 0.07466454426392809,
+          "late_supervised": 17,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 101,
+          "jobs": 756,
+          "supervised": 0.26785768922417386,
+          "hands_off": 0.3006600432360489,
+          "dividend": 0.03280235401187506,
+          "late_supervised": 15,
+          "late_hands_off": 0
+        }
+      ],
+      "supervised": {
+        "mean": 0.2736,
+        "min": 0.2495,
+        "max": 0.3136
+      },
+      "hands_off": {
+        "mean": 0.3362,
+        "min": 0.3007,
+        "max": 0.3676
+      },
+      "dividend": {
+        "mean": 0.0627,
+        "min": 0.0328,
+        "max": 0.0952
+      },
+      "late_hands_off_max": 0,
+      "late_supervised": {
+        "mean": 16.8,
+        "min": 12,
+        "max": 22
+      }
+    },
+    {
+      "case": "ES summer (Jul\u2013Sep 2025), marginal heuristic",
+      "runs": [
+        {
+          "seed": 7,
+          "jobs": 768,
+          "supervised": 0.20489736093673305,
+          "hands_off": 0.30651101526028124,
+          "dividend": 0.10161365432354821,
+          "late_supervised": 29,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 11,
+          "jobs": 768,
+          "supervised": 0.21480988067467477,
+          "hands_off": 0.3250616438388656,
+          "dividend": 0.11025176316419087,
+          "late_supervised": 25,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 23,
+          "jobs": 768,
+          "supervised": 0.2226711727208549,
+          "hands_off": 0.3321050684883532,
+          "dividend": 0.10943389576749828,
+          "late_supervised": 16,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 42,
+          "jobs": 768,
+          "supervised": 0.21991416323615176,
+          "hands_off": 0.3144043477773112,
+          "dividend": 0.09449018454115946,
+          "late_supervised": 15,
+          "late_hands_off": 0
+        },
+        {
+          "seed": 101,
+          "jobs": 768,
+          "supervised": 0.20504959339643347,
+          "hands_off": 0.2841116753202171,
+          "dividend": 0.07906208192378353,
+          "late_supervised": 14,
+          "late_hands_off": 0
+        }
+      ],
+      "supervised": {
+        "mean": 0.2135,
+        "min": 0.2049,
+        "max": 0.2227
+      },
+      "hands_off": {
+        "mean": 0.3124,
+        "min": 0.2841,
+        "max": 0.3321
+      },
+      "dividend": {
+        "mean": 0.099,
+        "min": 0.0791,
+        "max": 0.1103
+      },
+      "late_hands_off_max": 0,
+      "late_supervised": {
+        "mean": 19.8,
+        "min": 14,
+        "max": 29
+      }
+    }
+  ],
+  "knees": [
+    {
+      "case": "ES spring (Mar\u2013May 2025)",
+      "reduction_matrix": {
+        "20": {
+          "20": 0.3573,
+          "40": 0.3175,
+          "60": 0.2838,
+          "80": 0.2592
+        },
+        "40": {
+          "20": 0.3711,
+          "40": 0.3421,
+          "60": 0.3244,
+          "80": 0.3032
+        },
+        "60": {
+          "20": 0.3829,
+          "40": 0.3575,
+          "60": 0.3616,
+          "80": 0.3604
+        },
+        "80": {
+          "20": 0.3829,
+          "40": 0.3575,
+          "60": 0.3621,
+          "80": 0.3758
+        }
+      },
+      "market": {
+        "run_now": {
+          "eur_per_mwh": 14.51,
+          "surplus_share": 0.426
+        },
+        "hands_off_knee_20": {
+          "eur_per_mwh": 10.27,
+          "surplus_share": 0.4646
+        },
+        "hands_off_knee_40": {
+          "eur_per_mwh": 9.54,
+          "surplus_share": 0.4659
+        },
+        "hands_off_knee_60": {
+          "eur_per_mwh": 8.45,
+          "surplus_share": 0.465
+        },
+        "hands_off_knee_80": {
+          "eur_per_mwh": 8.04,
+          "surplus_share": 0.4654
+        }
+      }
+    },
+    {
+      "case": "ES summer (Jul\u2013Sep 2025)",
+      "reduction_matrix": {
+        "20": {
+          "20": 0.2429,
+          "40": 0.2406,
+          "60": 0.2312,
+          "80": 0.2174
+        },
+        "40": {
+          "20": 0.2756,
+          "40": 0.3065,
+          "60": 0.3122,
+          "80": 0.3035
+        },
+        "60": {
+          "20": 0.2974,
+          "40": 0.3326,
+          "60": 0.3507,
+          "80": 0.355
+        },
+        "80": {
+          "20": 0.3083,
+          "40": 0.3466,
+          "60": 0.3691,
+          "80": 0.3864
+        }
+      },
+      "market": {
+        "run_now": {
+          "eur_per_mwh": 34.01,
+          "surplus_share": 0.025
+        },
+        "hands_off_knee_20": {
+          "eur_per_mwh": 26.43,
+          "surplus_share": 0.0425
+        },
+        "hands_off_knee_40": {
+          "eur_per_mwh": 23.33,
+          "surplus_share": 0.0445
+        },
+        "hands_off_knee_60": {
+          "eur_per_mwh": 21.2,
+          "surplus_share": 0.0446
+        },
+        "hands_off_knee_80": {
+          "eur_per_mwh": 19.84,
+          "surplus_share": 0.0439
+        }
+      }
+    }
+  ]
+}
