@@ -35,6 +35,18 @@
   .scroll { overflow-x: auto; }
   .big { font-size: 26px; font-weight: 650; color: var(--accent); }
   code { font-family: var(--mono); font-size: 12px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 12px 0; }
+  .kpi { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .kpi .v { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .kpi .l { color: var(--muted); font-size: 12px; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 8px 0; }
+  .controls input[type=range] { flex: 1 1 240px; accent-color: var(--accent); }
+  button { font: inherit; padding: 4px 14px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); cursor: pointer; }
+  #replay-gantt { height: auto; }
+  .feed { list-style: none; padding: 0; margin: 8px 0 0; font-size: 13px; }
+  .feed li { border-left: 3px solid var(--accent); padding: 4px 10px; margin-bottom: 6px; }
+  .feed li.urgent { border-left-color: var(--warn); }
+  .feed time { color: var(--muted); font-size: 12px; display: block; }
 </style>
 </head>
 <body>
@@ -51,6 +63,20 @@
         <select id="region" aria-label="Region"></select></h2>
       <div class="muted" id="signal-meta"></div>
       <svg id="chart" role="img" aria-label="Decision signal over time"></svg>
+    </section>
+
+    <section class="wide" id="replay">
+      <h2>The backlog is a battery — a real week, replayed</h2>
+      <div class="muted" id="replay-meta"></div>
+      <div class="kpis" id="replay-kpis"></div>
+      <svg id="replay-chart" role="img" aria-label="Marginal signal, surplus hours and queued energy over the replayed week"></svg>
+      <svg id="replay-gantt" role="img" aria-label="When each issue was filed, waited and ran"></svg>
+      <div class="controls">
+        <button id="replay-play" type="button">Play</button>
+        <input type="range" id="replay-t" min="0" max="0" value="0" aria-label="Replay time">
+        <span class="muted" id="replay-now"></span>
+      </div>
+      <ul class="feed" id="replay-feed" aria-live="polite"></ul>
     </section>
 
     <section class="wide">
@@ -129,7 +155,98 @@ async function init() {
                       : "<tr><td colspan=3 class=muted>No samples yet — open the comparison endpoint to generate traffic.</td></tr>");
   });
 }
+const madrid = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const madridDay = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", day: "numeric", month: "short", year: "numeric" });
+const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const md = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`(.+?)`/g, "<code>$1</code>");
+let R = null, timer = null;
+
+function drawReplay(i) {
+  const css = getComputedStyle(document.documentElement), c = (v) => css.getPropertyValue(v);
+  const ticks = R.ticks, cur = new Date(ticks[i].t).getTime();
+  const t0 = new Date(ticks[0].t).getTime(), t1 = new Date(ticks[ticks.length - 1].t).getTime();
+  const svg = $("replay-chart"), W = svg.clientWidth || 800, H = 200, P = 36;
+  const x = (t) => P + (W - 2 * P) * (t - t0) / Math.max(t1 - t0, 1);
+  const gmax = Math.max(...ticks.map((k) => k.g_per_kwh || 0)) * 1.1 || 1;
+  const kmax = Math.max(...ticks.map((k) => k.pending_kwh)) * 1.2 || 1;
+  const yg = (v) => H - P - (H - 2 * P) * v / gmax, yk = (v) => H - P - (H - 2 * P) * v / kmax;
+  let out = "";
+  R.surplus_windows.forEach((w) => {
+    const a = Math.max(t0, new Date(w.start).getTime()), b = Math.min(t1, new Date(w.end).getTime());
+    if (b > a) out += `<rect x="${x(a)}" y="${P}" width="${x(b) - x(a)}" height="${H - 2 * P}" fill="${c("--surplus")}"/>`;
+  });
+  const seen = ticks.slice(0, i + 1);
+  const area = seen.map((k, j) => `${j ? "L" : "M"}${x(new Date(k.t).getTime()).toFixed(1)},${yk(k.pending_kwh).toFixed(1)}`).join("");
+  out += `<path d="${area}L${x(cur).toFixed(1)},${H - P}L${P},${H - P}Z" fill="${c("--accent")}" fill-opacity=".22" stroke="${c("--accent")}" stroke-width="1.5"/>`;
+  const line = ticks.filter((k) => k.g_per_kwh != null).map((k, j) => `${j ? "L" : "M"}${x(new Date(k.t).getTime()).toFixed(1)},${yg(k.g_per_kwh).toFixed(1)}`).join("");
+  out += `<path d="${line}" fill="none" stroke="${c("--muted")}" stroke-width="1.5"/>`;
+  out += `<line x1="${x(cur)}" x2="${x(cur)}" y1="${P - 6}" y2="${H - P}" stroke="${c("--warn")}" stroke-dasharray="4 3"/>`;
+  out += `<text x="4" y="${P - 10}" font-size="11" fill="${c("--muted")}">gCO₂/kWh (line, max ${gmax.toFixed(0)})</text>`;
+  out += `<text x="${W - 4}" y="${P - 10}" font-size="11" text-anchor="end" fill="${c("--accent")}">queued kWh (area, max ${kmax.toFixed(2)})</text>`;
+  for (let d = 0; d < (t1 - t0) / 864e5; d++) {
+    const t = t0 + d * 864e5;
+    out += `<text x="${x(t) + 2}" y="${H - P + 14}" font-size="11" fill="${c("--muted")}">${madrid.format(new Date(t)).split(",")[0]}</text>`;
+  }
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = out;
+
+  const g = $("replay-gantt"), row = 14, GH = R.issues.length * row + 8;
+  let bars = "";
+  R.issues.forEach((it, k) => {
+    const y = 4 + k * row, filed = new Date(it.filed).getTime();
+    if (filed > cur) return;
+    const started = it.started ? new Date(it.started).getTime() : null, fin = it.finished ? new Date(it.finished).getTime() : null;
+    const waitEnd = started && started <= cur ? started : cur;
+    const color = it.priority === "critical" ? c("--warn") : c("--accent");
+    bars += `<text x="2" y="${y + 9}" font-size="10" fill="${c("--muted")}">#${it.iid}</text>`;
+    bars += `<line x1="${x(filed)}" x2="${Math.max(x(waitEnd), x(filed) + 1)}" y1="${y + 6}" y2="${y + 6}" stroke="${c("--muted")}" stroke-dasharray="2 2"><title>#${it.iid} waiting</title></line>`;
+    if (started && started <= cur) {
+      const end = Math.min(fin || cur, cur);
+      bars += `<rect x="${x(started)}" y="${y + 1}" width="${Math.max(x(end) - x(started), 4)}" height="${row - 4}" rx="2" fill="${color}"><title>#${it.iid} ${esc(it.title)}: ${it.g ?? "…"} g (if run on filing: ${it.g_if_run_on_filing ?? "…"} g)</title></rect>`;
+    }
+  });
+  g.setAttribute("viewBox", `0 0 ${W} ${GH}`);
+  g.style.height = GH + "px";
+  g.innerHTML = bars;
+
+  const k = ticks[i];
+  $("replay-now").textContent = `${madrid.format(new Date(k.t))} Madrid · ${k.g_per_kwh?.toFixed(0) ?? "—"} gCO₂/kWh · ` +
+    `${k.price?.toFixed(1) ?? "—"} €/MWh · ${k.queued} waiting (${k.pending_kwh.toFixed(2)} kWh) · ${k.running} running`;
+  const notes = R.events.filter((e) => e.kind === "note" && new Date(e.t).getTime() <= cur).slice(-3).reverse();
+  $("replay-feed").innerHTML = notes.map((e) => `<li class="${e.body.includes("never waits") ? "urgent" : ""}"><time>${madrid.format(new Date(e.t))} · #${e.iid}</time>${md(e.body)}</li>`).join("");
+}
+
+async function loadReplay() {
+  R = await getJSON("/api/replay");
+  const T = R.totals, slider = $("replay-t");
+  $("replay-meta").innerHTML = `The real dispatcher (<code>joulethief.loop.tick</code>) every 30 min and on every new issue, on OMIE day-ahead prices for ` +
+    `${madridDay.format(new Date(R.start))} – ${madridDay.format(new Date(new Date(R.end).getTime() - 1))}, Madrid. Shaded: surplus hours (price ≤ 0). ` +
+    (R.other_weeks?.length ? `Replay of real data; the same backlog saves ${Math.min(...R.other_weeks.map((w) => w.saving * 100)).toFixed(0)}–` +
+      `${Math.max(...R.other_weeks.map((w) => w.saving * 100)).toFixed(0)}% on the first week of each month (docs/results/loop_replay.md).` : "Replay of real data.");
+  $("replay-kpis").innerHTML = [
+    [`${T.finished} / ${T.issues}`, `issues done · ${T.late} late`],
+    [`${T.g.toFixed(0)} g`, `vs ${T.g_if_run_on_filing.toFixed(0)} g if run on filing`],
+    [`${(-T.saving * 100).toFixed(0)}%`, "emissions, same work, same deadlines"],
+    [`${T.llm_calls_by_loop}`, `LLM calls by the loop · ${T.notes} @grid notes`],
+  ].map(([v, l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+  slider.max = R.ticks.length - 1;
+  slider.value = R.ticks.length - 1;
+  slider.oninput = () => { clearInterval(timer); timer = null; $("replay-play").textContent = "Play"; drawReplay(+slider.value); };
+  $("replay-play").onclick = () => {
+    if (timer) { clearInterval(timer); timer = null; $("replay-play").textContent = "Play"; return; }
+    if (+slider.value >= +slider.max) slider.value = 0;
+    $("replay-play").textContent = "Pause";
+    timer = setInterval(() => {
+      if (+slider.value >= +slider.max) { clearInterval(timer); timer = null; $("replay-play").textContent = "Play"; return; }
+      slider.value = +slider.value + 1;
+      drawReplay(+slider.value);
+    }, 60);
+  };
+  drawReplay(+slider.value);
+}
+
 init();
+loadReplay().catch(() => $("replay-meta").textContent = "Replay unavailable: run experiments/loop_replay.py");
 </script>
 </body>
 </html>

@@ -7,6 +7,9 @@ Every tick (Cloud Scheduler → Cloud Run, or a scheduled GitLab pipeline):
   4. start the work whose window has opened — a GitLab Duo flow through the Flows API
      (bots cannot trigger flows by mention) — and relabel the issue ``surge::running``;
   5. let @grid explain every hold and every release on the issue itself.
+
+A GitLab issue webhook (``/api/hook/gitlab``) also ticks the moment an issue becomes a Surge
+Request, so critical work never waits for the schedule.
 """
 
 from __future__ import annotations
@@ -73,6 +76,22 @@ def issue_to_job(issue: dict, regions: tuple[str, ...]) -> Job:
     return job_from_issue(issue["iid"], labels, parse_time(issue["created_at"]), duration, power, regions, kind)
 
 
+def cheapest_start(series: Series, job: Job, now: datetime, horizon: timedelta,
+                   slot: timedelta = timedelta(minutes=30)) -> tuple[float, datetime] | None:
+    """(grams, start) of the cleanest start for ``job`` in the known part of ``series``, costed like the plan."""
+    d = job.slots(slot)
+    values = series.on_grid(now, int(horizon / slot), slot)
+    best = None
+    for s in range(len(values) - d + 1):
+        window = values[s:s + d]
+        if None in window:
+            break
+        grams = job.energy_kwh / d * sum(window)
+        if best is None or grams < best[0]:
+            best = (grams, now + s * slot)
+    return best
+
+
 def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> TickReport:
     now = utc(now)
     issues = {i["iid"]: i for label in (QUEUED, SCHEDULED) for i in gitlab.issues([label])}
@@ -87,11 +106,14 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
         issue = issues[iid]
         job = next(j for j in jobs if j.id == a.job_id)
         now_g = sig[a.region].value_at(now) or a.expected_g / max(job.energy_kwh, 1e-9)
-        if a.start <= now + cfg.tick:
+        if a.start < now + cfg.tick / 2:  # planned for now; work planned for the next slot waits for the next tick
             if job.urgent:
-                note = voice.urgent(a.region, now_g, 0.0)
+                # what urgency costs: the cleanest start in view, had the work been allowed to wait
+                best = cheapest_start(sig[a.region], job, now, cfg.horizon)
+                extra = a.expected_g - best[0] if best else 0.0
+                note = voice.urgent(a.region, now_g, max(extra, 0.0), best[1] if best else None)
             else:
-                note = voice.releasing(a.region, now_g, None, 1)
+                note = voice.releasing(a.region, now_g, None)
             report.started.append(a.job_id)
             report.notes[a.job_id] = note
             if not cfg.dry_run:
@@ -117,7 +139,33 @@ def tick(gitlab, signals: SignalProvider, cfg: LoopConfig, now: datetime) -> Tic
             if not cfg.dry_run and first_hold:
                 gitlab.set_labels(iid, add=[SCHEDULED], remove=[QUEUED])
                 gitlab.issue_note(iid, note)
+    for job_id in p.deferred:  # nothing in view beats a typical hour: wait for the next prices/forecast
+        iid = int(job_id.lstrip("#"))
+        job = next(j for j in jobs if j.id == job_id)
+        region = next(r for r in job.regions if r in sig)
+        now_g = sig[region].value_at(now) or p.typical.get(region, 0.0)
+        note = voice.deferring(region, now_g, p.typical.get(region, now_g), job.deadline)
+        report.held.append(job_id)
+        report.notes[job_id] = note
+        if not cfg.dry_run and QUEUED in issues[iid].get("labels", []):
+            gitlab.set_labels(iid, add=[SCHEDULED], remove=[QUEUED])
+            gitlab.issue_note(iid, note)
     return report
+
+
+def wants_tick(event: dict) -> bool:
+    """Should a GitLab issue webhook wake the dispatcher? Only when an issue has just become a Surge Request
+    (opened with, or newly given, ``surge::queued``), so critical work starts within seconds instead of at the
+    next scheduled tick, and the dispatcher's own relabelling never wakes it again."""
+    if event.get("object_kind") != "issue":
+        return False
+    current = {label.get("title") for label in event.get("labels") or []}
+    if QUEUED not in current:
+        return False
+    if (event.get("object_attributes") or {}).get("action") in ("open", "reopen"):
+        return True
+    previous = ((event.get("changes") or {}).get("labels") or {}).get("previous") or []
+    return QUEUED not in {label.get("title") for label in previous}
 
 
 def publish_plan(gitlab, report: TickReport, title_prefix: str = "Dispatch plan") -> dict | None:

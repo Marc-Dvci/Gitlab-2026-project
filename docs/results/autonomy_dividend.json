@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06T12:42:05+00:00",
+  "generated": "2026-10-06T13:50:37+00:00",
   "cases": [
     {
       "case": "GB (NESO average intensity, Sep\u2013Oct 2026)",
@@ -22,25 +22,25 @@
           "policy": "supervised",
           "jobs": 276,
           "energy_kwh": 41.5668,
-          "realized_g": 3561.5,
+          "realized_g": 3592.65,
           "surplus_share": 0.0,
-          "late_jobs": 9,
-          "mean_wait_h": 13.19,
-          "runtime_s": 7.5,
-          "reduction_vs_run_now": 0.1863
+          "late_jobs": 10,
+          "mean_wait_h": 13.53,
+          "runtime_s": 8.3,
+          "reduction_vs_run_now": 0.1792
         },
         "hands_off": {
           "policy": "hands_off",
           "jobs": 276,
           "energy_kwh": 41.5668,
-          "realized_g": 3286.07,
+          "realized_g": 3288.86,
           "surplus_share": 0.0,
           "late_jobs": 0,
-          "mean_wait_h": 15.05,
-          "runtime_s": 13.6,
-          "reduction_vs_run_now": 0.2492
+          "mean_wait_h": 14.7,
+          "runtime_s": 12.2,
+          "reduction_vs_run_now": 0.2486
         },
-        "carbon_dividend_of_autonomy": 0.0629
+        "carbon_dividend_of_autonomy": 0.0694
       }
     },
     {
@@ -64,25 +64,25 @@
           "policy": "supervised",
           "jobs": 756,
           "energy_kwh": 114.4039,
-          "realized_g": 10207.93,
-          "surplus_share": 0.4607,
+          "realized_g": 10055.33,
+          "surplus_share": 0.4547,
           "late_jobs": 22,
-          "mean_wait_h": 4.52,
-          "runtime_s": 8.5,
-          "reduction_vs_run_now": 0.2534
+          "mean_wait_h": 4.15,
+          "runtime_s": 8.0,
+          "reduction_vs_run_now": 0.2646
         },
         "hands_off": {
           "policy": "hands_off",
           "jobs": 756,
           "energy_kwh": 114.4039,
-          "realized_g": 9021.96,
-          "surplus_share": 0.4682,
+          "realized_g": 8995.57,
+          "surplus_share": 0.4643,
           "late_jobs": 0,
-          "mean_wait_h": 4.04,
-          "runtime_s": 12.2,
-          "reduction_vs_run_now": 0.3402
+          "mean_wait_h": 3.53,
+          "runtime_s": 11.2,
+          "reduction_vs_run_now": 0.3421
         },
-        "carbon_dividend_of_autonomy": 0.0867
+        "carbon_dividend_of_autonomy": 0.0775
       }
     },
     {
@@ -106,25 +106,25 @@
           "policy": "supervised",
           "jobs": 768,
           "energy_kwh": 116.4186,
-          "realized_g": 26082.18,
-          "surplus_share": 0.037,
-          "late_jobs": 27,
-          "mean_wait_h": 8.51,
-          "runtime_s": 12.8,
-          "reduction_vs_run_now": 0.2363
+          "realized_g": 27155.22,
+          "surplus_share": 0.0393,
+          "late_jobs": 29,
+          "mean_wait_h": 11.45,
+          "runtime_s": 14.8,
+          "reduction_vs_run_now": 0.2049
         },
         "hands_off": {
           "policy": "hands_off",
           "jobs": 768,
           "energy_kwh": 116.4186,
-          "realized_g": 23540.07,
-          "surplus_share": 0.0412,
+          "realized_g": 23684.67,
+          "surplus_share": 0.0437,
           "late_jobs": 0,
-          "mean_wait_h": 9.04,
-          "runtime_s": 23.2,
-          "reduction_vs_run_now": 0.3107
+          "mean_wait_h": 10.37,
+          "runtime_s": 24.5,
+          "reduction_vs_run_now": 0.3065
         },
-        "carbon_dividend_of_autonomy": 0.0744
+        "carbon_dividend_of_autonomy": 0.1016
       }
     }
   ],

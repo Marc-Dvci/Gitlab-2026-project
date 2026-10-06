@@ -63,13 +63,13 @@ From `experiments/autonomy_dividend.py`. The backlog is synthetic and reproducib
 
 | Grid | Supervised vs run-now | Hands-off vs run-now | **Dividend of autonomy** | Late jobs (supervised / hands-off) |
 |---|---:|---:|---:|---:|
-| GB, NESO, Sep–Oct 2026 (average signal, real forecasts) | −18.6 % | −24.9 % | **6.3 %** | 9 / 0 |
-| Spain, OMIE, Mar–May 2025 (marginal price heuristic) | −25.3 % | −34.0 % | **8.7 %** | 22 / 0 |
-| Spain, OMIE, Jul–Sep 2025 | −23.6 % | −31.1 % | **7.4 %** | 27 / 0 |
+| GB, NESO, Sep–Oct 2026 (average signal, real forecasts) | −17.9 % | −24.9 % | **6.9 %** | 10 / 0 |
+| Spain, OMIE, Mar–May 2025 (marginal price heuristic) | −26.5 % | −34.2 % | **7.8 %** | 22 / 0 |
+| Spain, OMIE, Jul–Sep 2025 | −20.5 % | −30.6 % | **10.2 %** | 29 / 0 |
 
 Hands-off saves 25–34 % of emissions against running work the moment it is filed, misses no
-deadlines, and beats supervised autonomy by 6–9 points of baseline emissions, while supervised
-misses 9–27 deadlines. Details: [`results/autonomy_dividend.md`](results/autonomy_dividend.md).
+deadlines, and beats supervised autonomy by 7–10 points of baseline emissions, while supervised
+misses 10–29 deadlines. Details: [`results/autonomy_dividend.md`](results/autonomy_dividend.md).
 
 **Forecast uncertainty is calibrated, not assumed.** NESO publishes forecasts without error bars;
 from the archived forecast history we fit split-conformal intervals per lead time (±45–51 g/kWh at
@@ -89,7 +89,7 @@ marginal and surplus signals, and why every claim of *avoided* emissions is cons
  human ───▶ │ Issue ──(Work item created)──▶ Surge Intake flow ──▶ labels  │
  files      │   priority::*, energy::*, surge::queued                      │
  an issue   │                                                               │
-            │ Dispatcher tick (Cloud Scheduler → Cloud Run, or schedule)    │
+            │ Dispatcher tick (Cloud Scheduler → Cloud Run; issue webhook)  │
             │   ├─ reads Surge Requests (issues)                           │
             │   ├─ fetches grid signals (Energy-Charts, NESO, Open-Meteo)   │
             │   ├─ CP-SAT plan under SLAs + virtual capacity curve          │
@@ -169,7 +169,7 @@ directly with `POST /ai/duo_workflows/workflows` (`start_workflow: true`,
   the measurement showed the overhead could exceed the savings when only CI work can move, so it was cut:
   receipts only for deployable images, the Release Captain LLM flow replaced by a script, the Carbon
   Reviewer woken only by a measured regression, one-call triage for templated issues (19 → 5 LLM calls).
-  Likely payback now: scheduling 4–90×; everything included 5–18× (self-hosted inference), 0.7–2.7×
+  Likely payback now: scheduling 4–89×; everything included 5–17× (self-hosted inference), 0.7–2.6×
   (only CI can move).
 - **Deterministic first, LLM last.** @grid messages, plans, footprints, receipts, the MR energy check and
   the "Shipped" note involve no LLM. An agent is woken only when a deterministic check finds something

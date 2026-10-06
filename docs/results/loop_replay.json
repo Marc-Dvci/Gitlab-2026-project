@@ -1,0 +1,4677 @@
+{
+ "generated": "2026-10-06T13:53:17+00:00",
+ "region": "europe-southwest1",
+ "start": "2025-05-11T22:00:00+00:00",
+ "end": "2025-05-20T22:00:00+00:00",
+ "signal": {
+  "metric": "carbon_intensity_marginal_estimate",
+  "unit": "gCO2/kWh",
+  "source": "OMIE via cesar-tatto/mibel-dayahead-dataset (MIT)",
+  "model": {
+   "model": "price-marginal-v1",
+   "fossil_margin_g": 490.0,
+   "surplus_g": 11.0,
+   "fossil_price": 40.0
+  }
+ },
+ "surplus_windows": [
+  {
+   "start": "2025-05-12T08:00:00+00:00",
+   "end": "2025-05-12T17:00:00+00:00",
+   "min_price": -4.21
+  },
+  {
+   "start": "2025-05-13T09:00:00+00:00",
+   "end": "2025-05-13T15:00:00+00:00",
+   "min_price": -2.51
+  },
+  {
+   "start": "2025-05-14T09:00:00+00:00",
+   "end": "2025-05-14T16:00:00+00:00",
+   "min_price": -4.0
+  },
+  {
+   "start": "2025-05-15T08:00:00+00:00",
+   "end": "2025-05-15T18:00:00+00:00",
+   "min_price": -5.0
+  },
+  {
+   "start": "2025-05-16T07:00:00+00:00",
+   "end": "2025-05-16T17:00:00+00:00",
+   "min_price": -10.0
+  },
+  {
+   "start": "2025-05-17T07:00:00+00:00",
+   "end": "2025-05-17T17:00:00+00:00",
+   "min_price": -11.26
+  },
+  {
+   "start": "2025-05-18T07:00:00+00:00",
+   "end": "2025-05-18T17:00:00+00:00",
+   "min_price": -15.0
+  },
+  {
+   "start": "2025-05-19T08:00:00+00:00",
+   "end": "2025-05-19T17:00:00+00:00",
+   "min_price": -2.5
+  },
+  {
+   "start": "2025-05-20T07:00:00+00:00",
+   "end": "2025-05-20T17:00:00+00:00",
+   "min_price": -3.75
+  }
+ ],
+ "ticks": [
+  {
+   "t": "2025-05-11T22:00:00+00:00",
+   "g_per_kwh": 194.2175,
+   "price": 15.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-11T22:30:00+00:00",
+   "g_per_kwh": 194.2175,
+   "price": 15.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-11T23:00:00+00:00",
+   "g_per_kwh": 189.188,
+   "price": 14.88,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-11T23:30:00+00:00",
+   "g_per_kwh": 189.188,
+   "price": 14.88,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T00:00:00+00:00",
+   "g_per_kwh": 222.9575,
+   "price": 17.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T00:30:00+00:00",
+   "g_per_kwh": 222.9575,
+   "price": 17.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T01:00:00+00:00",
+   "g_per_kwh": 194.2175,
+   "price": 15.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T01:30:00+00:00",
+   "g_per_kwh": 194.2175,
+   "price": 15.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T02:00:00+00:00",
+   "g_per_kwh": 178.64999999999998,
+   "price": 14.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T02:30:00+00:00",
+   "g_per_kwh": 178.64999999999998,
+   "price": 14.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T03:00:00+00:00",
+   "g_per_kwh": 194.2175,
+   "price": 15.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T03:30:00+00:00",
+   "g_per_kwh": 194.2175,
+   "price": 15.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T04:00:00+00:00",
+   "g_per_kwh": 278.5215,
+   "price": 22.34,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T04:30:00+00:00",
+   "g_per_kwh": 278.5215,
+   "price": 22.34,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T05:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T05:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T06:00:00+00:00",
+   "g_per_kwh": 275.6475,
+   "price": 22.1,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T06:30:00+00:00",
+   "g_per_kwh": 275.6475,
+   "price": 22.1,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T07:00:00+00:00",
+   "g_per_kwh": 82.85,
+   "price": 6.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T07:30:00+00:00",
+   "g_per_kwh": 82.85,
+   "price": 6.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.89,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-12T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.89,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.21,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.21,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T17:00:00+00:00",
+   "g_per_kwh": 134.3425,
+   "price": 10.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T17:30:00+00:00",
+   "g_per_kwh": 134.3425,
+   "price": 10.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T18:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 61.81,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T18:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 61.81,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T19:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 122.03,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T19:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 122.03,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 103.75,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 103.75,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T21:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 70.44,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T21:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 70.44,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T22:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 67.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T22:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 67.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T23:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 45.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-12T23:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 45.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T00:00:00+00:00",
+   "g_per_kwh": 464.01425,
+   "price": 37.83,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T00:30:00+00:00",
+   "g_per_kwh": 464.01425,
+   "price": 37.83,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T01:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T01:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T02:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T02:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T03:00:00+00:00",
+   "g_per_kwh": 487.48525,
+   "price": 39.79,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T03:30:00+00:00",
+   "g_per_kwh": 487.48525,
+   "price": 39.79,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T04:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 70.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T04:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 70.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T05:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 108.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T05:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 108.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T06:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 68.25,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T06:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 68.25,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T07:00:00+00:00",
+   "g_per_kwh": 317.3205,
+   "price": 25.58,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T07:30:00+00:00",
+   "g_per_kwh": 317.3205,
+   "price": 25.58,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T08:00:00+00:00",
+   "g_per_kwh": 25.369999999999997,
+   "price": 1.2,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T08:30:00+00:00",
+   "g_per_kwh": 25.369999999999997,
+   "price": 1.2,
+   "pending_kwh": 0.08,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-13T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.51,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.51,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.08,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.08,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T15:00:00+00:00",
+   "g_per_kwh": 18.78375,
+   "price": 0.65,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T15:30:00+00:00",
+   "g_per_kwh": 18.78375,
+   "price": 0.65,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T16:00:00+00:00",
+   "g_per_kwh": 306.78249999999997,
+   "price": 24.7,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T16:30:00+00:00",
+   "g_per_kwh": 306.78249999999997,
+   "price": 24.7,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T17:00:00+00:00",
+   "g_per_kwh": 412.88100000000003,
+   "price": 33.56,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T17:30:00+00:00",
+   "g_per_kwh": 412.88100000000003,
+   "price": 33.56,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T18:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 92.67,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T18:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 92.67,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T19:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 128.07,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T19:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 128.07,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 112.3,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 112.3,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T21:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 74.55,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T21:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 74.55,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T22:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 64.93,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T22:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 64.93,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T23:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 45.33,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-13T23:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 45.33,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T00:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 41.2,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T00:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 41.2,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T01:00:00+00:00",
+   "g_per_kwh": 458.98474999999996,
+   "price": 37.41,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T01:30:00+00:00",
+   "g_per_kwh": 458.98474999999996,
+   "price": 37.41,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T02:00:00+00:00",
+   "g_per_kwh": 442.1,
+   "price": 36.0,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T02:30:00+00:00",
+   "g_per_kwh": 442.1,
+   "price": 36.0,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T03:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 40.05,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T03:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 40.05,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T04:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 53.08,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T04:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 53.08,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T05:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 91.53,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T05:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 91.53,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T06:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 57.64,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T06:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 57.64,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T07:00:00+00:00",
+   "g_per_kwh": 463.655,
+   "price": 37.8,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T07:30:00+00:00",
+   "g_per_kwh": 463.655,
+   "price": 37.8,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T08:00:00+00:00",
+   "g_per_kwh": 14.353000000000002,
+   "price": 0.28,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T08:30:00+00:00",
+   "g_per_kwh": 14.353000000000002,
+   "price": 0.28,
+   "pending_kwh": 0.262,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.02,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-14T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.02,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.13,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.13,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-14T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.89,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.89,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T16:00:00+00:00",
+   "g_per_kwh": 13.03575,
+   "price": 0.17,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T16:30:00+00:00",
+   "g_per_kwh": 13.03575,
+   "price": 0.17,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T17:00:00+00:00",
+   "g_per_kwh": 323.42775,
+   "price": 26.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T17:30:00+00:00",
+   "g_per_kwh": 323.42775,
+   "price": 26.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T18:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 46.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T18:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 46.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T19:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 64.03,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T19:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 64.03,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 61.51,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 61.51,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T21:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 40.14,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T21:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 40.14,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T22:00:00+00:00",
+   "g_per_kwh": 405.5762500000001,
+   "price": 32.95,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T22:30:00+00:00",
+   "g_per_kwh": 405.5762500000001,
+   "price": 32.95,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T23:00:00+00:00",
+   "g_per_kwh": 247.02725,
+   "price": 19.71,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-14T23:30:00+00:00",
+   "g_per_kwh": 247.02725,
+   "price": 19.71,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T00:00:00+00:00",
+   "g_per_kwh": 232.17825,
+   "price": 18.47,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T00:30:00+00:00",
+   "g_per_kwh": 232.17825,
+   "price": 18.47,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T01:00:00+00:00",
+   "g_per_kwh": 137.33625,
+   "price": 10.55,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T01:30:00+00:00",
+   "g_per_kwh": 137.33625,
+   "price": 10.55,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T02:00:00+00:00",
+   "g_per_kwh": 138.29425000000003,
+   "price": 10.63,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T02:30:00+00:00",
+   "g_per_kwh": 138.29425000000003,
+   "price": 10.63,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T03:00:00+00:00",
+   "g_per_kwh": 205.7135,
+   "price": 16.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T03:30:00+00:00",
+   "g_per_kwh": 205.7135,
+   "price": 16.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T04:00:00+00:00",
+   "g_per_kwh": 250.5,
+   "price": 20.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T04:30:00+00:00",
+   "g_per_kwh": 250.5,
+   "price": 20.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T05:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T05:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T06:00:00+00:00",
+   "g_per_kwh": 419.46725,
+   "price": 34.11,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T06:30:00+00:00",
+   "g_per_kwh": 419.46725,
+   "price": 34.11,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T07:00:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T07:30:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0.233,
+   "queued": 1,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-15T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-15T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -4.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.99,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.99,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-15T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T17:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T17:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T18:00:00+00:00",
+   "g_per_kwh": 233.37575,
+   "price": 18.57,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T18:30:00+00:00",
+   "g_per_kwh": 233.37575,
+   "price": 18.57,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T19:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T19:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T20:00:00+00:00",
+   "g_per_kwh": 377.914,
+   "price": 30.64,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T20:30:00+00:00",
+   "g_per_kwh": 377.914,
+   "price": 30.64,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T21:00:00+00:00",
+   "g_per_kwh": 250.2605,
+   "price": 19.98,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T21:30:00+00:00",
+   "g_per_kwh": 250.2605,
+   "price": 19.98,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T22:00:00+00:00",
+   "g_per_kwh": 72.19225,
+   "price": 5.11,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T22:30:00+00:00",
+   "g_per_kwh": 72.19225,
+   "price": 5.11,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T23:00:00+00:00",
+   "g_per_kwh": 70.875,
+   "price": 5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-15T23:30:00+00:00",
+   "g_per_kwh": 70.875,
+   "price": 5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T00:00:00+00:00",
+   "g_per_kwh": 82.85,
+   "price": 6.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T00:30:00+00:00",
+   "g_per_kwh": 82.85,
+   "price": 6.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T01:00:00+00:00",
+   "g_per_kwh": 54.11,
+   "price": 3.6,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T01:30:00+00:00",
+   "g_per_kwh": 54.11,
+   "price": 3.6,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T02:00:00+00:00",
+   "g_per_kwh": 50.27799999999999,
+   "price": 3.28,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T02:30:00+00:00",
+   "g_per_kwh": 50.27799999999999,
+   "price": 3.28,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T03:00:00+00:00",
+   "g_per_kwh": 67.88125,
+   "price": 4.75,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T03:30:00+00:00",
+   "g_per_kwh": 67.88125,
+   "price": 4.75,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T04:00:00+00:00",
+   "g_per_kwh": 82.85,
+   "price": 6.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T04:30:00+00:00",
+   "g_per_kwh": 82.85,
+   "price": 6.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T05:00:00+00:00",
+   "g_per_kwh": 130.75,
+   "price": 10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T05:30:00+00:00",
+   "g_per_kwh": 130.75,
+   "price": 10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T06:00:00+00:00",
+   "g_per_kwh": 11.11975,
+   "price": 0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T06:30:00+00:00",
+   "g_per_kwh": 11.11975,
+   "price": 0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T07:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T07:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.8,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.8,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -8.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -8.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -8.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -8.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -9.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -9.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 1
+  },
+  {
+   "t": "2025-05-16T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T17:00:00+00:00",
+   "g_per_kwh": 34.95,
+   "price": 2.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T17:30:00+00:00",
+   "g_per_kwh": 34.95,
+   "price": 2.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T18:00:00+00:00",
+   "g_per_kwh": 227.02899999999997,
+   "price": 18.04,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T18:30:00+00:00",
+   "g_per_kwh": 227.02899999999997,
+   "price": 18.04,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T19:00:00+00:00",
+   "g_per_kwh": 431.20275000000004,
+   "price": 35.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T19:30:00+00:00",
+   "g_per_kwh": 431.20275000000004,
+   "price": 35.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 41.21,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 41.21,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T21:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T21:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T22:00:00+00:00",
+   "g_per_kwh": 265.22925000000004,
+   "price": 21.23,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T22:30:00+00:00",
+   "g_per_kwh": 265.22925000000004,
+   "price": 21.23,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T23:00:00+00:00",
+   "g_per_kwh": 173.02175,
+   "price": 13.53,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-16T23:30:00+00:00",
+   "g_per_kwh": 173.02175,
+   "price": 13.53,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T00:00:00+00:00",
+   "g_per_kwh": 162.843,
+   "price": 12.68,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T00:30:00+00:00",
+   "g_per_kwh": 162.843,
+   "price": 12.68,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T01:00:00+00:00",
+   "g_per_kwh": 181.7635,
+   "price": 14.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T01:30:00+00:00",
+   "g_per_kwh": 181.7635,
+   "price": 14.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T02:00:00+00:00",
+   "g_per_kwh": 164.5195,
+   "price": 12.82,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T02:30:00+00:00",
+   "g_per_kwh": 164.5195,
+   "price": 12.82,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T03:00:00+00:00",
+   "g_per_kwh": 238.52499999999998,
+   "price": 19.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T03:30:00+00:00",
+   "g_per_kwh": 238.52499999999998,
+   "price": 19.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T04:00:00+00:00",
+   "g_per_kwh": 271.93525,
+   "price": 21.79,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T04:30:00+00:00",
+   "g_per_kwh": 271.93525,
+   "price": 21.79,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T05:00:00+00:00",
+   "g_per_kwh": 253.25425,
+   "price": 20.23,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T05:30:00+00:00",
+   "g_per_kwh": 253.25425,
+   "price": 20.23,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T06:00:00+00:00",
+   "g_per_kwh": 83.92775,
+   "price": 6.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T06:30:00+00:00",
+   "g_per_kwh": 83.92775,
+   "price": 6.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T07:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T07:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -9.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -9.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -11.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -11.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.8,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -5.8,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.81,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.81,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T17:00:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T17:30:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T18:00:00+00:00",
+   "g_per_kwh": 329.056,
+   "price": 26.56,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T18:30:00+00:00",
+   "g_per_kwh": 329.056,
+   "price": 26.56,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T19:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 52.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T19:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 52.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 57.12,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 57.12,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T21:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 41.28,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T21:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 41.28,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T22:00:00+00:00",
+   "g_per_kwh": 454.07500000000005,
+   "price": 37.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T22:30:00+00:00",
+   "g_per_kwh": 454.07500000000005,
+   "price": 37.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T23:00:00+00:00",
+   "g_per_kwh": 271.21675,
+   "price": 21.73,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-17T23:30:00+00:00",
+   "g_per_kwh": 271.21675,
+   "price": 21.73,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T00:00:00+00:00",
+   "g_per_kwh": 196.49275,
+   "price": 15.49,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T00:30:00+00:00",
+   "g_per_kwh": 196.49275,
+   "price": 15.49,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T01:00:00+00:00",
+   "g_per_kwh": 190.625,
+   "price": 15.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T01:30:00+00:00",
+   "g_per_kwh": 190.625,
+   "price": 15.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T02:00:00+00:00",
+   "g_per_kwh": 177.45250000000001,
+   "price": 13.9,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T02:30:00+00:00",
+   "g_per_kwh": 177.45250000000001,
+   "price": 13.9,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T03:00:00+00:00",
+   "g_per_kwh": 200.08525,
+   "price": 15.79,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T03:30:00+00:00",
+   "g_per_kwh": 200.08525,
+   "price": 15.79,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T04:00:00+00:00",
+   "g_per_kwh": 184.6375,
+   "price": 14.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T04:30:00+00:00",
+   "g_per_kwh": 184.6375,
+   "price": 14.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T05:00:00+00:00",
+   "g_per_kwh": 118.65525000000001,
+   "price": 8.99,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T05:30:00+00:00",
+   "g_per_kwh": 118.65525000000001,
+   "price": 8.99,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T06:00:00+00:00",
+   "g_per_kwh": 11.11975,
+   "price": 0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T06:30:00+00:00",
+   "g_per_kwh": 11.11975,
+   "price": 0.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T07:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T07:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.04,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.04,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -12.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -12.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -11.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -11.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -15.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -15.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -14.05,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -14.05,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -13.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -13.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -10.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T17:00:00+00:00",
+   "g_per_kwh": 14.353000000000002,
+   "price": 0.28,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T17:30:00+00:00",
+   "g_per_kwh": 14.353000000000002,
+   "price": 0.28,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T18:00:00+00:00",
+   "g_per_kwh": 100.094,
+   "price": 7.44,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T18:30:00+00:00",
+   "g_per_kwh": 100.094,
+   "price": 7.44,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T19:00:00+00:00",
+   "g_per_kwh": 454.07500000000005,
+   "price": 37.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T19:30:00+00:00",
+   "g_per_kwh": 454.07500000000005,
+   "price": 37.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 40.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 40.7,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T21:00:00+00:00",
+   "g_per_kwh": 417.671,
+   "price": 33.96,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T21:30:00+00:00",
+   "g_per_kwh": 417.671,
+   "price": 33.96,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T22:00:00+00:00",
+   "g_per_kwh": 260.31949999999995,
+   "price": 20.82,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T22:30:00+00:00",
+   "g_per_kwh": 260.31949999999995,
+   "price": 20.82,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T23:00:00+00:00",
+   "g_per_kwh": 226.7895,
+   "price": 18.02,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-18T23:30:00+00:00",
+   "g_per_kwh": 226.7895,
+   "price": 18.02,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T00:00:00+00:00",
+   "g_per_kwh": 176.61425,
+   "price": 13.83,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T00:30:00+00:00",
+   "g_per_kwh": 176.61425,
+   "price": 13.83,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T01:00:00+00:00",
+   "g_per_kwh": 178.64999999999998,
+   "price": 14.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T01:30:00+00:00",
+   "g_per_kwh": 178.64999999999998,
+   "price": 14.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T02:00:00+00:00",
+   "g_per_kwh": 138.29425000000003,
+   "price": 10.63,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T02:30:00+00:00",
+   "g_per_kwh": 138.29425000000003,
+   "price": 10.63,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T03:00:00+00:00",
+   "g_per_kwh": 249.78150000000002,
+   "price": 19.94,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T03:30:00+00:00",
+   "g_per_kwh": 249.78150000000002,
+   "price": 19.94,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T04:00:00+00:00",
+   "g_per_kwh": 321.75124999999997,
+   "price": 25.95,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T04:30:00+00:00",
+   "g_per_kwh": 321.75124999999997,
+   "price": 25.95,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T05:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 42.99,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T05:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 42.99,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T06:00:00+00:00",
+   "g_per_kwh": 274.45000000000005,
+   "price": 22.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T06:30:00+00:00",
+   "g_per_kwh": 274.45000000000005,
+   "price": 22.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T07:00:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T07:30:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.5,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.62,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.62,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T17:00:00+00:00",
+   "g_per_kwh": 18.9035,
+   "price": 0.66,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T17:30:00+00:00",
+   "g_per_kwh": 18.9035,
+   "price": 0.66,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T18:00:00+00:00",
+   "g_per_kwh": 276.84499999999997,
+   "price": 22.2,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T18:30:00+00:00",
+   "g_per_kwh": 276.84499999999997,
+   "price": 22.2,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T19:00:00+00:00",
+   "g_per_kwh": 465.33149999999995,
+   "price": 37.94,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T19:30:00+00:00",
+   "g_per_kwh": 465.33149999999995,
+   "price": 37.94,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T20:00:00+00:00",
+   "g_per_kwh": 456.7095,
+   "price": 37.22,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T20:30:00+00:00",
+   "g_per_kwh": 456.7095,
+   "price": 37.22,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T21:00:00+00:00",
+   "g_per_kwh": 368.57349999999997,
+   "price": 29.86,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T21:30:00+00:00",
+   "g_per_kwh": 368.57349999999997,
+   "price": 29.86,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T22:00:00+00:00",
+   "g_per_kwh": 256.84675,
+   "price": 20.53,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T22:30:00+00:00",
+   "g_per_kwh": 256.84675,
+   "price": 20.53,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T23:00:00+00:00",
+   "g_per_kwh": 213.73675,
+   "price": 16.93,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-19T23:30:00+00:00",
+   "g_per_kwh": 213.73675,
+   "price": 16.93,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T00:00:00+00:00",
+   "g_per_kwh": 173.62050000000002,
+   "price": 13.58,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T00:30:00+00:00",
+   "g_per_kwh": 173.62050000000002,
+   "price": 13.58,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T01:00:00+00:00",
+   "g_per_kwh": 103.68650000000001,
+   "price": 7.74,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T01:30:00+00:00",
+   "g_per_kwh": 103.68650000000001,
+   "price": 7.74,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T02:00:00+00:00",
+   "g_per_kwh": 94.82499999999999,
+   "price": 7.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T02:30:00+00:00",
+   "g_per_kwh": 94.82499999999999,
+   "price": 7.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T03:00:00+00:00",
+   "g_per_kwh": 229.6635,
+   "price": 18.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T03:30:00+00:00",
+   "g_per_kwh": 229.6635,
+   "price": 18.26,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T04:00:00+00:00",
+   "g_per_kwh": 318.2785,
+   "price": 25.66,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T04:30:00+00:00",
+   "g_per_kwh": 318.2785,
+   "price": 25.66,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T05:00:00+00:00",
+   "g_per_kwh": 431.20275000000004,
+   "price": 35.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T05:30:00+00:00",
+   "g_per_kwh": 431.20275000000004,
+   "price": 35.09,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T06:00:00+00:00",
+   "g_per_kwh": 252.895,
+   "price": 20.2,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T06:30:00+00:00",
+   "g_per_kwh": 252.895,
+   "price": 20.2,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T07:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T07:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": 0.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T08:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T08:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.3,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T09:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.1,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T09:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.1,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T10:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T10:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T11:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.81,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T11:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.81,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T12:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.1,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T12:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -2.1,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T13:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.75,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T13:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.75,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T14:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.4,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T14:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -3.4,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T15:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T15:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -1.54,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T16:00:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.04,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T16:30:00+00:00",
+   "g_per_kwh": 11.0,
+   "price": -0.04,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T17:00:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T17:30:00+00:00",
+   "g_per_kwh": 53.152,
+   "price": 3.52,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T18:00:00+00:00",
+   "g_per_kwh": 321.87100000000004,
+   "price": 25.96,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T18:30:00+00:00",
+   "g_per_kwh": 321.87100000000004,
+   "price": 25.96,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T19:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 53.91,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T19:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 53.91,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T20:00:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 54.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T20:30:00+00:00",
+   "g_per_kwh": 490.0,
+   "price": 54.0,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T21:00:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  },
+  {
+   "t": "2025-05-20T21:30:00+00:00",
+   "g_per_kwh": 430.24475,
+   "price": 35.01,
+   "pending_kwh": 0,
+   "queued": 0,
+   "running": 0
+  }
+ ],
+ "issues": [
+  {
+   "iid": 1,
+   "title": "Upgrade FastAPI and uvicorn to the latest patch releases",
+   "kind": "dependency_upgrade",
+   "priority": "low",
+   "filed": "2025-05-12T07:40:00+00:00",
+   "started": "2025-05-12T08:00:00+00:00",
+   "energy_kwh": 0.262,
+   "wait_h": 0.33,
+   "finished": "2025-05-12T08:45:00+00:00",
+   "g": 2.89,
+   "g_if_run_on_filing": 12.32,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **83 gCO\u2082/kWh**. I'm holding this Surge Request until **Mon 08:10 UTC**, when I expect **11 gCO\u2082/kWh** (\u224887% less). Deadline Thu 08:25 UTC is safe.",
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 2,
+   "title": "Dashboard comparison is slow",
+   "kind": "agent_session",
+   "priority": "low",
+   "filed": "2025-05-12T09:15:00+00:00",
+   "started": "2025-05-12T09:15:00+00:00",
+   "energy_kwh": 0.233,
+   "wait_h": 0.0,
+   "finished": "2025-05-12T09:55:00+00:00",
+   "g": 2.57,
+   "g_if_run_on_filing": 2.57,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 3,
+   "title": "Run the full test matrix on Python 3.11\u20133.13",
+   "kind": "ci_pipeline",
+   "priority": "normal",
+   "filed": "2025-05-12T13:30:00+00:00",
+   "started": "2025-05-12T13:30:00+00:00",
+   "energy_kwh": 0.017,
+   "wait_h": 0.0,
+   "finished": "2025-05-12T13:50:00+00:00",
+   "g": 0.18,
+   "g_if_run_on_filing": 0.18,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "pipeline"
+  },
+  {
+   "iid": 4,
+   "title": "Nightly DAST scan of the control room",
+   "kind": "security_scan",
+   "priority": "low",
+   "filed": "2025-05-13T08:05:00+00:00",
+   "started": "2025-05-13T09:00:00+00:00",
+   "energy_kwh": 0.08,
+   "wait_h": 0.92,
+   "finished": "2025-05-13T10:00:00+00:00",
+   "g": 0.88,
+   "g_if_run_on_filing": 2.03,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **25 gCO\u2082/kWh**. I'm holding this Surge Request until **Tue 09:05 UTC**, when I expect **11 gCO\u2082/kWh** (\u224857% less). Deadline Fri 09:05 UTC is safe.",
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "pipeline"
+  },
+  {
+   "iid": 5,
+   "title": "Retry Open-Meteo with backoff",
+   "kind": "agent_session",
+   "priority": "normal",
+   "filed": "2025-05-13T11:20:00+00:00",
+   "started": "2025-05-13T11:20:00+00:00",
+   "energy_kwh": 0.233,
+   "wait_h": 0.0,
+   "finished": "2025-05-13T12:00:00+00:00",
+   "g": 2.57,
+   "g_if_run_on_filing": 2.57,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 6,
+   "title": "Bump ortools to 9.15.x",
+   "kind": "dependency_upgrade",
+   "priority": "low",
+   "filed": "2025-05-13T15:45:00+00:00",
+   "started": "2025-05-14T09:00:00+00:00",
+   "energy_kwh": 0.262,
+   "wait_h": 17.25,
+   "finished": "2025-05-14T09:45:00+00:00",
+   "g": 2.89,
+   "g_if_run_on_filing": 80.53,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **19 gCO\u2082/kWh**. I'm holding this Surge Request until **Wed 08:45 UTC**, when I expect **11 gCO\u2082/kWh** (\u224841% less). Deadline Fri 16:30 UTC is safe.",
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 7,
+   "title": "Production: /api/grid returns 500 for europe-west2",
+   "kind": "agent_session",
+   "priority": "critical",
+   "filed": "2025-05-14T06:50:00+00:00",
+   "started": "2025-05-14T06:50:00+00:00",
+   "energy_kwh": 0.233,
+   "wait_h": 0.0,
+   "finished": "2025-05-14T07:30:00+00:00",
+   "g": 108.19,
+   "g_if_run_on_filing": 108.19,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 critical work never waits for me. Running now at **490 gCO\u2082/kWh**; waiting until Wed 08:50 UTC would have saved about 105.6 g. That's the price of urgency, and it's in the ledger."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 8,
+   "title": "Fuzz the receipt verifier",
+   "kind": "security_scan",
+   "priority": "low",
+   "filed": "2025-05-14T10:30:00+00:00",
+   "started": "2025-05-14T10:30:00+00:00",
+   "energy_kwh": 0.08,
+   "wait_h": 0.0,
+   "finished": "2025-05-14T11:30:00+00:00",
+   "g": 0.88,
+   "g_if_run_on_filing": 0.88,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "pipeline"
+  },
+  {
+   "iid": 9,
+   "title": "Rerun the autonomy experiment on September data",
+   "kind": "ci_pipeline",
+   "priority": "low",
+   "filed": "2025-05-14T14:10:00+00:00",
+   "started": "2025-05-14T14:10:00+00:00",
+   "energy_kwh": 0.017,
+   "wait_h": 0.0,
+   "finished": "2025-05-14T14:30:00+00:00",
+   "g": 0.18,
+   "g_if_run_on_filing": 0.18,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "pipeline"
+  },
+  {
+   "iid": 10,
+   "title": "Cache region metadata between ticks",
+   "kind": "agent_session",
+   "priority": "normal",
+   "filed": "2025-05-15T07:30:00+00:00",
+   "started": "2025-05-15T08:00:00+00:00",
+   "energy_kwh": 0.233,
+   "wait_h": 0.5,
+   "finished": "2025-05-15T08:40:00+00:00",
+   "g": 2.57,
+   "g_if_run_on_filing": 7.48,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **53 gCO\u2082/kWh**. I'm holding this Surge Request until **Thu 08:00 UTC**, when I expect **11 gCO\u2082/kWh** (\u224879% less). Deadline Fri 08:10 UTC is safe.",
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 11,
+   "title": "Container scan with the full vulnerability database",
+   "kind": "security_scan",
+   "priority": "normal",
+   "filed": "2025-05-15T12:00:00+00:00",
+   "started": "2025-05-15T12:00:00+00:00",
+   "energy_kwh": 0.08,
+   "wait_h": 0.0,
+   "finished": "2025-05-15T13:00:00+00:00",
+   "g": 0.88,
+   "g_if_run_on_filing": 0.88,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "pipeline"
+  },
+  {
+   "iid": 12,
+   "title": "Upgrade mcp to 2.4",
+   "kind": "dependency_upgrade",
+   "priority": "normal",
+   "filed": "2025-05-15T15:30:00+00:00",
+   "started": "2025-05-15T15:30:00+00:00",
+   "energy_kwh": 0.262,
+   "wait_h": 0.0,
+   "finished": "2025-05-15T16:15:00+00:00",
+   "g": 2.89,
+   "g_if_run_on_filing": 2.89,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 13,
+   "title": "Document the price-knee sensitivity",
+   "kind": "agent_session",
+   "priority": "low",
+   "filed": "2025-05-16T08:20:00+00:00",
+   "started": "2025-05-16T08:20:00+00:00",
+   "energy_kwh": 0.233,
+   "wait_h": 0.0,
+   "finished": "2025-05-16T09:00:00+00:00",
+   "g": 2.57,
+   "g_if_run_on_filing": 2.57,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  },
+  {
+   "iid": 14,
+   "title": "Load-test the canary",
+   "kind": "ci_pipeline",
+   "priority": "high",
+   "filed": "2025-05-16T13:45:00+00:00",
+   "started": "2025-05-16T13:45:00+00:00",
+   "energy_kwh": 0.017,
+   "wait_h": 0.0,
+   "finished": "2025-05-16T14:05:00+00:00",
+   "g": 0.18,
+   "g_if_run_on_filing": 0.18,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "pipeline"
+  },
+  {
+   "iid": 15,
+   "title": "Refresh pinned dev dependencies",
+   "kind": "dependency_upgrade",
+   "priority": "low",
+   "filed": "2025-05-16T15:50:00+00:00",
+   "started": "2025-05-16T15:50:00+00:00",
+   "energy_kwh": 0.262,
+   "wait_h": 0.0,
+   "finished": "2025-05-16T16:35:00+00:00",
+   "g": 2.89,
+   "g_if_run_on_filing": 2.89,
+   "late": false,
+   "notes": [
+    "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+   ],
+   "started_by": "flow"
+  }
+ ],
+ "plans": [],
+ "totals": {
+  "issues": 15,
+  "finished": 15,
+  "late": 0,
+  "g": 133.2,
+  "g_if_run_on_filing": 226.3,
+  "saving": 0.4115,
+  "notes": 19,
+  "flows_started": 9,
+  "pipelines_started": 6,
+  "ticks": 432,
+  "webhook_ticks": 15,
+  "llm_calls_by_loop": 0
+ },
+ "events": [
+  {
+   "t": "2025-05-12T07:40:00+00:00",
+   "kind": "filed",
+   "iid": 1,
+   "title": "Upgrade FastAPI and uvicorn to the latest patch releases",
+   "labels": [
+    "priority::low",
+    "energy::dependency_upgrade",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-12T07:40:00+00:00",
+   "kind": "webhook",
+   "iid": 1
+  },
+  {
+   "t": "2025-05-12T07:40:00+00:00",
+   "kind": "labels",
+   "iid": 1,
+   "add": [
+    "surge::scheduled"
+   ],
+   "remove": [
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-12T07:40:00+00:00",
+   "kind": "note",
+   "iid": 1,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **83 gCO\u2082/kWh**. I'm holding this Surge Request until **Mon 08:10 UTC**, when I expect **11 gCO\u2082/kWh** (\u224887% less). Deadline Thu 08:25 UTC is safe."
+  },
+  {
+   "t": "2025-05-12T08:00:00+00:00",
+   "kind": "flow",
+   "iid": 1,
+   "goal": "Resolve issue #1: Upgrade FastAPI and uvicorn to the latest patch releases. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #1."
+  },
+  {
+   "t": "2025-05-12T08:00:00+00:00",
+   "kind": "labels",
+   "iid": 1,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-12T08:00:00+00:00",
+   "kind": "note",
+   "iid": 1,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-12T08:45:00+00:00",
+   "kind": "done",
+   "iid": 1,
+   "g": 2.89,
+   "g_if_run_on_filing": 12.32
+  },
+  {
+   "t": "2025-05-12T09:15:00+00:00",
+   "kind": "filed",
+   "iid": 2,
+   "title": "Dashboard comparison is slow",
+   "labels": [
+    "priority::low",
+    "energy::agent_session",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-12T09:15:00+00:00",
+   "kind": "webhook",
+   "iid": 2
+  },
+  {
+   "t": "2025-05-12T09:15:00+00:00",
+   "kind": "flow",
+   "iid": 2,
+   "goal": "Resolve issue #2: Dashboard comparison is slow. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #2."
+  },
+  {
+   "t": "2025-05-12T09:15:00+00:00",
+   "kind": "labels",
+   "iid": 2,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-12T09:15:00+00:00",
+   "kind": "note",
+   "iid": 2,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-12T09:55:00+00:00",
+   "kind": "done",
+   "iid": 2,
+   "g": 2.57,
+   "g_if_run_on_filing": 2.57
+  },
+  {
+   "t": "2025-05-12T13:30:00+00:00",
+   "kind": "filed",
+   "iid": 3,
+   "title": "Run the full test matrix on Python 3.11\u20133.13",
+   "labels": [
+    "priority::normal",
+    "energy::ci_pipeline",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-12T13:30:00+00:00",
+   "kind": "webhook",
+   "iid": 3
+  },
+  {
+   "t": "2025-05-12T13:30:00+00:00",
+   "kind": "pipeline",
+   "iid": 3,
+   "variables": {
+    "JOULE_TASK": "heavy-tests",
+    "JOULE_ISSUE": "3",
+    "JOULE_REGION": "europe-southwest1"
+   }
+  },
+  {
+   "t": "2025-05-12T13:30:00+00:00",
+   "kind": "labels",
+   "iid": 3,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-12T13:30:00+00:00",
+   "kind": "note",
+   "iid": 3,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-12T13:50:00+00:00",
+   "kind": "done",
+   "iid": 3,
+   "g": 0.18,
+   "g_if_run_on_filing": 0.18
+  },
+  {
+   "t": "2025-05-13T08:05:00+00:00",
+   "kind": "filed",
+   "iid": 4,
+   "title": "Nightly DAST scan of the control room",
+   "labels": [
+    "priority::low",
+    "energy::security_scan",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-13T08:05:00+00:00",
+   "kind": "webhook",
+   "iid": 4
+  },
+  {
+   "t": "2025-05-13T08:05:00+00:00",
+   "kind": "labels",
+   "iid": 4,
+   "add": [
+    "surge::scheduled"
+   ],
+   "remove": [
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-13T08:05:00+00:00",
+   "kind": "note",
+   "iid": 4,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **25 gCO\u2082/kWh**. I'm holding this Surge Request until **Tue 09:05 UTC**, when I expect **11 gCO\u2082/kWh** (\u224857% less). Deadline Fri 09:05 UTC is safe."
+  },
+  {
+   "t": "2025-05-13T09:00:00+00:00",
+   "kind": "pipeline",
+   "iid": 4,
+   "variables": {
+    "JOULE_TASK": "heavy-scan",
+    "JOULE_ISSUE": "4",
+    "JOULE_REGION": "europe-southwest1"
+   }
+  },
+  {
+   "t": "2025-05-13T09:00:00+00:00",
+   "kind": "labels",
+   "iid": 4,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-13T09:00:00+00:00",
+   "kind": "note",
+   "iid": 4,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-13T10:00:00+00:00",
+   "kind": "done",
+   "iid": 4,
+   "g": 0.88,
+   "g_if_run_on_filing": 2.03
+  },
+  {
+   "t": "2025-05-13T11:20:00+00:00",
+   "kind": "filed",
+   "iid": 5,
+   "title": "Retry Open-Meteo with backoff",
+   "labels": [
+    "priority::normal",
+    "energy::agent_session",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-13T11:20:00+00:00",
+   "kind": "webhook",
+   "iid": 5
+  },
+  {
+   "t": "2025-05-13T11:20:00+00:00",
+   "kind": "flow",
+   "iid": 5,
+   "goal": "Resolve issue #5: Retry Open-Meteo with backoff. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #5."
+  },
+  {
+   "t": "2025-05-13T11:20:00+00:00",
+   "kind": "labels",
+   "iid": 5,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-13T11:20:00+00:00",
+   "kind": "note",
+   "iid": 5,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-13T12:00:00+00:00",
+   "kind": "done",
+   "iid": 5,
+   "g": 2.57,
+   "g_if_run_on_filing": 2.57
+  },
+  {
+   "t": "2025-05-13T15:45:00+00:00",
+   "kind": "filed",
+   "iid": 6,
+   "title": "Bump ortools to 9.15.x",
+   "labels": [
+    "priority::low",
+    "energy::dependency_upgrade",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-13T15:45:00+00:00",
+   "kind": "webhook",
+   "iid": 6
+  },
+  {
+   "t": "2025-05-13T15:45:00+00:00",
+   "kind": "labels",
+   "iid": 6,
+   "add": [
+    "surge::scheduled"
+   ],
+   "remove": [
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-13T15:45:00+00:00",
+   "kind": "note",
+   "iid": 6,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **19 gCO\u2082/kWh**. I'm holding this Surge Request until **Wed 08:45 UTC**, when I expect **11 gCO\u2082/kWh** (\u224841% less). Deadline Fri 16:30 UTC is safe."
+  },
+  {
+   "t": "2025-05-14T06:50:00+00:00",
+   "kind": "filed",
+   "iid": 7,
+   "title": "Production: /api/grid returns 500 for europe-west2",
+   "labels": [
+    "priority::critical",
+    "energy::agent_session",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-14T06:50:00+00:00",
+   "kind": "webhook",
+   "iid": 7
+  },
+  {
+   "t": "2025-05-14T06:50:00+00:00",
+   "kind": "flow",
+   "iid": 7,
+   "goal": "Resolve issue #7: Production: /api/grid returns 500 for europe-west2. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #7."
+  },
+  {
+   "t": "2025-05-14T06:50:00+00:00",
+   "kind": "labels",
+   "iid": 7,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-14T06:50:00+00:00",
+   "kind": "note",
+   "iid": 7,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 critical work never waits for me. Running now at **490 gCO\u2082/kWh**; waiting until Wed 08:50 UTC would have saved about 105.6 g. That's the price of urgency, and it's in the ledger."
+  },
+  {
+   "t": "2025-05-14T07:30:00+00:00",
+   "kind": "done",
+   "iid": 7,
+   "g": 108.19,
+   "g_if_run_on_filing": 108.19
+  },
+  {
+   "t": "2025-05-14T09:00:00+00:00",
+   "kind": "flow",
+   "iid": 6,
+   "goal": "Resolve issue #6: Bump ortools to 9.15.x. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #6."
+  },
+  {
+   "t": "2025-05-14T09:00:00+00:00",
+   "kind": "labels",
+   "iid": 6,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-14T09:00:00+00:00",
+   "kind": "note",
+   "iid": 6,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-14T09:45:00+00:00",
+   "kind": "done",
+   "iid": 6,
+   "g": 2.89,
+   "g_if_run_on_filing": 80.53
+  },
+  {
+   "t": "2025-05-14T10:30:00+00:00",
+   "kind": "filed",
+   "iid": 8,
+   "title": "Fuzz the receipt verifier",
+   "labels": [
+    "priority::low",
+    "energy::security_scan",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-14T10:30:00+00:00",
+   "kind": "webhook",
+   "iid": 8
+  },
+  {
+   "t": "2025-05-14T10:30:00+00:00",
+   "kind": "pipeline",
+   "iid": 8,
+   "variables": {
+    "JOULE_TASK": "heavy-scan",
+    "JOULE_ISSUE": "8",
+    "JOULE_REGION": "europe-southwest1"
+   }
+  },
+  {
+   "t": "2025-05-14T10:30:00+00:00",
+   "kind": "labels",
+   "iid": 8,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-14T10:30:00+00:00",
+   "kind": "note",
+   "iid": 8,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-14T11:30:00+00:00",
+   "kind": "done",
+   "iid": 8,
+   "g": 0.88,
+   "g_if_run_on_filing": 0.88
+  },
+  {
+   "t": "2025-05-14T14:10:00+00:00",
+   "kind": "filed",
+   "iid": 9,
+   "title": "Rerun the autonomy experiment on September data",
+   "labels": [
+    "priority::low",
+    "energy::ci_pipeline",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-14T14:10:00+00:00",
+   "kind": "webhook",
+   "iid": 9
+  },
+  {
+   "t": "2025-05-14T14:10:00+00:00",
+   "kind": "pipeline",
+   "iid": 9,
+   "variables": {
+    "JOULE_TASK": "heavy-tests",
+    "JOULE_ISSUE": "9",
+    "JOULE_REGION": "europe-southwest1"
+   }
+  },
+  {
+   "t": "2025-05-14T14:10:00+00:00",
+   "kind": "labels",
+   "iid": 9,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-14T14:10:00+00:00",
+   "kind": "note",
+   "iid": 9,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-14T14:30:00+00:00",
+   "kind": "done",
+   "iid": 9,
+   "g": 0.18,
+   "g_if_run_on_filing": 0.18
+  },
+  {
+   "t": "2025-05-15T07:30:00+00:00",
+   "kind": "filed",
+   "iid": 10,
+   "title": "Cache region metadata between ticks",
+   "labels": [
+    "priority::normal",
+    "energy::agent_session",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-15T07:30:00+00:00",
+   "kind": "webhook",
+   "iid": 10
+  },
+  {
+   "t": "2025-05-15T07:30:00+00:00",
+   "kind": "labels",
+   "iid": 10,
+   "add": [
+    "surge::scheduled"
+   ],
+   "remove": [
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-15T07:30:00+00:00",
+   "kind": "note",
+   "iid": 10,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 one more kWh here right now would be answered at about **53 gCO\u2082/kWh**. I'm holding this Surge Request until **Thu 08:00 UTC**, when I expect **11 gCO\u2082/kWh** (\u224879% less). Deadline Fri 08:10 UTC is safe."
+  },
+  {
+   "t": "2025-05-15T08:00:00+00:00",
+   "kind": "flow",
+   "iid": 10,
+   "goal": "Resolve issue #10: Cache region metadata between ticks. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #10."
+  },
+  {
+   "t": "2025-05-15T08:00:00+00:00",
+   "kind": "labels",
+   "iid": 10,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-15T08:00:00+00:00",
+   "kind": "note",
+   "iid": 10,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-15T08:40:00+00:00",
+   "kind": "done",
+   "iid": 10,
+   "g": 2.57,
+   "g_if_run_on_filing": 7.48
+  },
+  {
+   "t": "2025-05-15T12:00:00+00:00",
+   "kind": "filed",
+   "iid": 11,
+   "title": "Container scan with the full vulnerability database",
+   "labels": [
+    "priority::normal",
+    "energy::security_scan",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-15T12:00:00+00:00",
+   "kind": "webhook",
+   "iid": 11
+  },
+  {
+   "t": "2025-05-15T12:00:00+00:00",
+   "kind": "pipeline",
+   "iid": 11,
+   "variables": {
+    "JOULE_TASK": "heavy-scan",
+    "JOULE_ISSUE": "11",
+    "JOULE_REGION": "europe-southwest1"
+   }
+  },
+  {
+   "t": "2025-05-15T12:00:00+00:00",
+   "kind": "labels",
+   "iid": 11,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-15T12:00:00+00:00",
+   "kind": "note",
+   "iid": 11,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-15T13:00:00+00:00",
+   "kind": "done",
+   "iid": 11,
+   "g": 0.88,
+   "g_if_run_on_filing": 0.88
+  },
+  {
+   "t": "2025-05-15T15:30:00+00:00",
+   "kind": "filed",
+   "iid": 12,
+   "title": "Upgrade mcp to 2.4",
+   "labels": [
+    "priority::normal",
+    "energy::dependency_upgrade",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-15T15:30:00+00:00",
+   "kind": "webhook",
+   "iid": 12
+  },
+  {
+   "t": "2025-05-15T15:30:00+00:00",
+   "kind": "flow",
+   "iid": 12,
+   "goal": "Resolve issue #12: Upgrade mcp to 2.4. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #12."
+  },
+  {
+   "t": "2025-05-15T15:30:00+00:00",
+   "kind": "labels",
+   "iid": 12,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-15T15:30:00+00:00",
+   "kind": "note",
+   "iid": 12,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-15T16:15:00+00:00",
+   "kind": "done",
+   "iid": 12,
+   "g": 2.89,
+   "g_if_run_on_filing": 2.89
+  },
+  {
+   "t": "2025-05-16T08:20:00+00:00",
+   "kind": "filed",
+   "iid": 13,
+   "title": "Document the price-knee sensitivity",
+   "labels": [
+    "priority::low",
+    "energy::agent_session",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-16T08:20:00+00:00",
+   "kind": "webhook",
+   "iid": 13
+  },
+  {
+   "t": "2025-05-16T08:20:00+00:00",
+   "kind": "flow",
+   "iid": 13,
+   "goal": "Resolve issue #13: Document the price-knee sensitivity. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #13."
+  },
+  {
+   "t": "2025-05-16T08:20:00+00:00",
+   "kind": "labels",
+   "iid": 13,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-16T08:20:00+00:00",
+   "kind": "note",
+   "iid": 13,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-16T09:00:00+00:00",
+   "kind": "done",
+   "iid": 13,
+   "g": 2.57,
+   "g_if_run_on_filing": 2.57
+  },
+  {
+   "t": "2025-05-16T13:45:00+00:00",
+   "kind": "filed",
+   "iid": 14,
+   "title": "Load-test the canary",
+   "labels": [
+    "priority::high",
+    "energy::ci_pipeline",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-16T13:45:00+00:00",
+   "kind": "webhook",
+   "iid": 14
+  },
+  {
+   "t": "2025-05-16T13:45:00+00:00",
+   "kind": "pipeline",
+   "iid": 14,
+   "variables": {
+    "JOULE_TASK": "heavy-tests",
+    "JOULE_ISSUE": "14",
+    "JOULE_REGION": "europe-southwest1"
+   }
+  },
+  {
+   "t": "2025-05-16T13:45:00+00:00",
+   "kind": "labels",
+   "iid": 14,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-16T13:45:00+00:00",
+   "kind": "note",
+   "iid": 14,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-16T14:05:00+00:00",
+   "kind": "done",
+   "iid": 14,
+   "g": 0.18,
+   "g_if_run_on_filing": 0.18
+  },
+  {
+   "t": "2025-05-16T15:50:00+00:00",
+   "kind": "filed",
+   "iid": 15,
+   "title": "Refresh pinned dev dependencies",
+   "labels": [
+    "priority::low",
+    "energy::dependency_upgrade",
+    "surge::queued"
+   ]
+  },
+  {
+   "t": "2025-05-16T15:50:00+00:00",
+   "kind": "webhook",
+   "iid": 15
+  },
+  {
+   "t": "2025-05-16T15:50:00+00:00",
+   "kind": "flow",
+   "iid": 15,
+   "goal": "Resolve issue #15: Refresh pinned dev dependencies. Follow AGENTS.md. Run the tests, keep the change minimal, open a merge request that closes #15."
+  },
+  {
+   "t": "2025-05-16T15:50:00+00:00",
+   "kind": "labels",
+   "iid": 15,
+   "add": [
+    "surge::running"
+   ],
+   "remove": [
+    "surge::queued",
+    "surge::scheduled"
+   ]
+  },
+  {
+   "t": "2025-05-16T15:50:00+00:00",
+   "kind": "note",
+   "iid": 15,
+   "body": "**@grid \u00b7 Madrid (`europe-southwest1`, ES bidding zone)** \u2014 releasing this Surge Request now: one more kWh here is answered at about **11 gCO\u2082/kWh**, the best slot I can find before its deadline."
+  },
+  {
+   "t": "2025-05-16T16:35:00+00:00",
+   "kind": "done",
+   "iid": 15,
+   "g": 2.89,
+   "g_if_run_on_filing": 2.89
+  }
+ ],
+ "other_weeks": [
+  {
+   "week": "2025-03-03",
+   "saving": 0.3235,
+   "late": 0,
+   "g": 822.2,
+   "g_if_run_on_filing": 1215.4,
+   "holds": 7,
+   "surplus_hours": 0.0
+  },
+  {
+   "week": "2025-04-07",
+   "saving": 0.6322,
+   "late": 0,
+   "g": 121.8,
+   "g_if_run_on_filing": 331.1,
+   "holds": 7,
+   "surplus_hours": 42.0
+  },
+  {
+   "week": "2025-05-05",
+   "saving": 0.5287,
+   "late": 0,
+   "g": 62.5,
+   "g_if_run_on_filing": 132.5,
+   "holds": 5,
+   "surplus_hours": 74.0
+  },
+  {
+   "week": "2025-06-02",
+   "saving": 0.6607,
+   "late": 0,
+   "g": 139.3,
+   "g_if_run_on_filing": 410.7,
+   "holds": 9,
+   "surplus_hours": 39.0
+  },
+  {
+   "week": "2025-07-07",
+   "saving": 0.39,
+   "late": 0,
+   "g": 616.5,
+   "g_if_run_on_filing": 1010.7,
+   "holds": 9,
+   "surplus_hours": 4.0
+  },
+  {
+   "week": "2025-08-04",
+   "saving": 0.5772,
+   "late": 0,
+   "g": 333.1,
+   "g_if_run_on_filing": 787.7,
+   "holds": 13,
+   "surplus_hours": 14.0
+  },
+  {
+   "week": "2025-09-01",
+   "saving": 0.8545,
+   "late": 0,
+   "g": 84.0,
+   "g_if_run_on_filing": 577.2,
+   "holds": 9,
+   "surplus_hours": 25.0
+  }
+ ]
+}

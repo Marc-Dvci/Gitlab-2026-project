@@ -6,6 +6,7 @@ does real work is metered, so the app can carbon-blame itself.
 
 from __future__ import annotations
 
+import hmac
 import json
 import os
 import time
@@ -30,6 +31,7 @@ from .insights import compare
 ROOT = Path(__file__).resolve().parents[1]
 STATIC = Path(__file__).resolve().parent / "static"
 RESULTS = ROOT / "docs" / "results" / "autonomy_dividend.json"
+REPLAY = ROOT / "docs" / "results" / "loop_replay.json"
 STARTED = time.time()
 
 profiler = SamplingProfiler(root=ROOT)
@@ -146,6 +148,15 @@ def autonomy() -> JSONResponse:
     return JSONResponse(json.loads(RESULTS.read_text()))
 
 
+@app.get("/api/replay")
+def replay() -> FileResponse:
+    """The real dispatcher loop replayed on a real week (experiments/loop_replay.py): the battery, charging and discharging."""
+    if not REPLAY.exists():
+        raise HTTPException(404, "run experiments/loop_replay.py")
+    # A static file: served as is (no parse, no re-serialise) and cached by the browser for a day.
+    return FileResponse(REPLAY, media_type="application/json", headers={"Cache-Control": "public, max-age=86400"})
+
+
 @app.get("/api/ledger")
 def ledger() -> dict:
     path = Path(os.environ.get("JOULE_LEDGER", ROOT / "ledger.jsonl"))
@@ -163,11 +174,12 @@ def blame(intensity: float = 50.0) -> dict:
             "markdown": render_markdown(costs, intensity_label=f"{intensity:.0f} gCO₂/kWh")}
 
 
-@app.post("/api/tick")
-def run_tick(x_joule_key: str = Header(default="")) -> dict:
-    expected = os.environ.get("JOULE_TICK_KEY")
-    if not expected or x_joule_key != expected:
-        raise HTTPException(403, "missing or wrong X-Joule-Key")
+def _authorised(key: str) -> bool:
+    expected = os.environ.get("JOULE_TICK_KEY", "")
+    return bool(expected) and hmac.compare_digest(key.encode(), expected.encode())
+
+
+def _tick() -> dict:
     from joulethief.gitlab import GitLab
     from joulethief.loop import LoopConfig, tick
 
@@ -175,6 +187,25 @@ def run_tick(x_joule_key: str = Header(default="")) -> dict:
                      dry_run=os.environ.get("JOULE_DRY_RUN") == "1")
     report = tick(GitLab.from_env(), signals, cfg, datetime.now(timezone.utc))
     return {"plan": report.plan.to_dict(), "started": report.started, "held": report.held, "notes": report.notes}
+
+
+@app.post("/api/tick")
+def run_tick(x_joule_key: str = Header(default="")) -> dict:
+    if not _authorised(x_joule_key):
+        raise HTTPException(403, "missing or wrong X-Joule-Key")
+    return _tick()
+
+
+@app.post("/api/hook/gitlab")
+def gitlab_hook(event: dict, x_gitlab_token: str = Header(default="")) -> dict:
+    """Project webhook (Issues events, secret token = JOULE_TICK_KEY): tick as soon as a Surge Request is queued."""
+    if not _authorised(x_gitlab_token):
+        raise HTTPException(403, "missing or wrong X-Gitlab-Token")
+    from joulethief.loop import wants_tick
+
+    if not wants_tick(event):
+        return {"tick": False}
+    return {"tick": True, **_tick()}
 
 
 @app.get("/api/receipt/schema", response_class=PlainTextResponse)

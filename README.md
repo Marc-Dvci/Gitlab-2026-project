@@ -28,9 +28,9 @@ Built for the GitLab Transcend Hackathon *Life After Code* — Path A, hands-off
 
 | Grid | Hands-off vs run-now | Supervised vs run-now | Carbon dividend of autonomy | Deadlines missed (hands-off) |
 |---|---:|---:|---:|---:|
-| Great Britain, Sep–Oct 2026 | −24.9 % | −18.6 % | 6.3 % | 0 |
-| Spain, spring 2025 | −34.0 % | −25.3 % | 8.7 % | 0 |
-| Spain, summer 2025 | −31.1 % | −23.6 % | 7.4 % | 0 |
+| Great Britain, Sep–Oct 2026 | −24.9 % | −17.9 % | 6.9 % | 0 |
+| Spain, spring 2025 | −34.2 % | −26.5 % | 7.8 % | 0 |
+| Spain, summer 2025 | −30.6 % | −20.5 % | 10.2 % | 0 |
 
 [Full results](docs/results/autonomy_dividend.md) · [Average vs marginal by region](docs/results/region_ledgers.md) ·
 [Design](docs/DESIGN.md) · [Methodology](docs/METHODOLOGY.md) · [Data sources](docs/DATA_SOURCES.md) ·

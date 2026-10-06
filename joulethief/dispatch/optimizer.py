@@ -1,9 +1,9 @@
 """Carbon-aware dispatch of deferrable work, solved with OR-Tools CP-SAT.
 
 Decision: for every pending job, a region and a start slot inside its service window —
-or "defer", when the job's deadline lies beyond the horizon and no slot in view beats
-the zone's typical emissions. Objective: minimise expected emissions under the decision
-signal (marginal where available). Constraints: release times, deadlines, an optional
+or "defer", when the job's deadline lies beyond the horizon and no slot in view comes close
+to a good hour of a typical day (``DEFER_QUANTILE``). Objective: minimise expected emissions
+under the decision signal (marginal where available). Constraints: release times, deadlines, an optional
 allowed-start mask (e.g. office hours for supervised autonomy) and per-region
 concurrency limits (virtual capacity curves).
 """
@@ -11,7 +11,6 @@ concurrency limits (virtual capacity curves).
 from __future__ import annotations
 
 import math
-import statistics
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 from typing import Callable
@@ -20,6 +19,10 @@ from ..signals.base import Series, utc
 from .jobs import Job
 
 AllowedStart = Callable[[str, datetime], bool]
+# Waiting for hours not yet published is worth it when nothing in view reaches a *good* hour of a typical
+# day. "Good" = the cleanest tenth of everything the signal holds (the past week included): in surplus-rich
+# grids that is the surplus floor, so deferrable work waits for surplus when its deadline allows.
+DEFER_QUANTILE = 0.1
 
 
 @dataclass(frozen=True)
@@ -44,6 +47,7 @@ class Plan:
     solver: str
     status: str
     capacity: dict[str, list[int]] = field(default_factory=dict)
+    typical: dict[str, float] = field(default_factory=dict)  # per region: the value deferring is weighed against
 
     def assignment(self, job_id: str) -> Assignment | None:
         return next((a for a in self.assignments if a.job_id == job_id), None)
@@ -99,12 +103,13 @@ def plan(
 ) -> Plan:
     start = utc(start)
     n = max(1, int(horizon / slot))
-    slot_h = slot.total_seconds() / 3600.0
     regions = sorted({r for j in jobs for r in j.regions if r in signals})
     known = {r: [v for v in signals[r].on_grid(start, n, slot) if v is not None] for r in regions}
     unknown = {r: (unknown_signal or {}).get(r, max(signals[r].values()) if len(signals[r]) else 1000.0) for r in regions}
     sig = {r: _grid(signals[r], start, n, slot, unknown[r]) for r in regions}
-    typical = {r: (defer_value or {}).get(r, statistics.median(known[r]) if known[r] else unknown[r]) for r in regions}
+    # What waiting is weighed against (see DEFER_QUANTILE), unless the caller sets it.
+    typical = {r: (defer_value or {}).get(r, _quantile(signals[r].values(), DEFER_QUANTILE) if len(signals[r]) else unknown[r])
+               for r in regions}
     if isinstance(capacity, int):
         cap = {r: [capacity] * n for r in regions}
     else:
@@ -115,7 +120,8 @@ def plan(
         window = sig[region][s:s + d]
         if len(window) < d:  # runs past the horizon: assume the unknown (pessimistic) value
             window = window + [unknown[region]] * (d - len(window))
-        return int(round(job.power_kw * slot_h * sum(window) * 1000))
+        # the job's exact energy spread over the slots it touches (a 40-minute job is not billed for 60)
+        return int(round(job.energy_kwh / d * sum(window) * 1000))
 
     def start_time(s: int) -> datetime:
         return start + s * slot
@@ -196,7 +202,12 @@ def plan(
     expected = sum(a.expected_g for a in assignments) + sum(
         deferrable[j] / 1000.0 for j in deferred if j in deferrable)
     assignments.sort(key=lambda a: (a.start, a.job_id))
-    return Plan(start, slot, assignments, deferred, expected, baseline, solver_name, status, cap)
+    return Plan(start, slot, assignments, deferred, expected, baseline, solver_name, status, cap, typical)
+
+
+def _quantile(values: list[float], q: float) -> float:
+    ordered = sorted(values)
+    return ordered[min(len(ordered) - 1, int(q * len(ordered)))]
 
 
 def _solve_cp_sat(candidates, deferrable, job_by_id, cap, slot, n, time_limit_s):
@@ -218,7 +229,8 @@ def _solve_cp_sat(candidates, deferrable, job_by_id, cap, slot, n, time_limit_s)
                 load.setdefault((c.region, t), []).append(v)
         if job_id in deferrable:
             defer = model.NewBoolVar(f"defer_{job_id}")
-            objective.append(deferrable[job_id] * defer)
+            # + n: deferring must be strictly better than every slot in view, never a tie with one
+            objective.append((deferrable[job_id] + n) * defer)
             model.AddExactlyOne(vars_ + [defer])
         else:
             model.AddExactlyOne(vars_)
@@ -245,7 +257,7 @@ def _greedy(candidates, deferrable, job_by_id, cap, slot, n):
     for job_id in order:
         d = job_by_id[job_id].slots(slot)
         for c in sorted(candidates[job_id], key=lambda c: c.cost_mg):
-            if job_id in deferrable and c.cost_mg > deferrable[job_id]:
+            if job_id in deferrable and c.cost_mg > deferrable[job_id] + n:
                 break
             span = range(c.slot, min(n, c.slot + d))
             if all(used[(c.region, t)] < cap[c.region][t] for t in span):

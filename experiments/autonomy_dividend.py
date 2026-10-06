@@ -47,7 +47,7 @@ def gb_forecast_fn():
     def forecast(region: str, now: datetime) -> Series:
         pts = []
         for w in windows:
-            if w < now - timedelta(hours=1) or w > now + timedelta(hours=48):
+            if w < now - timedelta(days=7) or w > now + timedelta(hours=48):  # past week: actuals
                 continue
             row = table[w]
             if w < now:
@@ -72,7 +72,7 @@ def es_forecast_fn(marginal: Series):
         local = now.astimezone(madrid)
         known_until_local = (local + timedelta(days=1 if local.hour >= 13 else 0)).replace(hour=0, minute=0) + timedelta(days=1)
         known_until = known_until_local.astimezone(UTC)
-        return marginal.slice(now - timedelta(hours=1), known_until)
+        return marginal.slice(now - timedelta(days=7), known_until)  # the past week is known, too
 
     return forecast
 

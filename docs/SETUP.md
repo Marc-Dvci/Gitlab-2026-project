@@ -100,6 +100,11 @@ schedules (Build → Pipeline schedules):
 | Daily plan | `JOULE_TASK=plan` | `0 13 * * *` (after European day-ahead publication) |
 | Eco-mode | `JOULE_TASK=eco` | `15 * * * *` |
 
+Add a project webhook so new Surge Requests are planned within seconds (critical work never waits for
+the next tick): Settings → Webhooks → URL `https://<service_url>/api/hook/gitlab`, **Secret token** = the
+same value as `TF_VAR_tick_key`, trigger **Issues events**. The service ticks only when an issue has just
+been queued (opened with, or newly labelled, `surge::queued`), never on its own relabelling.
+
 Create the feature flag `eco-mode` (Deploy → Feature flags) and set `JOULE_UNLEASH_URL` /
 `JOULE_UNLEASH_INSTANCE_ID` on the Cloud Run service (values shown in the flags page → Configure).
 

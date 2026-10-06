@@ -31,16 +31,29 @@ def holding(region: str, now_g: float, start: datetime, planned_g_per_kwh: float
             f"**{planned_g_per_kwh:.0f} gCO₂/kWh** (≈{saving:.0%} less). Deadline {_hhmm(deadline)} is safe.")
 
 
-def releasing(region: str, now_g: float, price: float | None, count: int) -> str:
-    price_text = f" Day-ahead price is **{price:.1f} €/MWh**" if price is not None else ""
-    surplus = " — clean power is in surplus." if price is not None and price <= 0 else "."
-    return (f"**@grid · {region_label(region)}** — releasing {count} queued Surge Request(s) now: marginal ≈ "
-            f"**{now_g:.0f} gCO₂/kWh**.{price_text}{surplus}")
+def releasing(region: str, now_g: float, price: float | None, count: int = 1) -> str:
+    what = "this Surge Request" if count == 1 else f"{count} Surge Requests"
+    price_text = ""
+    if price is not None:
+        price_text = f" Day-ahead price is **{price:.1f} €/MWh**" + (": clean power is in surplus." if price <= 0 else ".")
+    return (f"**@grid · {region_label(region)}** — releasing {what} now: one more kWh here is answered at about "
+            f"**{now_g:.0f} gCO₂/kWh**, the best slot I can find before its deadline.{price_text}")
 
 
-def urgent(region: str, now_g: float, extra_g: float) -> str:
+def urgent(region: str, now_g: float, extra_g: float, best_at: datetime | None = None) -> str:
+    if extra_g >= 0.05 and best_at is not None:
+        cost = f"waiting until {_hhmm(best_at)} would have saved about {extra_g:.1f} g. That's the price of urgency"
+    else:
+        cost = "waiting would not have been cleaner"
     return (f"**@grid · {region_label(region)}** — critical work never waits for me. Running now at "
-            f"**{now_g:.0f} gCO₂/kWh**; waiting would have saved about {extra_g:.1f} g. Logged in the ledger.")
+            f"**{now_g:.0f} gCO₂/kWh**; {cost}, and it's in the ledger.")
+
+
+def deferring(region: str, now_g: float, typical_g: float, deadline: datetime) -> str:
+    return (f"**@grid · {region_label(region)}** — one more kWh here right now would be answered at about "
+            f"**{now_g:.0f} gCO₂/kWh**, and none of the hours I can see yet comes close to a good hour here "
+            f"(≈{typical_g:.0f}, the cleanest tenth of the past week). I'm holding this Surge Request until I can see further ahead (the next day-ahead "
+            f"prices or forecast). Deadline {_hhmm(deadline)} is safe.")
 
 
 def daily_plan(rows: list[dict], horizon_label: str) -> str:
