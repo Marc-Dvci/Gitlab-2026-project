@@ -1,0 +1,158 @@
+{
+  "generated": "2026-10-06T12:42:05+00:00",
+  "cases": [
+    {
+      "case": "GB (NESO average intensity, Sep\u2013Oct 2026)",
+      "region": "europe-west2",
+      "start": "2026-09-01T00:00:00+00:00",
+      "end": "2026-10-05T00:00:00+00:00",
+      "jobs": 276,
+      "results": {
+        "run_now": {
+          "policy": "run_now",
+          "jobs": 276,
+          "energy_kwh": 41.5668,
+          "realized_g": 4376.85,
+          "surplus_share": 0.0,
+          "late_jobs": 0,
+          "mean_wait_h": 0.0,
+          "runtime_s": 0.0
+        },
+        "supervised": {
+          "policy": "supervised",
+          "jobs": 276,
+          "energy_kwh": 41.5668,
+          "realized_g": 3561.5,
+          "surplus_share": 0.0,
+          "late_jobs": 9,
+          "mean_wait_h": 13.19,
+          "runtime_s": 7.5,
+          "reduction_vs_run_now": 0.1863
+        },
+        "hands_off": {
+          "policy": "hands_off",
+          "jobs": 276,
+          "energy_kwh": 41.5668,
+          "realized_g": 3286.07,
+          "surplus_share": 0.0,
+          "late_jobs": 0,
+          "mean_wait_h": 15.05,
+          "runtime_s": 13.6,
+          "reduction_vs_run_now": 0.2492
+        },
+        "carbon_dividend_of_autonomy": 0.0629
+      }
+    },
+    {
+      "case": "ES spring (Mar\u2013May 2025), OMIE day-ahead \u2192 marginal heuristic",
+      "region": "europe-southwest1",
+      "start": "2025-03-01T00:00:00+00:00",
+      "end": "2025-06-01T00:00:00+00:00",
+      "jobs": 756,
+      "results": {
+        "run_now": {
+          "policy": "run_now",
+          "jobs": 756,
+          "energy_kwh": 114.4039,
+          "realized_g": 13673.14,
+          "surplus_share": 0.426,
+          "late_jobs": 0,
+          "mean_wait_h": 0.0,
+          "runtime_s": 0.0
+        },
+        "supervised": {
+          "policy": "supervised",
+          "jobs": 756,
+          "energy_kwh": 114.4039,
+          "realized_g": 10207.93,
+          "surplus_share": 0.4607,
+          "late_jobs": 22,
+          "mean_wait_h": 4.52,
+          "runtime_s": 8.5,
+          "reduction_vs_run_now": 0.2534
+        },
+        "hands_off": {
+          "policy": "hands_off",
+          "jobs": 756,
+          "energy_kwh": 114.4039,
+          "realized_g": 9021.96,
+          "surplus_share": 0.4682,
+          "late_jobs": 0,
+          "mean_wait_h": 4.04,
+          "runtime_s": 12.2,
+          "reduction_vs_run_now": 0.3402
+        },
+        "carbon_dividend_of_autonomy": 0.0867
+      }
+    },
+    {
+      "case": "ES summer (Jul\u2013Sep 2025), OMIE day-ahead \u2192 marginal heuristic",
+      "region": "europe-southwest1",
+      "start": "2025-07-01T00:00:00+00:00",
+      "end": "2025-09-30T00:00:00+00:00",
+      "jobs": 768,
+      "results": {
+        "run_now": {
+          "policy": "run_now",
+          "jobs": 768,
+          "energy_kwh": 116.4186,
+          "realized_g": 34153.11,
+          "surplus_share": 0.025,
+          "late_jobs": 0,
+          "mean_wait_h": 0.0,
+          "runtime_s": 0.0
+        },
+        "supervised": {
+          "policy": "supervised",
+          "jobs": 768,
+          "energy_kwh": 116.4186,
+          "realized_g": 26082.18,
+          "surplus_share": 0.037,
+          "late_jobs": 27,
+          "mean_wait_h": 8.51,
+          "runtime_s": 12.8,
+          "reduction_vs_run_now": 0.2363
+        },
+        "hands_off": {
+          "policy": "hands_off",
+          "jobs": 768,
+          "energy_kwh": 116.4186,
+          "realized_g": 23540.07,
+          "surplus_share": 0.0412,
+          "late_jobs": 0,
+          "mean_wait_h": 9.04,
+          "runtime_s": 23.2,
+          "reduction_vs_run_now": 0.3107
+        },
+        "carbon_dividend_of_autonomy": 0.0744
+      }
+    }
+  ],
+  "neso_conformal": {
+    "alpha": 0.1,
+    "q_by_lead_g": {
+      "1": 45.0,
+      "6": 51.0,
+      "12": 50.0,
+      "24": 47.0,
+      "36": 50.0,
+      "47": 49.0
+    },
+    "held_out_coverage": {
+      "1": 0.921,
+      "6": 0.908,
+      "12": 0.883,
+      "24": 0.843,
+      "36": 0.823,
+      "47": 0.812
+    },
+    "rolling_14d_coverage": {
+      "1": 0.915,
+      "6": 0.917,
+      "12": 0.901,
+      "24": 0.883,
+      "36": 0.87,
+      "47": 0.873
+    }
+  }
+}
