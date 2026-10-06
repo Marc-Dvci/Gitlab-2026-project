@@ -63,6 +63,12 @@ variables, so `configure:infra` re-applies the same configuration instead of rem
 | `JOULE_FLOW_CONSUMER_ID` | see step 5 | no |
 | `JOULE_CONTROL_ID`, `JOULE_CONTROL_SECRET` | see step 7 (Ultimate) | secret masked |
 | `JOULE_MONTHLY_CAP_G` | monthly carbon budget in grams, e.g. `5000` | no |
+| `JOULE_REVIEWER_CONSUMER_ID` | consumer id of the carbon-reviewer flow (step 5) | no |
+| `JOULE_WATTTIME_USERNAME`, `JOULE_WATTTIME_PASSWORD` | optional: a WattTime account, for US regions (also on Cloud Run) | password masked |
+| `JOULE_WATTTIME_REGIONS` | optional: `us-west1=<WattTime region>,...` from WattTime's region lookup | no |
+
+WattTime is used only where it returns a marginal rate in gCO₂/kWh (its free plan gives the MOER forecast
+for a few regions and a 0–100 index elsewhere); otherwise US regions fall back to their annual marginal figure.
 
 Protect `main` (Workload Identity only trusts protected refs).
 

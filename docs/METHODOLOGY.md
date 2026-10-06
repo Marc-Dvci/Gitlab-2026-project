@@ -38,8 +38,9 @@ system emits follows the rules below and carries a low / likely / high range.
 (11 g/kWh, IPCC AR5 onshore wind median); `p ≥ 40` → a thermal unit or an import displacing one is
 on the margin (the zone's annual marginal from GSF/WattTime, e.g. 785 g/kWh for Finland; 490 g/kWh
 gas CCGT by default); linear in between. This is a transparent heuristic, not a dispatch model, and
-is replaced by WattTime MOER wherever available. A sensitivity analysis on the 40 €/MWh knee is on
-the roadmap.
+is replaced by WattTime MOER wherever available. Its sensitivity is tested: the dispatcher decides with
+one knee (20–80 €/MWh) and is scored with another, and a model-free metric (the day-ahead price paid)
+is reported next to it ([`results/robustness.md`](results/robustness.md)).
 
 **Avoided emissions** = consequential(counterfactual: run immediately, default region) −
 consequential(actual). Attributional differences are never called "avoided".
@@ -72,11 +73,30 @@ only information available at decision time; emissions are scored on what the gr
 Policies: run-now, supervised (starts only in office hours), hands-off (24/7). Critical work always
 starts immediately. Reported: emissions, share of energy in surplus hours, deadline misses, mean wait.
 
+The planner bills each job its exact energy across the slots it touches. Deferring past the visible
+horizon is weighed against a *good hour of a typical day*: the cleanest tenth of everything the signal
+holds, the past seven days included (known at decision time, so no look-ahead). Work waits for
+unpublished hours only when nothing in view comes close, and never on a tie.
+
+Three further checks:
+
+- **The loop itself** ([`results/loop_replay.md`](results/loop_replay.md)): `joulethief.loop.tick`, unchanged,
+  every 30 minutes and on every new issue, against an in-memory GitLab on a real week of Spanish prices,
+  then on the first full week of every month.
+- **Robustness** ([`results/robustness.md`](results/robustness.md)): five backlog seeds; decide with one
+  price knee and score with another; the day-ahead price paid as a metric with no emission model.
+- **Net impact** ([`results/net_impact.md`](results/net_impact.md)): everything Joule Thief adds (dispatcher
+  ticks measured, LLM sessions, accounting CI jobs), charged at the marginal rate where it runs, against
+  what it saves; SCI per Surge Request net of overhead; the break-even energy a job must move.
+
 ## 8. Reproduce
 
 ```bash
 python scripts/build_snapshots.py          # rebuild the real-data snapshots
 python experiments/autonomy_dividend.py    # policies × grids, conformal intervals
+python experiments/loop_replay.py          # the real loop on a real week (seconds)
+python experiments/net_impact.py           # what Joule Thief adds vs what it saves (~1 min)
+python experiments/robustness.py           # seeds and price-knee sensitivity (~15 min)
 python experiments/region_ledgers.py       # average vs marginal per region
 python scripts/energy_benchmark.py         # joules/request and carbon blame for this service
 ```

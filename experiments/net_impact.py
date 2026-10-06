@@ -250,8 +250,13 @@ def balance(case: dict, oh: dict) -> dict:
            # the deferrable energy per Surge Request at which dispatch repays what Joule Thief adds (likely)
            "break_even_wh": {"scheduling": round(scheduling.likely / per_kwh * 1000, 1),
                              "everything": round(full.likely / per_kwh * 1000, 1)}}
+    run_now = case["run_now_g_per_surge_request"]
     for scenario, saved in case["saved_g_per_surge_request"].items():
+        # SCI per Surge Request (functional unit R = 1 Surge Request; consequential), net of all overhead
+        sci = Estimate.exact(run_now - saved) + full
         out[scenario] = {
+            "sci_g_per_surge_request": {"run_now": run_now, "hands_off_net": sci.to_dict(3),
+                                        "change_likely": round(sci.likely / run_now - 1, 4)},
             "net_g": (Estimate.exact(saved) - full).to_dict(3),
             "payback_full": {"likely": round(saved / full.likely, 2), "worst": round(saved / full.high, 2)},
             "payback_scheduling": {"likely": round(saved / scheduling.likely, 2), "worst": round(saved / scheduling.high, 2)},
@@ -343,7 +348,19 @@ def render(r: dict) -> str:
                 f"{_r(bn['overhead_g_per_surge_request'], 2)} | {sn['payback_scheduling']['likely']:.0f}× "
                 f"(worst {sn['payback_scheduling']['worst']:.1f}×) | {s1['payback_full']['likely']:.1f}× → "
                 f"**{sn['payback_full']['likely']:.1f}×** (worst {sn['payback_full']['worst']:.1f}×) |")
-    lines += ["", "## Break-even: how much energy must a Surge Request move?", "",
+    lines += ["", "## SCI per Surge Request, net of everything Joule Thief adds", "",
+              "SCI = (E × I + M) / R with R = 1 Surge Request, consequential intensity; hands-off includes the full "
+              "overhead (scheduling + measurement), likely (low–high).", "",
+              "| Grid | Scenario | Run-now (g/SR) | Hands-off, net (g/SR) | Change (likely) |", "|---|---|---:|---:|---:|"]
+    for c in r["cases"]:
+        for scenario, label in (("self_hosted", "self-hosted model"), ("provider_hosted", "provider-hosted")):
+            sci = c["balance"]["now"][scenario]["sci_g_per_surge_request"]
+            lines.append(f"| {c['case']} | {label} | {sci['run_now']:.1f} | {_r(sci['hands_off_net'], 1)} | "
+                         f"{sci['change_likely']:+.0%} |")
+    lines += ["", "With provider-hosted inference, Joule Thief can move only CI work, so its net effect on a Surge "
+              "Request's total is small; the lever is to put inference where it can be scheduled (self-hosted or "
+              "region-pinned models, e.g. GitLab Duo Self-Hosted).", ""]
+    lines += ["## Break-even: how much energy must a Surge Request move?", "",
               "Each kWh the dispatcher moves saves the grams below; dividing what Joule Thief adds by that gives the "
               "deferrable energy per Surge Request at which it pays for itself (likely values). Work below the "
               "threshold is cheaper to run now.", "",

@@ -1,35 +1,35 @@
 {
-  "generated": "2026-10-06T13:53:07+00:00",
-  "runtime_s": 55.6,
+  "generated": "2026-10-06T14:03:42+00:00",
+  "runtime_s": 52.8,
   "dispatcher": {
     "cold_start_cpu_s": {
-      "low": 1.867,
-      "likely": 2.164,
-      "high": 2.222
+      "low": 1.789,
+      "likely": 1.955,
+      "high": 1.999
     },
     "solve_cpu_s": {
-      "low": 0.006,
-      "likely": 0.036,
-      "high": 0.593
+      "low": 0.007,
+      "likely": 0.03,
+      "high": 0.722
     },
     "solve_samples": {
       "typical": 11,
       "stress": 9
     },
     "per_tick_kwh": {
-      "low": 8.74e-07,
-      "likely": 2.9924e-05,
-      "high": 0.000912878
+      "low": 8.38e-07,
+      "likely": 2.961e-05,
+      "high": 0.000912623
     },
     "per_day_g": {
-      "low": 0.0329,
-      "likely": 1.1275,
-      "high": 34.3972
+      "low": 0.0316,
+      "likely": 1.1157,
+      "high": 34.3876
     },
     "per_surge_request_g": {
-      "low": 0.0038,
-      "likely": 0.1315,
-      "high": 4.013
+      "low": 0.0037,
+      "likely": 0.1302,
+      "high": 4.0119
     },
     "gitlab_schedule_alternative_per_day_g": {
       "low": 2.374,
@@ -68,9 +68,9 @@
         "high": 6.29
       },
       "scheduling_g": {
-        "low": 0.0122,
-        "likely": 0.1808,
-        "high": 6.3039
+        "low": 0.0121,
+        "likely": 0.1795,
+        "high": 6.3028
       },
       "measurement_g_per_code_change": {
         "low": 0.7107,
@@ -105,9 +105,9 @@
         "high": 4.588
       },
       "scheduling_g": {
-        "low": 0.0052,
-        "likely": 0.1538,
-        "high": 6.3039
+        "low": 0.0051,
+        "likely": 0.1525,
+        "high": 6.3028
       },
       "measurement_g_per_code_change": {
         "low": 0.5738,
@@ -143,9 +143,9 @@
         "dependency_upgrade": {
           "jobs": 74,
           "kwh": 19.091,
-          "saved_g": 531.427,
+          "saved_g": 531.516,
           "run_now_g": 1983.358,
-          "saved_g_per_job": 7.181
+          "saved_g_per_job": 7.183
         },
         "security_scan": {
           "jobs": 61,
@@ -163,18 +163,27 @@
       "balance": {
         "v1": {
           "overhead_g_per_surge_request": {
-            "low": 0.3727,
-            "likely": 1.0266,
-            "high": 14.9167
+            "low": 0.3726,
+            "likely": 1.0253,
+            "high": 14.9156
           },
           "break_even_wh": {
             "scheduling": 6.9,
             "everything": 39.2
           },
           "self_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 15.858,
+              "hands_off_net": {
+                "low": 12.289,
+                "likely": 12.941,
+                "high": 26.832
+              },
+              "change_likely": -0.1839
+            },
             "net_g": {
-              "low": -10.975,
-              "likely": 2.915,
+              "low": -10.974,
+              "likely": 2.917,
               "high": 3.569
             },
             "payback_full": {
@@ -182,14 +191,23 @@
               "worst": 0.26
             },
             "payback_scheduling": {
-              "likely": 21.8,
+              "likely": 21.96,
               "worst": 0.63
             }
           },
           "provider_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 15.858,
+              "hands_off_net": {
+                "low": 15.656,
+                "likely": 16.308,
+                "high": 30.199
+              },
+              "change_likely": 0.0284
+            },
             "net_g": {
-              "low": -14.342,
-              "likely": -0.452,
+              "low": -14.341,
+              "likely": -0.45,
               "high": 0.202
             },
             "payback_full": {
@@ -197,25 +215,34 @@
               "worst": 0.04
             },
             "payback_scheduling": {
-              "likely": 3.18,
+              "likely": 3.2,
               "worst": 0.09
             }
           }
         },
         "now": {
           "overhead_g_per_surge_request": {
-            "low": 0.2962,
-            "likely": 0.7939,
-            "high": 12.1168
+            "low": 0.2961,
+            "likely": 0.7926,
+            "high": 12.1157
           },
           "break_even_wh": {
-            "scheduling": 5.9,
+            "scheduling": 5.8,
             "everything": 30.3
           },
           "self_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 15.858,
+              "hands_off_net": {
+                "low": 12.212,
+                "likely": 12.709,
+                "high": 24.032
+              },
+              "change_likely": -0.1986
+            },
             "net_g": {
-              "low": -8.175,
-              "likely": 3.148,
+              "low": -8.174,
+              "likely": 3.149,
               "high": 3.646
             },
             "payback_full": {
@@ -223,22 +250,31 @@
               "worst": 0.33
             },
             "payback_scheduling": {
-              "likely": 25.63,
+              "likely": 25.85,
               "worst": 0.63
             }
           },
           "provider_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 15.858,
+              "hands_off_net": {
+                "low": 15.579,
+                "likely": 16.076,
+                "high": 27.399
+              },
+              "change_likely": 0.0137
+            },
             "net_g": {
-              "low": -11.542,
-              "likely": -0.219,
+              "low": -11.541,
+              "likely": -0.218,
               "high": 0.279
             },
             "payback_full": {
-              "likely": 0.72,
+              "likely": 0.73,
               "worst": 0.05
             },
             "payback_scheduling": {
-              "likely": 3.74,
+              "likely": 3.77,
               "worst": 0.09
             }
           }
@@ -289,33 +325,51 @@
       "balance": {
         "v1": {
           "overhead_g_per_surge_request": {
-            "low": 0.3666,
-            "likely": 1.0124,
-            "high": 14.7723
+            "low": 0.3665,
+            "likely": 1.0111,
+            "high": 14.7712
           },
           "break_even_wh": {
             "scheduling": 4.4,
-            "everything": 24.8
+            "everything": 24.7
           },
           "self_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 18.086,
+              "hands_off_net": {
+                "low": 12.266,
+                "likely": 12.91,
+                "high": 26.67
+              },
+              "change_likely": -0.2862
+            },
             "net_g": {
-              "low": -8.585,
-              "likely": 5.175,
+              "low": -8.584,
+              "likely": 5.176,
               "high": 5.82
             },
             "payback_full": {
-              "likely": 6.11,
+              "likely": 6.12,
               "worst": 0.42
             },
             "payback_scheduling": {
-              "likely": 34.22,
+              "likely": 34.47,
               "worst": 0.98
             }
           },
           "provider_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 18.086,
+              "hands_off_net": {
+                "low": 17.464,
+                "likely": 18.108,
+                "high": 31.868
+              },
+              "change_likely": 0.0012
+            },
             "net_g": {
-              "low": -13.783,
-              "likely": -0.023,
+              "low": -13.782,
+              "likely": -0.022,
               "high": 0.622
             },
             "payback_full": {
@@ -323,40 +377,58 @@
               "worst": 0.07
             },
             "payback_scheduling": {
-              "likely": 5.47,
+              "likely": 5.51,
               "worst": 0.16
             }
           }
         },
         "now": {
           "overhead_g_per_surge_request": {
-            "low": 0.2914,
-            "likely": 0.7832,
-            "high": 12.0194
+            "low": 0.2913,
+            "likely": 0.7819,
+            "high": 12.0183
           },
           "break_even_wh": {
-            "scheduling": 3.8,
-            "everything": 19.2
+            "scheduling": 3.7,
+            "everything": 19.1
           },
           "self_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 18.086,
+              "hands_off_net": {
+                "low": 12.19,
+                "likely": 12.681,
+                "high": 23.917
+              },
+              "change_likely": -0.2989
+            },
             "net_g": {
-              "low": -5.832,
-              "likely": 5.404,
+              "low": -5.831,
+              "likely": 5.405,
               "high": 5.896
             },
             "payback_full": {
-              "likely": 7.9,
+              "likely": 7.91,
               "worst": 0.51
             },
             "payback_scheduling": {
-              "likely": 40.23,
+              "likely": 40.57,
               "worst": 0.98
             }
           },
           "provider_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 18.086,
+              "hands_off_net": {
+                "low": 17.388,
+                "likely": 17.879,
+                "high": 29.115
+              },
+              "change_likely": -0.0115
+            },
             "net_g": {
-              "low": -11.03,
-              "likely": 0.206,
+              "low": -11.029,
+              "likely": 0.207,
               "high": 0.698
             },
             "payback_full": {
@@ -364,7 +436,7 @@
               "worst": 0.08
             },
             "payback_scheduling": {
-              "likely": 6.43,
+              "likely": 6.49,
               "worst": 0.16
             }
           }
@@ -388,9 +460,9 @@
         "ci_pipeline": {
           "jobs": 204,
           "kwh": 3.484,
-          "saved_g": 282.728,
+          "saved_g": 282.867,
           "run_now_g": 962.697,
-          "saved_g_per_job": 1.386
+          "saved_g_per_job": 1.387
         },
         "dependency_upgrade": {
           "jobs": 188,
@@ -415,82 +487,118 @@
       "balance": {
         "v1": {
           "overhead_g_per_surge_request": {
-            "low": 0.3675,
-            "likely": 1.0146,
-            "high": 14.7944
+            "low": 0.3674,
+            "likely": 1.0133,
+            "high": 14.7933
           },
           "break_even_wh": {
             "scheduling": 2.0,
             "everything": 11.3
           },
           "self_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 44.47,
+              "hands_off_net": {
+                "low": 31.206,
+                "likely": 31.852,
+                "high": 45.632
+              },
+              "change_likely": -0.2837
+            },
             "net_g": {
-              "low": -1.163,
-              "likely": 12.616,
-              "high": 13.263
+              "low": -1.162,
+              "likely": 12.618,
+              "high": 13.264
             },
             "payback_full": {
-              "likely": 13.43,
+              "likely": 13.45,
               "worst": 0.92
             },
             "payback_scheduling": {
-              "likely": 75.39,
+              "likely": 75.94,
               "worst": 2.16
             }
           },
           "provider_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 44.47,
+              "hands_off_net": {
+                "low": 42.763,
+                "likely": 43.409,
+                "high": 57.189
+              },
+              "change_likely": -0.0239
+            },
             "net_g": {
-              "low": -12.72,
-              "likely": 1.059,
-              "high": 1.706
+              "low": -12.719,
+              "likely": 1.061,
+              "high": 1.707
             },
             "payback_full": {
-              "likely": 2.04,
+              "likely": 2.05,
               "worst": 0.14
             },
             "payback_scheduling": {
-              "likely": 11.47,
+              "likely": 11.55,
               "worst": 0.33
             }
           }
         },
         "now": {
           "overhead_g_per_surge_request": {
-            "low": 0.2921,
-            "likely": 0.7849,
-            "high": 12.0343
+            "low": 0.292,
+            "likely": 0.7835,
+            "high": 12.0332
           },
           "break_even_wh": {
             "scheduling": 1.7,
             "everything": 8.7
           },
           "self_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 44.47,
+              "hands_off_net": {
+                "low": 31.131,
+                "likely": 31.623,
+                "high": 42.872
+              },
+              "change_likely": -0.2889
+            },
             "net_g": {
-              "low": 1.597,
-              "likely": 12.846,
+              "low": 1.598,
+              "likely": 12.847,
               "high": 13.339
             },
             "payback_full": {
-              "likely": 17.37,
+              "likely": 17.4,
               "worst": 1.13
             },
             "payback_scheduling": {
-              "likely": 88.63,
+              "likely": 89.38,
               "worst": 2.16
             }
           },
           "provider_hosted": {
+            "sci_g_per_surge_request": {
+              "run_now": 44.47,
+              "hands_off_net": {
+                "low": 42.688,
+                "likely": 43.18,
+                "high": 54.429
+              },
+              "change_likely": -0.029
+            },
             "net_g": {
-              "low": -9.96,
-              "likely": 1.289,
+              "low": -9.959,
+              "likely": 1.29,
               "high": 1.782
             },
             "payback_full": {
-              "likely": 2.64,
+              "likely": 2.65,
               "worst": 0.17
             },
             "payback_scheduling": {
-              "likely": 13.49,
+              "likely": 13.6,
               "worst": 0.33
             }
           }
