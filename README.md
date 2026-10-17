@@ -1,5 +1,7 @@
 # Joule Thief
 
+> **This is the early development mirror.** The submitted, final version of Joule Thief, with its live pipelines, agents and later fixes, is the GitLab project: <https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/39253963/joule-thief>. Code on this mirror predates it.
+
 **Just-in-time Orchestration Using Leftover Energy** — hands-off agents that run the post-code
 lifecycle on the energy the grid throws away. *The backlog is a battery.*
 
